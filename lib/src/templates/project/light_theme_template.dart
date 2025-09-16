@@ -1,0 +1,66 @@
+import '../../generators/project_generator.dart';
+
+String lightThemeTemplate(ProjectConfig config) => '''
+import 'package:flutter/material.dart';
+import '../color_values.dart';
+import '../design_tokens/theme_token.dart';
+import 'base_theme.dart';
+
+/// Contains color mapping when device is in light theme mode
+final lightTheme = baseTheme.copyWith(
+  colors: {
+    \$token.color.border: AppColors.neutral100,
+    \$token.color.dialogSurface: AppColors.neutral100,
+    \$token.color.divider: AppColors.neutral100,
+    \$token.color.dividerLight: AppColors.neutral100,
+    \$token.color.error: AppColors.error,
+    \$token.color.errorBg: AppColors.error.withOpacity(0.08),
+    \$token.color.errorBorder: AppColors.error,
+    \$token.color.errorText: AppColors.error,
+    \$token.color.fill: AppColors.white,
+    \$token.color.fillDark: AppColors.neutral600,
+    \$token.color.focusedBorder: AppColors.neutral400,
+    \$token.color.hover: AppColors.neutral50,
+    \$token.color.inactiveBg: AppColors.neutral100,
+    \$token.color.inactiveText: AppColors.neutral600,
+    \$token.color.inputLabel: AppColors.neutral300,
+    \$token.color.inputText: AppColors.neutral600,
+    \$token.color.label: AppColors.neutral600,
+    \$token.color.onDialogSurface: AppColors.neutral400,
+    \$token.color.onError: AppColors.white,
+    \$token.color.onPrimary: AppColors.surface001,
+    \$token.color.onSecondary: AppColors.neutral600,
+    \$token.color.onSurface: AppColors.neutral500,
+    \$token.color.onSurfaceBlack: AppColors.black,
+    \$token.color.onSurfaceDark: AppColors.neutral600,
+    \$token.color.onSurfaceError: AppColors.error,
+    \$token.color.onSurfaceLight: AppColors.neutral400,
+    \$token.color.onSurfaceXDark: AppColors.neutral600,
+    \$token.color.onSurfaceXLight: AppColors.neutral50,
+    \$token.color.onSurfaceWhite: AppColors.white,
+    \$token.color.onToastError: AppColors.white,
+    \$token.color.onToastInfo: AppColors.white,
+    \$token.color.onToastSuccess: AppColors.white,
+    \$token.color.primary: AppColors.primary,
+    \$token.color.primaryDark: AppColors.primaryDark,
+    \$token.color.primaryDisabled: AppColors.primaryDisabled,
+    \$token.color.primaryGrading: AppColors.primaryGrading,
+    \$token.color.primaryPressed: AppColors.primaryPressed,
+    \$token.color.primaryOutline: AppColors.surface001,
+    \$token.color.secondary: AppColors.neutral100,
+    \$token.color.secondaryBorder: AppColors.surface001,
+    \$token.color.secondaryOutline: AppColors.surface001,
+    \$token.color.selectedNavItem: AppColors.primaryDark,
+    \$token.color.shimmer: AppColors.shimmer,
+    \$token.color.successBg: AppColors.primary,
+    \$token.color.successText: AppColors.primaryDark,
+    \$token.color.surface: AppColors.white,
+    \$token.color.toastError: AppColors.error,
+    \$token.color.toastInfo: AppColors.neutral600,
+    \$token.color.toastSuccess: AppColors.primaryDark,
+    \$token.color.unSelectedNavItem: AppColors.neutral500,
+    \$token.color.warning: AppColors.warning,
+    \$token.color.warningBg: AppColors.warning.withOpacity(0.08),
+  },
+);
+''';

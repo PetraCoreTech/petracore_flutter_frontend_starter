@@ -1,0 +1,4 @@
+
+String devtoolsOptionsTemplate() => '''
+extensions:
+''';
