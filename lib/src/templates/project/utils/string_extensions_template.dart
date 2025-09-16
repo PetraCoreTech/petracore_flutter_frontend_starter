@@ -1,6 +1,6 @@
 import '../../../generators/project_generator.dart';
 
-String stringExtensionsTemplate(ProjectConfig config) => '''
+String stringExtensionsTemplate(ProjectConfig config) => """
 /// String extension methods for ${config.projectName}
 /// 
 /// Provides utility methods for string validation, formatting, and manipulation
@@ -17,8 +17,7 @@ extension StringExtensions on String {
     const topDomainName = '[a-zA-Z]{2,}';
     const symbol = '@';
 
-    const emailRegExpString =
-        '''^((\$usernamePrefix+\$usernameSuffix|\$quotedString)\$symbol(\$ipAddress|(\$domainName+\$topDomainName)))\\$''';
+    final emailRegExpString = r'^((' + usernamePrefix + r'+' + usernameSuffix + r'|' + quotedString + ')@(' + ipAddress + r'|(' + domainName + r'+' + topDomainName + r')))\$';
     final emailRegExp = RegExp(emailRegExpString);
     return emailRegExp.hasMatch(this);
   }
@@ -35,8 +34,8 @@ extension StringExtensions on String {
     const topDomainName = '[a-zA-Z0-9]{1,6}';
     const optionalPath = r'(\\\\/[-a-zA-Z0-9()@:%_\\\\+.~#?&\\\\/=]*)?';
 
-    const linkRegExpString =
-        '''(\$protocol1|\$protocol2|\$protocol3|\$protocol4)\$domainName\$symbol\$topDomainName\$optionalPath''';
+    final linkRegExpString = r'(' + protocol1 + r'|' + protocol2 + r'|' + protocol3 + r'|' + protocol4 + r')' + 
+        domainName + symbol + topDomainName + optionalPath;
     final linkRegExp = RegExp(linkRegExpString);
     return linkRegExp.hasMatch(this);
   }
@@ -273,4 +272,4 @@ extension StringExtensions on String {
   /// Character count excluding spaces
   int get characterCountNoSpaces => replaceAll(' ', '').length;
 }
-''';
+""";

@@ -271,7 +271,7 @@ class ValidationExamples {
   static String? validateProductCode(String? value) {
     return InputFieldValidator.custom(
       value,
-      RegExp(r'^[A-Z]{2}\\d{4}\\$'),
+      RegExp(r'^[A-Z]{2}\d{4}\$'),
       'Product code must be in format: AB1234',
     );
   }

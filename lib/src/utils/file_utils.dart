@@ -36,7 +36,6 @@ class FileUtils {
 
   static Future<void> copyFile(String sourcePath, String targetPath) async {
     final sourceFile = File(sourcePath);
-    final targetFile = File(targetPath);
 
     final targetDirectory = Directory(path.dirname(targetPath));
     if (!await targetDirectory.exists()) {
