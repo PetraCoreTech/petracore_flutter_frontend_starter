@@ -14,21 +14,7 @@ ArgParser initCommandParser() {
       help: 'Show help for init command',
       negatable: false,
     )
-    ..addFlag(
-      'firebase',
-      help: 'Include Firebase configuration and setup',
-      defaultsTo: true,
-    )
-    ..addFlag(
-      'analytics',
-      help: 'Include Firebase Analytics',
-      defaultsTo: true,
-    )
-    ..addFlag(
-      'messaging',
-      help: 'Include Firebase Cloud Messaging',
-      defaultsTo: true,
-    )
+    
     ..addOption(
       'org',
       help: 'Organization identifier (e.g., com.example)',
@@ -88,9 +74,7 @@ class InitCommand extends BaseCommand {
       projectName: projectName,
       organization: results['org'] as String,
       description: results['description'] as String,
-      includeFirebase: results['firebase'] as bool,
-      includeAnalytics: results['analytics'] as bool,
-      includeMessaging: results['messaging'] as bool,
+      
       projectPath: projectPath,
     );
 
@@ -105,10 +89,7 @@ class InitCommand extends BaseCommand {
       Logger.info('  cd $projectName');
       Logger.info('  flutter pub get');
       
-      if (config.includeFirebase) {
-        Logger.info('  # Configure Firebase (see README.md)');
-        Logger.info('  # Add your google-services.json and GoogleService-Info.plist');
-      }
+      
       
       Logger.info('  flutter run');
       
@@ -124,10 +105,7 @@ Initialize a new Flutter project with PetraCore architecture
 
 Usage: petracore init <project_name> [options]
 
-Options:
-  --firebase        Include Firebase configuration (default: true)
-  --analytics       Include Firebase Analytics (default: true) 
-  --messaging       Include Firebase Cloud Messaging (default: true)
+
   --org             Organization identifier (default: com.petracore)
   --description     Project description
   --force           Force creation even if directory exists

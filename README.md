@@ -107,9 +107,6 @@ petracore generate feature chat
 ### Available Options
 
 #### Init Command Options
-- `--firebase` / `--no-firebase`: Include Firebase setup (default: true)
-- `--analytics` / `--no-analytics`: Include Firebase Analytics (default: true)
-- `--messaging` / `--no-messaging`: Include Firebase Cloud Messaging (default: true)
 - `--org`: Organization identifier (default: com.petracore)
 - `--description`: Project description
 - `--force`: Force creation even if directory exists
@@ -185,7 +182,6 @@ flutter_secure_storage: ^9.0.0 # Secure key-value storage
 flutter_dotenv: ^5.0.2         # Environment variables
 
 # Code Generation
-freezed: ^2.3.2                # Immutable data classes
 json_serializable: ^6.8.0      # JSON serialization
 build_runner: ^2.4.11          # Code generation runner
 
@@ -213,20 +209,12 @@ firebase_messaging: ^15.2.4    # Cloud Messaging
    flutter pub get
    ```
 
-3. **Configure Firebase** (if included):
-   - Create a Firebase project at [Firebase Console](https://console.firebase.google.com)
-   - Add your iOS/Android apps
-   - Download and add configuration files:
-     - `google-services.json` → `android/app/`
-     - `GoogleService-Info.plist` → `ios/Runner/`
-   - Update `lib/firebase_options.dart` with your configuration
-
-4. **Generate code** (for models/freezed):
+3. **Generate code** (for models):
    ```bash
    flutter packages pub run build_runner build
    ```
 
-5. **Run your app**:
+4. **Run your app**:
    ```bash
    flutter run
    ```
@@ -269,9 +257,8 @@ firebase_messaging: ^15.2.4    # Cloud Messaging
 - Create custom extensions in `lib/core/utils/extensions/`
 
 ### Configuration
-- Environment variables in `.env`
+- Environment variables in `env.json`
 - App-level config in `lib/app/app/constants/`
-- Firebase settings in `firebase.json`
 
 ## 🧪 Testing
 
@@ -296,9 +283,6 @@ flutter test
 petracore init social_media_app \
   --org com.yourcompany \
   --description "A social media application with real-time features" \
-  --firebase \
-  --analytics \
-  --messaging
 
 cd social_media_app
 flutter pub get

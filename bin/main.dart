@@ -24,6 +24,7 @@ void main(List<String> arguments) async {
   parser.addCommand('init', initCommandParser());
   parser.addCommand('generate', generateCommandParser());
   parser.addCommand('feature', featureCommandParser());
+  parser.addCommand('auth', authCommandParser());
 
   try {
     final results = parser.parse(arguments);
@@ -46,6 +47,9 @@ void main(List<String> arguments) async {
       case 'generate':
       case 'feature':
         await FeatureCommand().run(results.command!);
+        break;
+      case 'auth':
+        await AuthCommand().run(results.command!);
         break;
       default:
         Logger.error('Unknown command: ${results.command!.name}');
@@ -71,6 +75,7 @@ Available commands:
   init       Initialize a new Flutter project with PetraCore architecture
   generate   Generate various components (alias: feature)
   feature    Generate a new feature module
+  auth       Generate complete authentication flow with login, signup, and more
 
 Global options:
 ${parser.usage}
@@ -78,7 +83,8 @@ ${parser.usage}
 Examples:
   petracore init my_app                    # Create new project
   petracore init my_app --firebase         # Create project with Firebase
-  petracore feature auth                   # Generate auth feature
+  petracore feature auth                   # Detects auth keyword, offers full flow
+  petracore auth                           # Generate complete auth flow
   petracore generate feature profile       # Generate profile feature
 
 For more help on a specific command:

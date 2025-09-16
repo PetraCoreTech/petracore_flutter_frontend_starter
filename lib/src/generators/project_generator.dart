@@ -11,18 +11,13 @@ class ProjectConfig {
   final String projectName;
   final String organization;
   final String description;
-  final bool includeFirebase;
-  final bool includeAnalytics;
-  final bool includeMessaging;
+
   final String projectPath;
 
   ProjectConfig({
     required this.projectName,
     required this.organization,
     required this.description,
-    required this.includeFirebase,
-    required this.includeAnalytics,
-    required this.includeMessaging,
     required this.projectPath,
   });
 
@@ -55,11 +50,6 @@ class ProjectGenerator {
     Logger.step('Setting up app structure...');
     await _generateAppFiles();
 
-    if (config.includeFirebase) {
-      Logger.step('Setting up Firebase configuration...');
-      await _generateFirebaseFiles();
-    }
-
     Logger.step('Creating initial feature example...');
     await _generateSampleFeature();
 
@@ -80,6 +70,7 @@ class ProjectGenerator {
       path.join(config.projectPath, 'lib', 'core'),
       path.join(config.projectPath, 'lib', 'core', 'components'),
       path.join(config.projectPath, 'lib', 'core', 'components', 'buttons'),
+      path.join(config.projectPath, 'lib', 'core', 'components', 'frames'),
       path.join(
           config.projectPath, 'lib', 'core', 'components', 'input_fields'),
       path.join(config.projectPath, 'lib', 'core', 'components', 'scaffolds'),
@@ -88,8 +79,11 @@ class ProjectGenerator {
       path.join(config.projectPath, 'lib', 'core', 'data', 'services'),
       path.join(
           config.projectPath, 'lib', 'core', 'data', 'services', 'network'),
+      path.join(config.projectPath, 'lib', 'core', 'data', 'data_sources'),
+      path.join(config.projectPath, 'lib', 'core', 'data', 'models'),
       path.join(config.projectPath, 'lib', 'core', 'utils'),
       path.join(config.projectPath, 'lib', 'core', 'utils', 'extensions'),
+      path.join(config.projectPath, 'lib', 'core', 'utils', 'validation'),
       path.join(config.projectPath, 'lib', 'features'),
       path.join(config.projectPath, 'lib', 'features', 'shared'),
       path.join(
@@ -113,7 +107,6 @@ class ProjectGenerator {
   }
 
   Future<void> _generateFlutterProject() async {
-    // We'll generate the basic Flutter structure manually to have full control
     await FileUtils.writeFile(
       path.join(config.projectPath, 'pubspec.yaml'),
       templates.pubspecYaml,
@@ -125,6 +118,7 @@ class ProjectGenerator {
       'analysis_options.yaml': templates.analysisOptions,
       '.gitignore': templates.gitignore,
       'README.md': templates.readme,
+      'ENV_CONFIG.md': templates.dartDefineDocs,
       'devtools_options.yaml': templates.devtoolsOptions,
       '.vscode/settings.json': templates.vscodeSettings,
       '.vscode/launch.json': templates.vscodeLaunch,
@@ -150,9 +144,27 @@ class ProjectGenerator {
           templates.stringExtensions,
       'lib/core/utils/extensions/context_extensions.dart':
           templates.contextExtensions,
-      'lib/core/data/services/network/network_service.dart':
-          templates.networkService,
+      'lib/core/utils/env_config.dart': templates.envConfig,
+      
+      // Validation utilities
+      'lib/core/utils/validation/validation_index.dart': templates.validationIndex,
+      'lib/core/utils/validation/input_field_validator.dart': templates.inputFieldValidator,
+      'lib/core/utils/validation/string_extensions.dart': templates.utilsStringExtensions,
+      
+      // Network layer files
+      'lib/core/data/services/network/network_index.dart': templates.networkIndex,
+      'lib/core/data/services/network/network_service.dart': templates.networkService,
+      'lib/core/data/services/network/api_interceptor.dart': templates.apiInterceptor,
+      'lib/core/data/services/network/interceptor_strings.dart': templates.interceptorStrings,
+      'lib/core/data/services/network/request_method.dart': templates.requestMethod,
+      'lib/core/data/data_sources/auth_data_source.dart': templates.authDataSource,
+      'lib/core/data/models/error_response.dart': templates.errorResponse,
+      'lib/core/data/models/success_response.dart': templates.successResponse,
+      
+      // Component files with mixtheme integration
       'lib/core/components/buttons/app_button.dart': templates.appButton,
+      'lib/core/components/buttons/app_button_style.dart': templates.appButtonStyle,
+      'lib/core/components/buttons/app_button_type.dart': templates.appButtonType,
       'lib/core/components/input_fields/base_text_field.dart':
           templates.baseTextField,
       'lib/core/components/scaffolds/base_scaffold.dart':
@@ -190,28 +202,20 @@ class ProjectGenerator {
       'lib/app/app.dart': templates.appBarrel,
       'lib/app/app/view/app.dart': templates.appView,
       'lib/app/app/constants/app_constants.dart': templates.appConstants,
+      
+      // Theme system files
       'lib/app/theme/theme.dart': templates.themeBarrel,
+      'lib/app/theme/color_values.dart': templates.colorValues,
+      'lib/app/theme/design_tokens/theme_token.dart': templates.themeToken,
+      'lib/app/theme/design_tokens/theme_color_token.dart': templates.themeColorToken,
+      'lib/app/theme/design_tokens/theme_text_style_token.dart': templates.themeTextStyleToken,
+      'lib/app/theme/design_tokens/theme_radius_token.dart': templates.themeRadiusToken,
+      'lib/app/theme/themes/base_theme.dart': templates.baseTheme,
+      'lib/app/theme/themes/light_theme.dart': templates.lightTheme,
+      'lib/app/theme/themes/dark_theme.dart': templates.darkTheme,
+      
       'lib/features/shared/presentation/controllers/bloc_provider.dart':
           templates.blocProvider,
-    };
-
-    for (final entry in files.entries) {
-      final filePath = path.join(config.projectPath, entry.key);
-      await Directory(path.dirname(filePath)).create(recursive: true);
-      await FileUtils.writeFile(filePath, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
-    }
-  }
-
-  Future<void> _generateFirebaseFiles() async {
-    if (!config.includeFirebase) return;
-
-    final files = {
-      'firebase.json': templates.firebaseConfig,
-      '.firebaserc': templates.firebaserc,
-      'firestore.rules': templates.firestoreRules,
-      'firestore.indexes.json': templates.firestoreIndexes,
-      'lib/firebase_options.dart': templates.firebaseOptions,
     };
 
     for (final entry in files.entries) {
