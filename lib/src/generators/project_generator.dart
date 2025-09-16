@@ -168,6 +168,10 @@ class ProjectGenerator {
       'lib/core/components/buttons/app_button.dart': templates.appButton,
       'lib/core/components/buttons/app_button_style.dart': templates.appButtonStyle,
       'lib/core/components/buttons/app_button_type.dart': templates.appButtonType,
+      'lib/core/components/frames/icon_frame.dart': templates.iconFrame,
+      'lib/core/components/frames/list_frame.dart': templates.listFrame,
+      'lib/core/components/frames/profile_frame.dart': templates.profileFrame,
+      'lib/core/components/frames/screen_frame.dart': templates.screenFrame,
       'lib/core/components/input_fields/base_text_field.dart':
           templates.baseTextField,
       'lib/core/components/scaffolds/base_scaffold.dart':

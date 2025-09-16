@@ -52,6 +52,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - cloud_firestore ^5.6.5
 - And many more carefully selected packages
 
+## [1.0.1] - 2024-09-16
+
+### Added
+- 🎨 **AppBarV1 Component**: Comprehensive app bar component with theming support
+  - Full integration with design tokens and theme system
+  - Multiple variants: `AppBarV1`, `AppBarV1Transparent`, `AppBarV1Secondary`
+  - Customizable properties: title, actions, colors, elevation, center title
+  - PreferredSizeWidget implementation for proper sizing
+- 📑 **TabBarV1 Component**: Feature-rich tab bar component with theming
+  - Multiple variants: `TabBarV1`, `TabBarV1Scrollable`, `TabBarV1Minimal`
+  - Comprehensive customization: colors, text styles, indicators, padding
+  - Built-in hover and pressed state handling
+  - Scrollable support with proper physics
+- 🏗️ **App Bars Directory**: Added `app_bars/` folder structure to project generation
+- 🔧 **Project Generator Updates**: Updated to include app bar components in generated projects
+- 📱 **Sample Integration**: Updated sample home screen to demonstrate AppBarV1 usage
+- 🎨 **Design System Integration**: All components fully integrated with the app's design tokens
+
+### Improved
+- Enhanced project structure with proper app bar component organization
+- Better component documentation and usage examples
+- More consistent theming across all generated components
+
 ## [Unreleased]
 
 ### Planned

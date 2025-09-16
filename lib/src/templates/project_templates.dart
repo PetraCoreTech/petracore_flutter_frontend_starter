@@ -16,7 +16,11 @@ import 'project/components/app_button_type_template.dart';
 import 'project/components/base_scaffold_template.dart';
 import 'project/components/base_text_field_template.dart';
 import 'project/components/components_index_template.dart';
+import 'project/components/icon_frame_template.dart';
+import 'project/components/list_frame_template.dart';
 import 'project/components/loading_indicator_template.dart';
+import 'project/components/profile_frame_template.dart';
+import 'project/components/screen_frame_template.dart';
 import 'project/components/tab_bar_v1_template.dart';
 import 'project/context_extensions_template.dart';
 import 'project/core_barrel_template.dart';
@@ -145,6 +149,12 @@ class ProjectTemplates {
   String get baseTextField => baseTextFieldTemplate(config);
   String get baseScaffold => baseScaffoldTemplate(config);
   String get loadingIndicator => loadingIndicatorTemplate(config);
+  
+  // Frame templates
+  String get iconFrame => iconframeTemplate(config);
+  String get listFrame => listframeTemplate(config);
+  String get profileFrame => profileframeTemplate(config);
+  String get screenFrame => screenFrameTemplate(config);
 
   String get sampleHomeScreen => sampleHomeScreenTemplate(config);
 
