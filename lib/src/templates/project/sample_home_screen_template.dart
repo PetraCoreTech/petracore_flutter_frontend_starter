@@ -10,9 +10,22 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      appBar: AppBar(
-        title: Text('${config.className}'),
-        centerTitle: true,
+      appBar: AppBarV1(
+        title: '${config.className}',
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: () {
+              context.showSnackBar('Notifications feature coming soon!');
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () {
+              context.showSnackBar('Settings feature coming soon!');
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(

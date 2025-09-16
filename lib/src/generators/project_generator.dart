@@ -69,6 +69,7 @@ class ProjectGenerator {
       path.join(config.projectPath, 'lib', 'app', 'theme', 'themes'),
       path.join(config.projectPath, 'lib', 'core'),
       path.join(config.projectPath, 'lib', 'core', 'components'),
+      path.join(config.projectPath, 'lib', 'core', 'components', 'app_bars'),
       path.join(config.projectPath, 'lib', 'core', 'components', 'buttons'),
       path.join(config.projectPath, 'lib', 'core', 'components', 'frames'),
       path.join(
@@ -162,6 +163,8 @@ class ProjectGenerator {
       'lib/core/data/models/success_response.dart': templates.successResponse,
       
       // Component files with mixtheme integration
+      'lib/core/components/app_bars/app_bar_v1.dart': templates.appBarV1,
+      'lib/core/components/app_bars/tab_bar_v1.dart': templates.tabBarV1,
       'lib/core/components/buttons/app_button.dart': templates.appButton,
       'lib/core/components/buttons/app_button_style.dart': templates.appButtonStyle,
       'lib/core/components/buttons/app_button_type.dart': templates.appButtonType,

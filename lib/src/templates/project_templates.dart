@@ -10,12 +10,14 @@ import 'project/bootstrap_template.dart';
 import 'project/color_values_template.dart';
 import 'project/components/app_button_style_template.dart';
 // Component templates
+import 'project/components/app_bar_v1_template.dart';
 import 'project/components/app_button_template.dart';
 import 'project/components/app_button_type_template.dart';
 import 'project/components/base_scaffold_template.dart';
 import 'project/components/base_text_field_template.dart';
 import 'project/components/components_index_template.dart';
 import 'project/components/loading_indicator_template.dart';
+import 'project/components/tab_bar_v1_template.dart';
 import 'project/context_extensions_template.dart';
 import 'project/core_barrel_template.dart';
 import 'project/dark_theme_template.dart';
@@ -135,6 +137,8 @@ class ProjectTemplates {
   String get dartDefineDocs => dartDefineDocsTemplate(config);
 
   // Component templates
+  String get appBarV1 => appbarv1Template(config);
+  String get tabBarV1 => tabbarv1Template(config);
   String get appButton => appButtonTemplate(config);
   String get appButtonStyle => appButtonStyleTemplate(config);
   String get appButtonType => appButtonTypeTemplate(config);
