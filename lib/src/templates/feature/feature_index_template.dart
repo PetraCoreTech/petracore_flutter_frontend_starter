@@ -1,12 +1,9 @@
-
-import '../../generators/feature_generator.dart';
+import 'package:petracore_flutter_frontend_starter/src/generators/feature_generator.dart';
 
 String featureIndexTemplate(FeatureConfig config) => '''
-// Data Layer
 ${config.includeModels ? "export 'data/models/models.dart';" : ''}
 ${config.includeRepository ? "export 'data/remote/remote.dart';" : ''}
-${config.includeUseCases ? "export 'data/use_cases/use_cases.dart';" : ''}
+${config.includeUseCases ? "export 'data/domain/${config.featureName}use_cases.dart';" : ''}
 
-// Presentation Layer
 export 'presentation/presentation.dart';
 ''';

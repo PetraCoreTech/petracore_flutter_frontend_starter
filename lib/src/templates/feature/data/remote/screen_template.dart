@@ -1,4 +1,4 @@
-import '../../generators/feature_generator.dart';
+import '../../../../generators/feature_generator.dart';
 
 String screenTemplate(FeatureConfig config) => '''
 import 'package:flutter/material.dart';

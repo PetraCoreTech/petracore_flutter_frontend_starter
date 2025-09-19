@@ -1,5 +1,4 @@
-
-import '../../generators/feature_generator.dart';
+import 'package:petracore_flutter_frontend_starter/src/generators/feature_generator.dart';
 
 String remoteBarrelTemplate(FeatureConfig config) => '''
 export '${config.featureName}_repository.dart';
