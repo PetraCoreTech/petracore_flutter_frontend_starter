@@ -12,7 +12,6 @@ import 'package:${config.projectName}/core/utils/env_config.dart';
 
 typedef Json = Map<String, dynamic>;
 
-/// Base Dio options configuration using environment variables
 final baseOptions = BaseOptions(
   baseUrl: Env.apiBaseUrl,
   connectTimeout: Duration(milliseconds: Env.apiTimeout),
@@ -20,16 +19,12 @@ final baseOptions = BaseOptions(
   sendTimeout: Duration(milliseconds: Env.apiTimeout),
 );
 
-/// Global Dio instance
 final dio = Dio(baseOptions);
 
-/// Global api_client service instance
-final networkService = NetworkService(dio);
+final apiClient = ApiClient(dio);
 
-/// Handles HTTP requests with automatic token injection and refresh
-class NetworkService {
-  /// Constructor
-  NetworkService(this.dio) {
+class ApiClient {
+  ApiClient(this.dio) {
     if (kDebugMode) {
       dio.interceptors
         ..add(PrettyDioLogger(
@@ -47,7 +42,6 @@ class NetworkService {
     }
   }
 
-  /// Dio instance for making HTTP requests
   final Dio dio;
 
   /// Default query parameters for all requests

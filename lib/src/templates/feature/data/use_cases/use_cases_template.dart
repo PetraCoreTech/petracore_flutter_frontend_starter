@@ -41,7 +41,7 @@ class Multiple${config.pascalCase}UseCase extends UseCase<List<${config.pascalCa
   }
 }
 
-/* Single ${config.pascalCase} use case */
+/* Single ${config.pascalCase} Use Case */
 final single${config.pascalCase}UseCase = Single${config.pascalCase}UseCase();
 
 class Single${config.pascalCase}UseCase extends UseCase<${config.pascalCase}, String> {
@@ -52,7 +52,7 @@ class Single${config.pascalCase}UseCase extends UseCase<${config.pascalCase}, St
   }
 }
 
-/* Update ${config.pascalCase} use case */
+/* Update ${config.pascalCase} Use Case */
 final update${config.pascalCase}UseCase = Update${config.pascalCase}UseCase();
 
 class Update${config.pascalCase}UseCase extends UseCase<${config.pascalCase}, Update${config.pascalCase}Dto> {
