@@ -1,6 +1,4 @@
-import '../../generators/project_generator.dart';
-
-String bootstrapTemplate(ProjectConfig config) => '''
+String bootstrapTemplate() => '''
 import 'dart:async';
 import 'dart:developer';
 
@@ -33,10 +31,8 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   Bloc.observer = const AppBlocObserver();
 
-  /// Add cross-flavor configuration here
   WidgetsFlutterBinding.ensureInitialized();
 
-  /// Hydrated bloc initialization
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: kIsWeb
         ? HydratedStorage.webStorageDirectory

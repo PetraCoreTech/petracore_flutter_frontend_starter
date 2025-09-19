@@ -1,4 +1,0 @@
-
-String sampleFeatureIndexTemplate() => '''
-export 'presentation/screens/home_screen.dart';
-''';

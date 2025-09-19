@@ -1,4 +1,4 @@
-import '../../generators/project_generator.dart';
+import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String envJsonTemplate(ProjectConfig config) => '''
 {

@@ -18,13 +18,14 @@ dependencies:
   # Architecture & State Management
   flutter_bloc: ^8.1.3
   hydrated_bloc: ^9.1.5
-  provider: ^6.0.2
   equatable: ^2.0.5
   
   # Navigation
   go_router: ^10.0.0
   
   # UI & Design
+  flextras: ^1.0.0
+  flutter_animated_dialog_updated: ^1.0.1
   flutter_screenutil: ^5.4.0
   flutter_svg: ^2.0.17
   flutter_hooks: ^0.18.6
@@ -34,7 +35,8 @@ dependencies:
   cached_network_image: ^3.2.3
   lottie: ^2.2.0
   mix: ^1.4.5
-  
+  flutter_styled_toast: 2.2.1
+
   # Network & API
   dio: ^5.3.3
   pretty_dio_logger: ^1.4.0
@@ -76,9 +78,4 @@ flutter:
     - assets/svg/
     - assets/lottie/
     - env.json
-
-  fonts:
-    - family: Inter
-      fonts:
-        - asset: fonts/Inter-Regular.ttf
 ''';

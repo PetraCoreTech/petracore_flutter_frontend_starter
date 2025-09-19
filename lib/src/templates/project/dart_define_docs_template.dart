@@ -1,4 +1,4 @@
-import '../../generators/project_generator.dart';
+import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String dartDefineDocsTemplate(ProjectConfig config) => '''
 # Environment Configuration with dart-define
@@ -9,24 +9,21 @@ This project uses Dart's `--dart-define` feature for environment variables. This
 
 | Variable | Type | Default Value | Description |
 |----------|------|---------------|-------------|
-| `APP_NAME` | String | `${config.projectName}` | Application name |
-| `API_BASE_URL` | String | `https://api.${config.projectName.toLowerCase()}.com` | Base URL for API calls |
+| `BASE_URL` | String | `https://api.${config.projectName.toLowerCase()}.com` | Base URL for API calls |
 | `API_TIMEOUT` | int | `30000` | API request timeout in milliseconds |
-| `DEBUG_MODE` | bool | `true` | Enable/disable debug mode |
 | `ENABLE_LOGGING` | bool | `true` | Enable/disable logging |
-| `STRIPE_PUBLISHABLE_KEY` | String | `""` | Stripe publishable key |
 | `GOOGLE_MAPS_API_KEY` | String | `""` | Google Maps API key |
 
 ## Usage
 
 ### Development
 ```bash
-flutter run --dart-define=API_BASE_URL=https://dev-api.example.com --dart-define=DEBUG_MODE=true
+flutter run --dart-define-from-file=env.json
 ```
 
 ### Production
 ```bash
-flutter build apk --dart-define=API_BASE_URL=https://api.example.com --dart-define=DEBUG_MODE=false --dart-define=STRIPE_PUBLISHABLE_KEY=pk_live_xxx
+flutter run --dart-define-from-file=env.json
 ```
 
 ### Using in Code
@@ -50,62 +47,9 @@ void main() {
 }
 ```
 
-## Build Scripts
-
-You can create shell scripts to simplify builds with different configurations:
-
-### `scripts/dev.sh`
-```bash
-#!/bin/bash
-flutter run \\
-  --dart-define=API_BASE_URL=https://dev-api.example.com \\
-  --dart-define=DEBUG_MODE=true \\
-  --dart-define=ENABLE_LOGGING=true
-```
-
-### `scripts/prod.sh`
-```bash
-#!/bin/bash
-flutter build apk \\
-  --dart-define=API_BASE_URL=https://api.example.com \\
-  --dart-define=DEBUG_MODE=false \\
-  --dart-define=ENABLE_LOGGING=false \\
-  --dart-define=STRIPE_PUBLISHABLE_KEY=\$STRIPE_LIVE_KEY
-```
-
-## VS Code Configuration
-
-Add to `.vscode/launch.json`:
-
-```json
-{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Development",
-      "request": "launch",
-      "type": "dart",
-      "args": [
-        "--dart-define=API_BASE_URL=https://dev-api.example.com",
-        "--dart-define=DEBUG_MODE=true"
-      ]
-    },
-    {
-      "name": "Production",
-      "request": "launch",
-      "type": "dart",
-      "args": [
-        "--dart-define=API_BASE_URL=https://api.example.com",
-        "--dart-define=DEBUG_MODE=false"
-      ]
-    }
-  ]
-}
-```
-
 ## Network Service Integration
 
-The environment variables are automatically used in the network service:
+The environment variables are automatically used in the api_client service:
 
 ```dart
 // In network_service.dart

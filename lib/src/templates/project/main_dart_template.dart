@@ -1,5 +1,4 @@
-
-import '../../generators/project_generator.dart';
+import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String mainDartTemplate(ProjectConfig config) => '''
 import 'package:${config.packageName}/app/app.dart';
