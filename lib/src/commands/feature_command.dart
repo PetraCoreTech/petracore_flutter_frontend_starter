@@ -6,6 +6,7 @@ import 'package:path/path.dart' as path;
 import '../generators/auth_flow_generator.dart';
 import '../generators/feature_generator.dart';
 import '../utils/logger.dart';
+import '../utils/project_config_reader.dart';
 import '../utils/validation.dart';
 import 'base_command.dart';
 
@@ -122,6 +123,9 @@ class FeatureCommand extends BaseCommand {
 
     Logger.header('🚀 Generating Feature: $featureName');
 
+    Logger.step('Reading project configuration...');
+    final projectConfig = await ProjectConfigReader.readOrDefault();
+
     final config = FeatureConfig(
       featureName: featureName,
       outputPath: featurePath,
@@ -129,6 +133,7 @@ class FeatureCommand extends BaseCommand {
       includeRepository: featureResults['repository'] as bool,
       includeUseCases: featureResults['use-cases'] as bool,
       includeModels: featureResults['models'] as bool,
+      projectConfig: projectConfig,
     );
 
     final generator = FeatureGenerator(config);
@@ -205,6 +210,10 @@ class FeatureCommand extends BaseCommand {
 
     Logger.header('🚀 Generating Basic Auth Feature');
 
+    // Read project configuration
+    Logger.step('Reading project configuration...');
+    final projectConfig = await ProjectConfigReader.readOrDefault();
+
     final config = FeatureConfig(
       featureName: 'auth',
       outputPath: featurePath,
@@ -212,6 +221,7 @@ class FeatureCommand extends BaseCommand {
       includeRepository: true,
       includeUseCases: true,
       includeModels: true,
+      projectConfig: projectConfig,
     );
 
     final generator = FeatureGenerator(config);

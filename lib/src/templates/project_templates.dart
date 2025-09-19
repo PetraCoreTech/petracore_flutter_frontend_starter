@@ -1,170 +1,160 @@
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
-import 'package:petracore_flutter_frontend_starter/src/templates/project/project_bloc_provider_template.dart';
-
-import 'project/analysis_options_template.dart';
-import 'project/app_barrel_template.dart';
-import 'project/app_constants_template.dart';
-import 'project/app_view_template.dart';
-import 'project/base_theme_template.dart';
-import 'project/bootstrap_template.dart';
-import 'project/color_values_template.dart';
-import 'project/components/app_button_style_template.dart';
-// Component templates
-import 'project/components/app_bar_v1_template.dart';
-import 'project/components/app_button_template.dart';
-import 'project/components/app_button_type_template.dart';
-import 'project/components/base_scaffold_template.dart';
-import 'project/components/base_text_field_template.dart';
-import 'project/components/components_index_template.dart';
-import 'project/components/icon_frame_template.dart';
-import 'project/components/list_frame_template.dart';
-import 'project/components/loading_indicator_template.dart';
-import 'project/components/profile_frame_template.dart';
-import 'project/components/screen_frame_template.dart';
-import 'project/components/tab_bar_v1_template.dart';
-import 'project/context_extensions_template.dart';
-import 'project/core_barrel_template.dart';
-import 'project/dark_theme_template.dart';
-import 'project/dart_define_docs_template.dart';
-import 'project/data_index_template.dart';
-import 'project/devtools_options_template.dart';
-import 'project/domain_use_case_template.dart';
-// Environment templates
-import 'project/env_config_template.dart';
-import 'project/env_file_template.dart';
-import 'project/gitignore_template.dart';
-import 'project/light_theme_template.dart';
-import 'project/main_dart_template.dart';
-import 'project/navigation_index_template.dart';
-import 'project/network/api_interceptor_template.dart';
-import 'project/network/auth_data_source_template.dart';
-import 'project/network/error_response_template.dart';
-import 'project/network/interceptor_strings_template.dart';
-import 'project/network/network_index_template.dart';
-// Network templates
-import 'project/network/network_service_template.dart';
-import 'project/network/request_method_template.dart';
-import 'project/network/success_response_template.dart';
-import 'project/pubspec_yaml_template.dart';
-import 'project/readme_template.dart';
-import 'project/router_template.dart';
-import 'project/routes_template.dart';
-import 'project/sample_feature_index_template.dart';
-import 'project/sample_home_screen_template.dart';
-import 'project/string_extensions_template.dart';
-import 'project/theme_barrel_template.dart';
-import 'project/theme_color_token_template.dart';
-import 'project/theme_radius_token_template.dart';
-import 'project/theme_text_style_token_template.dart';
-import 'project/theme_token_template.dart';
-import 'project/utils_index_template.dart';
-import 'project/utils/input_field_validator_template.dart';
-import 'project/utils/string_extensions_template.dart' as utils_string_ext;
-import 'project/utils/validation_index_template.dart';
-import 'project/vscode_launch_template.dart';
-import 'project/vscode_settings_template.dart';
+import 'package:petracore_flutter_frontend_starter/src/templates/template_index.dart';
 
 class ProjectTemplates {
-  final ProjectConfig config;
-
   ProjectTemplates(this.config);
 
+  final ProjectConfig config;
+
+  /// Project Files
+  String get analysisOptions => analysisOptionsTemplate();
+  String get gitignore => gitignoreTemplate();
+  String get readme => readmeTemplate(config);
+  String get dartDefineDocs => dartDefineDocsTemplate(config);
+  String get devtoolsOptions => devtoolsOptionsTemplate();
+  String get vscodeSettings => vscodeSettingsTemplate();
+  String get vscodeLaunch => vscodeLaunchTemplate(config);
+  String get envJson => envJsonTemplate(config);
   String get pubspecYaml => pubspecYamlTemplate(config);
 
+  /// Project Config
   String get mainDart => mainDartTemplate(config);
+  String get bootstrap => bootstrapTemplate();
 
-  String get bootstrap => bootstrapTemplate(config);
-
+  /// App
+  String get appBarrel => appBarrelTemplate();
   String get appView => appViewTemplate(config);
-
   String get appConstants => appConstantsTemplate(config);
+  String get contentStrings => contentStringsTemplate();
 
+  /// App/Theme
+  String get themeBarrel => themeBarrelTemplate();
+  String get colorValues => colorValuesTemplate();
+  String get themeToken => themeTokenTemplate();
+  String get themeColorToken => themeColorTokenTemplate();
+  String get themeTextStyleToken => themeTextStyleTokenTemplate();
+  String get themeRadiusToken => themeRadiusTokenTemplate();
+  String get baseTheme => baseThemeTemplate();
+  String get lightTheme => lightThemeTemplate();
+  String get darkTheme => darkThemeTemplate();
+
+  /// Core
   String get coreBarrel => coreBarrelTemplate(config);
 
-  String get router => routerTemplate(config);
-
-  String get analysisOptions => analysisOptionsTemplate();
-
-  String get gitignore => gitignoreTemplate();
-
-  String get readme => readmeTemplate(config);
-
-  String get appBarrel => appBarrelTemplate();
-
-  String get themeBarrel => themeBarrelTemplate(config);
-
-  // Theme system templates
-  String get themeToken => themeTokenTemplate(config);
-  String get themeColorToken => themeColorTokenTemplate(config);
-  String get themeTextStyleToken => themeTextStyleTokenTemplate(config);
-  String get themeRadiusToken => themeRadiusTokenTemplate(config);
-  String get colorValues => colorValuesTemplate(config);
-  String get baseTheme => baseThemeTemplate(config);
-  String get lightTheme => lightThemeTemplate(config);
-  String get darkTheme => darkThemeTemplate(config);
-
-  String get componentsIndex => componentsIndexTemplate(config);
-
+  /// Core/Data
   String get dataIndex => dataIndexTemplate();
-
   String get domainUseCase => domainUseCaseTemplate();
+  String get localAuthData => localAuthDataTemplate();
 
+  /// Core/Data/Enums
+  String get requestMethod => requestMethodTemplate();
+
+  /// Core/Data/Models
+  String get errorResponse => errorResponseTemplate();
+  String get successResponse => successResponseTemplate();
+  String get baseModel => baseModelTemplate();
+
+  /// Core/Data/Services
+  String get apiClientIndex => apiClientIndexTemplate();
+  String get apiClient => apiClientTemplate(config);
+  String get apiInterceptor => apiInterceptorTemplate(config);
+  String get interceptorStrings => interceptorStringsTemplate();
+
+  /// Core/Data/Utils
+  String get envConfig => envConfigTemplate(config);
+
+  /// Core/Utils
   String get utilsIndex => utilsIndexTemplate();
-
-  String get navigationIndex => navigationIndexTemplate();
-
-  String get routes => routesTemplate();
-
-  String get blocProvider => projectBlocProviderTemplate();
-
-  String get stringExtensions => stringExtensionsTemplate();
-
+  String get boolExtension => boolExtensionTemplate();
   String get contextExtensions => contextExtensionsTemplate();
-
-  // Validation templates
+  String get ctxResponsiveExt => ctxResponsiveExtTemplate();
+  String get dateTimeExtension => dateTimeExtTemplate(config);
+  String get intExtension => intExtensionTemplate();
+  String get listExtension => listExtensionTemplate();
+  String get pageControllerExt => pageControllerExtTemplate();
+  String get stringExtension => stringExtensionTemplate();
   String get inputFieldValidator => inputFieldValidatorTemplate(config);
-  String get utilsStringExtensions => utils_string_ext.stringExtensionsTemplate(config);
   String get validationIndex => validationIndexTemplate(config);
 
-  // Network templates
-  String get networkService => networkServiceTemplate(config);
-  String get authDataSource => authDataSourceTemplate(config);
-  String get apiInterceptor => apiInterceptorTemplate(config);
-  String get interceptorStrings => interceptorStringsTemplate(config);
-  String get requestMethod => requestMethodTemplate(config);
-  String get errorResponse => errorResponseTemplate(config);
-  String get successResponse => successResponseTemplate(config);
-  String get networkIndex => networkIndexTemplate(config);
+  /// Core/Component
+  String get componentsIndex => componentsIndexTemplate(config);
 
-  // Environment templates
-  String get envConfig => envConfigTemplate(config);
-  String get dartDefineDocs => dartDefineDocsTemplate(config);
-
-  // Component templates
+  /// Core/Component/AppBar
   String get appBarV1 => appbarv1Template(config);
+  String get persistentHeaderV1 => persistentHeaderV1Template(config);
   String get tabBarV1 => tabbarv1Template(config);
+
+  /// Core/Component/Buttons
   String get appButton => appButtonTemplate(config);
-  String get appButtonStyle => appButtonStyleTemplate(config);
-  String get appButtonType => appButtonTypeTemplate(config);
-  String get baseTextField => baseTextFieldTemplate(config);
-  String get baseScaffold => baseScaffoldTemplate(config);
-  String get loadingIndicator => loadingIndicatorTemplate(config);
-  
-  // Frame templates
-  String get iconFrame => iconframeTemplate(config);
-  String get listFrame => listframeTemplate(config);
-  String get profileFrame => profileframeTemplate(config);
+  String get appButtonStyle => appButtonStyleTemplate();
+  String get appButtonType => appButtonTypeTemplate();
+  String get appOutlineButton => appOutlineButtonTemplate(config);
+  String get appOutlineButtonStyle => appOutlineButtonStyleTemplate();
+  String get appOutlineButtonType => appOutlineButtonTypeTemplate();
+  String get appTextButton => appTextButtonTemplate(config);
+  String get appTextButtonStyle => appTextButtonStyleTemplate();
+  String get appTextButtonType => appTextButtonTypeTemplate();
+
+  ///Core/Component/Custom
+  String get customIcon => customIconTemplate();
+  String get dividerV1 => dividerV1Template(config);
+  String get dot => dotTemplate(config);
+  String get expansionTileV1 => expansionTileV1Template(config);
+  String get hyperLinkText => hyperLinkTextTemplate(config);
+  String get initialsDisplay => initialsDisplayTemplate(config);
+  String get listTileV1 => listTileV1Template(config);
+  String get passwordStrengthChecker => passwordStrengthCheckerTemplate(config);
+
+  /// Core/Component/Dialog
+  String get actionDialog => actionDialogTemplate(config);
+  String get bottomSheetSelectContent =>
+      bottomSheetSelectContentTemplate(config);
+  String get toastV1 => toastV1Template(config);
+
+  /// Core/Component/Frames
+  String get iconFrame => iconFrameTemplate(config);
+  String get listFrame => listFrameTemplate(config);
+  String get profileFrame => profileFrameTemplate(config);
   String get screenFrame => screenFrameTemplate(config);
 
-  String get sampleHomeScreen => sampleHomeScreenTemplate(config);
+  /// Core/Component/Helpers
+  String get dateTimeHelper => dateTimeHelperTemplate(config);
+  String get dialogHelper => dialogHelperTemplate(config);
+  String get interactionHelper => interactionHelperTemplate(config);
+  String get sliverHelper => sliverHelperTemplate(config);
+  String get snackBarHelper => snackBarHelperTemplate(config);
+  String get toastHelper => toastHelperTemplate(config);
 
-  String get sampleFeatureIndex => sampleFeatureIndexTemplate();
+  /// Core/Component/InputFields
+  String get baseTextField => baseTextFieldTemplate(config);
+  String get inputField => inputFieldTemplate(config);
+  String get inputItem => inputItemTemplate(config);
+  String get passwordField => passwordFieldTemplate(config);
+  String get phoneField => phoneFieldTemplate(config);
+  String get searchFeatureField => searchFeatureFieldTemplate(config);
+  String get searchInputField => searchInputFieldTemplate(config);
 
-  String get devtoolsOptions => devtoolsOptionsTemplate();
+  /// Core/Component/Scaffolds
+  String get baseScaffold => baseScaffoldTemplate();
+  String get scaffoldV1 => scaffoldV1Template(config);
 
-  String get vscodeSettings => vscodeSettingsTemplate();
+  /// Core/Component/States
+  String get infoDisplay => infoDisplayTemplate(config);
+  String get loadingIndicator => loadingIndicatorTemplate(config);
+  String get loadingOverlayV1 => loadingOverlayV1Template(config);
+  String get loadingShimmer => loadingShimmerTemplate(config);
 
-  String get vscodeLaunch => vscodeLaunchTemplate(config);
+  /// Navigation
+  String get routes => routesTemplate();
+  String get router => routerTemplate(config);
+  String get navigationIndex => navigationIndexTemplate();
+  String get routeModel => routeModelTemplate();
+  String get func => funcTemplate(config);
+  String get navigationExtension => navigationExtTemplate(config);
 
-  String get envFile => envFileTemplate(config);
+  /// Shared/Presentation/Controllers
+  String get keyValue => keyValueTemplate();
+  String get blocProvider => projectBlocProviderTemplate();
+  String get sharedIndex => sharedIndexTemplate();
+  String get typeDef => typeDefTemplate();
 }

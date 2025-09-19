@@ -1,7 +1,7 @@
 /// PetraCore Flutter Frontend Starter
 ///
 /// A powerful CLI tool and package for generating Flutter projects with clean architecture,
-/// Firebase integration, and industry best practices.
+/// and industry best practices.
 library petracore_flutter_frontend_starter;
 
 export 'src/commands/commands.dart';

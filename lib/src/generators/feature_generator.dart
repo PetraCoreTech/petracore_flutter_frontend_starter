@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
+import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
+import 'package:petracore_flutter_frontend_starter/src/templates/feature_templates.dart';
 import 'package:recase/recase.dart';
-
-import '../templates/feature_templates.dart';
-import '../utils/file_utils.dart';
-import '../utils/logger.dart';
 
 class FeatureConfig {
   final String featureName;
@@ -14,14 +12,16 @@ class FeatureConfig {
   final bool includeRepository;
   final bool includeUseCases;
   final bool includeModels;
+  final ProjectConfig projectConfig;
 
   FeatureConfig({
     required this.featureName,
     required this.outputPath,
-    required this.includeBloc,
-    required this.includeRepository,
-    required this.includeUseCases,
-    required this.includeModels,
+    required this.projectConfig,
+    this.includeBloc = true,
+    this.includeRepository = true,
+    this.includeUseCases = true,
+    this.includeModels = true,
   });
 
   String get className => ReCase(featureName).pascalCase;
@@ -30,10 +30,10 @@ class FeatureConfig {
 }
 
 class FeatureGenerator {
-  final FeatureConfig config;
-  final FeatureTemplates templates;
-
   FeatureGenerator(this.config) : templates = FeatureTemplates(config);
+  final FeatureConfig config;
+
+  final FeatureTemplates templates;
 
   Future<void> generate() async {
     Logger.step('Creating feature directory structure...');
@@ -110,9 +110,13 @@ class FeatureGenerator {
 
   Future<void> _generateRepository() async {
     final files = {
-      'data/remote/${config.featureName}_repository.dart': templates.repository,
       'data/remote/${config.featureName}_service.dart': templates.service,
-      'data/remote/dto/${config.featureName}_dto.dart': templates.dto,
+      'data/remote/${config.featureName}_repository.dart': templates.repository,
+      'data/remote/dto/create${config.featureName}_dto.dart':
+          templates.createDto,
+      'data/remote/dto/update${config.featureName}_dto.dart':
+          templates.updateDto,
+      'data/remote/dto/${config.featureName}_params.dart': templates.params,
       'data/remote/dto/dto.dart': templates.dtoBarrel,
       'data/remote/remote.dart': templates.remoteBarrel,
     };
@@ -126,9 +130,7 @@ class FeatureGenerator {
 
   Future<void> _generateUseCases() async {
     final files = {
-      'data/use_cases/get_${config.featureName}_use_case.dart':
-          templates.getUseCase,
-      'data/use_cases/use_cases.dart': templates.useCasesBarrel,
+      'data/domain/use_cases.dart': templates.useCases,
     };
 
     for (final entry in files.entries) {
@@ -140,13 +142,24 @@ class FeatureGenerator {
 
   Future<void> _generateBloc() async {
     final files = {
-      'presentation/controllers/${config.featureName}_cubit.dart':
+      'presentation/controllers/cubits/${config.featureName}_cubit.dart':
           templates.cubit,
-      'presentation/controllers/${config.featureName}_state.dart':
-          templates.state,
+      'presentation/controllers/blocs/${config.featureName}_bloc/${config.featureName}_bloc.dart':
+          templates.dataBloc,
+      'presentation/controllers/blocs/${config.featureName}_bloc/${config.featureName}_event.dart':
+          templates.dataBlocEvent,
+      'presentation/controllers/blocs/${config.featureName}_bloc/${config.featureName}_state.dart':
+          templates.dataBlocState,
+      'presentation/controllers/blocs/${config.featureName}_action_bloc/${config.featureName}_action_bloc.dart':
+          templates.actionBloc,
+      'presentation/controllers/blocs/${config.featureName}_action_bloc/${config.featureName}_action_event.dart':
+          templates.actionBlocEvent,
+      'presentation/controllers/blocs/${config.featureName}_action_bloc/${config.featureName}_action_state.dart':
+          templates.actionBlocState,
       'presentation/controllers/${config.featureName}_bloc_provider.dart':
           templates.blocProvider,
-      'presentation/controllers/controllers.dart': templates.controllersBarrel,
+      'presentation/controllers/controller_index.dart':
+          templates.controllersBarrel,
     };
 
     for (final entry in files.entries) {
@@ -160,10 +173,8 @@ class FeatureGenerator {
     final files = {
       'presentation/screens/${config.featureName}_screen.dart':
           templates.screen,
-      'presentation/widgets/${config.featureName}_widget.dart':
-          templates.widget,
-      'presentation/screens/screens.dart': templates.screensBarrel,
-      'presentation/widgets/widgets.dart': templates.widgetsBarrel,
+      'presentation/screens/${config.featureName}screens_index.dart':
+          templates.screensBarrel,
       'presentation/presentation.dart': templates.presentationBarrel,
     };
 

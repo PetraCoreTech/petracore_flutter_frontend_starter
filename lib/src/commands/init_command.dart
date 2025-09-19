@@ -63,9 +63,21 @@ class InitCommand extends BaseCommand {
     final projectPath = path.join(Directory.current.path, projectName);
     final projectDir = Directory(projectPath);
 
-    if (projectDir.existsSync() && results['force'] != true) {
-      Logger.error('Directory $projectName already exists. Use --force to overwrite.');
-      exit(1);
+    if (projectDir.existsSync()) {
+      if (results['force'] != true) {
+        Logger.error('Directory $projectName already exists. Use --force to overwrite.');
+        exit(1);
+      } else {
+        Logger.warning('Directory $projectName exists. Cleaning up for fresh Flutter project creation...');
+        // Delete the existing directory to ensure clean flutter create
+        try {
+          await projectDir.delete(recursive: true);
+          Logger.verbose('Deleted existing directory');
+        } catch (e) {
+          Logger.error('Failed to delete existing directory: $e');
+          exit(1);
+        }
+      }
     }
 
     Logger.header('🏗️  Creating PetraCore Flutter Project: $projectName');
@@ -87,10 +99,8 @@ class InitCommand extends BaseCommand {
       Logger.info('');
       Logger.info('Next steps:');
       Logger.info('  cd $projectName');
-      Logger.info('  flutter pub get');
-      
-      
-      
+      Logger.info('  flutter pub get  # Get updated dependencies');
+      Logger.info('  flutter packages pub run build_runner build  # Generate code for models');
       Logger.info('  flutter run');
       
     } catch (e) {
