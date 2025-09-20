@@ -6,7 +6,7 @@ class Create${config.pascalCase}Dto {
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    return data;
+    return json;
   }
 }
 ''';

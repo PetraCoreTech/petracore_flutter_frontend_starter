@@ -17,8 +17,6 @@ class FeatureTemplates {
   String get createDto => createDtoTemplate(config);
   String get updateDto => updateDtoTemplate(config);
   String get params => paramsTemplate(config);
-  String get dtoBarrel => dtoBarrelTemplate(config);
-  String get remoteBarrel => remoteBarrelTemplate(config);
   String get repository => repositoryTemplate(config);
   String get service => serviceTemplate(projectConfig, config);
   String get repositoriesBarrel => repositoriesBarrelTemplate(config);

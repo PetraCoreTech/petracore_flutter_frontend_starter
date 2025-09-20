@@ -2,7 +2,6 @@ import 'package:petracore_flutter_frontend_starter/src/generators/feature_genera
 
 String cubitTemplate(FeatureConfig config) => '''
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:${config.projectConfig.projectName}/core/core.dart';
 import 'package:${config.projectConfig.projectName}/features/${config.featureName}/${config.featureName}_index.dart';
 import 'package:${config.projectConfig.projectName}/features/shared/shared_index.dart';
 
@@ -18,12 +17,12 @@ class ${config.pascalCase}Cubit extends Cubit<${config.pascalCase}?> with Hydrat
   void reset() => emit(null);
 
   @override
-  Journal? fromJson(Map<String, dynamic> json) =>
+  ${config.pascalCase}? fromJson(Map<String, dynamic> json) =>
       ${config.pascalCase}.maybeFromJson(json[KeyValues.value] as Json?);
 
   @override
   Map<String, dynamic>? toJson(${config.pascalCase}? state) {
-    final json = Json;
+    final json = Json();
     json[KeyValues.value] = state?.toJson();
     return json;
   }

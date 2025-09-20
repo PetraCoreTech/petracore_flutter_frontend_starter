@@ -2,9 +2,9 @@ import 'package:petracore_flutter_frontend_starter/src/generators/feature_genera
 
 String dataModelTemplate(FeatureConfig config) => '''
 import 'package:json_annotation/json_annotation.dart';
-import 'package:equatable/equatable.dart';
+import 'package:${config.projectConfig.projectName}/core/core.dart';
 
-part '${config.pascalCase}_model.g.dart';
+part '${config.featureName}_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class ${config.pascalCase} extends BaseModel {

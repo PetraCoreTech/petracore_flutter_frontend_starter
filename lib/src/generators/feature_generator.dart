@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/feature_templates.dart';
+import 'package:petracore_flutter_frontend_starter/src/utils/command_utils.dart';
 import 'package:recase/recase.dart';
 
 class FeatureConfig {
@@ -65,6 +66,18 @@ class FeatureGenerator {
     Logger.step('Generating presentation layer...');
     await _generatePresentationLayer();
 
+    await CommandUtils.runCommand(
+      'dart',
+      ['run', 'build_runner', 'build', '--delete-conflicting-outputs'],
+      workingDirectory: config.projectConfig.projectPath,
+    );
+
+    await CommandUtils.runCommand(
+      'dart',
+      ['fix', '--apply'],
+      workingDirectory: config.projectConfig.projectPath,
+    );
+
     Logger.verbose('Feature generation completed');
   }
 
@@ -75,7 +88,7 @@ class FeatureGenerator {
       path.join(config.outputPath, 'data', 'models'),
       path.join(config.outputPath, 'data', 'remote'),
       path.join(config.outputPath, 'data', 'remote', 'dto'),
-      path.join(config.outputPath, 'data', 'use_cases'),
+      path.join(config.outputPath, 'data', 'domain'),
       path.join(config.outputPath, 'presentation'),
       path.join(config.outputPath, 'presentation', 'controllers'),
       path.join(config.outputPath, 'presentation', 'screens'),
@@ -112,13 +125,11 @@ class FeatureGenerator {
     final files = {
       'data/remote/${config.featureName}_service.dart': templates.service,
       'data/remote/${config.featureName}_repository.dart': templates.repository,
-      'data/remote/dto/create${config.featureName}_dto.dart':
+      'data/remote/dto/create_${config.featureName}_dto.dart':
           templates.createDto,
-      'data/remote/dto/update${config.featureName}_dto.dart':
+      'data/remote/dto/update_${config.featureName}_dto.dart':
           templates.updateDto,
       'data/remote/dto/${config.featureName}_params.dart': templates.params,
-      'data/remote/dto/dto.dart': templates.dtoBarrel,
-      'data/remote/remote.dart': templates.remoteBarrel,
     };
 
     for (final entry in files.entries) {
@@ -130,7 +141,7 @@ class FeatureGenerator {
 
   Future<void> _generateUseCases() async {
     final files = {
-      'data/domain/use_cases.dart': templates.useCases,
+      'data/domain/${config.featureName}_use_cases.dart': templates.useCases,
     };
 
     for (final entry in files.entries) {
@@ -144,11 +155,11 @@ class FeatureGenerator {
     final files = {
       'presentation/controllers/cubits/${config.featureName}_cubit.dart':
           templates.cubit,
-      'presentation/controllers/blocs/${config.featureName}_bloc/${config.featureName}_bloc.dart':
+      'presentation/controllers/blocs/multiple_${config.featureName}_bloc/multiple_${config.featureName}_bloc.dart':
           templates.dataBloc,
-      'presentation/controllers/blocs/${config.featureName}_bloc/${config.featureName}_event.dart':
+      'presentation/controllers/blocs/multiple_${config.featureName}_bloc/multiple_${config.featureName}_event.dart':
           templates.dataBlocEvent,
-      'presentation/controllers/blocs/${config.featureName}_bloc/${config.featureName}_state.dart':
+      'presentation/controllers/blocs/multiple_${config.featureName}_bloc/multiple_${config.featureName}_state.dart':
           templates.dataBlocState,
       'presentation/controllers/blocs/${config.featureName}_action_bloc/${config.featureName}_action_bloc.dart':
           templates.actionBloc,
@@ -158,7 +169,7 @@ class FeatureGenerator {
           templates.actionBlocState,
       'presentation/controllers/${config.featureName}_bloc_provider.dart':
           templates.blocProvider,
-      'presentation/controllers/controller_index.dart':
+      'presentation/controllers/${config.featureName}_controller_index.dart':
           templates.controllersBarrel,
     };
 
@@ -173,7 +184,7 @@ class FeatureGenerator {
     final files = {
       'presentation/screens/${config.featureName}_screen.dart':
           templates.screen,
-      'presentation/screens/${config.featureName}screens_index.dart':
+      'presentation/screens/${config.featureName}_screens_index.dart':
           templates.screensBarrel,
       'presentation/presentation.dart': templates.presentationBarrel,
     };

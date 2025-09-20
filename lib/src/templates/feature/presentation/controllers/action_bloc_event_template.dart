@@ -16,6 +16,7 @@ final class Delete${config.pascalCase} extends ${config.pascalCase}ActionEvent {
 }
 
 final class Update${config.pascalCase} extends ${config.pascalCase}ActionEvent {
-  Update${config.pascalCase}();
+  Update${config.pascalCase}({required this.id});
+  final String id;
 }
 ''';

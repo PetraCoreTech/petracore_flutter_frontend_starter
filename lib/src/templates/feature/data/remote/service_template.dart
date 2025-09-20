@@ -7,7 +7,7 @@ import 'package:${project.projectName}/features/${config.featureName}/${config.f
 
 final ${config.camelCase}Service = ${config.pascalCase}Service(apiClient);
 
-abstract class ${config.pascalCase}Interface {
+abstract class ${config.pascalCase}ServiceInterface {
   Future<Response<dynamic>> create${config.pascalCase}(Create${config.pascalCase}Dto data);
 
   Future<Response<dynamic>> delete${config.pascalCase}(String id);
@@ -68,4 +68,5 @@ class ${config.pascalCase}Service implements ${config.pascalCase}ServiceInterfac
     );
     return response;
   }
+}  
 ''';

@@ -47,11 +47,12 @@ class ${config.pascalCase}ActionBloc extends Bloc<${config.pascalCase}ActionEven
     Emitter<${config.pascalCase}ActionState> emit,
   ) async {
     emit(${config.pascalCase}ActionLoading());
-    final params = Update${config.pascalCase}Dto();
+    final params = Update${config.pascalCase}Dto(id: event.id);
     final res = await update${config.pascalCase}UseCase.call(params);
     res.fold(
       (l) => emit(${config.pascalCase}Updated(l)),
       (r) => emit(${config.pascalCase}ActionError(r)),
     );
   }
+}  
 ''';

@@ -30,9 +30,7 @@ export 'auth/presentation/screens/welcome_screen_template.dart';
 export 'feature/data/models/data_model_template.dart';
 export 'feature/data/models/models_barrel_template.dart';
 export 'feature/data/remote/create_dto_template.dart';
-export 'feature/data/remote/dto_barrel_template.dart';
 export 'feature/data/remote/params_template.dart';
-export 'feature/data/remote/remote_barrel_template.dart';
 export 'feature/data/remote/repositories_barrel_template.dart';
 export 'feature/data/remote/repository_template.dart';
 export 'feature/data/remote/screen_template.dart';
@@ -117,12 +115,13 @@ export 'project/components/states/info_display_template.dart';
 export 'project/components/states/loading_indicator_template.dart';
 export 'project/components/states/loading_overlay_v1_template.dart';
 export 'project/components/states/loading_shimmer_template.dart';
-export 'project/core/core_barrel_template.dart';
 
 /// Api Client templates
+export 'project/core/core_barrel_template.dart';
 export 'project/dart_define_docs_template.dart';
 export 'project/data/api_client/api_client_index_template.dart';
 export 'project/data/api_client/api_client_template.dart';
+export 'project/data/api_client/api_error_template.dart';
 export 'project/data/api_client/api_interceptor_template.dart';
 export 'project/data/api_client/base_model_template.dart';
 export 'project/data/api_client/error_response_template.dart';

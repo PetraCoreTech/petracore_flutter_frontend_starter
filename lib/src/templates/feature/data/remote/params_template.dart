@@ -6,7 +6,7 @@ class ${config.pascalCase}Params {
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    return data;
+    return json;
   }
 }
 ''';
