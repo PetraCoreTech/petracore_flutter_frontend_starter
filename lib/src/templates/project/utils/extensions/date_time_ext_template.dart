@@ -1,6 +1,7 @@
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
 
 String dateTimeExtTemplate(ProjectConfig config) => """
+import 'package:intl/intl.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 extension DateTimeExtensions on DateTime {

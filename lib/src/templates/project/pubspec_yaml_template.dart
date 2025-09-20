@@ -48,7 +48,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   
   # Utilities
-  intl: ^0.20.2
+  intl: ^0.19.0
   uuid: ^4.3.3
   path: ^1.8.2
   path_provider: ^2.1.4
