@@ -2,7 +2,6 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String routerTemplate(ProjectConfig config) => '''
 import 'package:${config.packageName}/core/core.dart';
-import 'package:${config.packageName}/navigation/navigation_index.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 

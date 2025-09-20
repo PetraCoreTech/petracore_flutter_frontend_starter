@@ -1,10 +1,8 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String sliverHelperTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
 import 'package:${config.projectName}/core/core.dart';
 import 'package:${config.projectName}/app/app.dart';
-import 'package:${config.projectName}/core/components/app_bar/persistent_header_v1.dart';
 
 class SliverHelper {
   SliverHelper(this.context);

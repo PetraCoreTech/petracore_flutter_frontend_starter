@@ -1,4 +1,8 @@
-String errorResponseTemplate() => '''
+import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
+
+String errorResponseTemplate(ProjectConfig config) => '''
+import 'package:${config.projectName}/core/core.dart';
+
 class ErrorResponse implements Exception {
   ErrorResponse({this.message, this.status});
 

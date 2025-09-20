@@ -162,6 +162,4 @@ class _AppButtonWithIcon extends AppButton {
     );
   }
 }
-
-enum IconAlignment { start, end }
 ''';

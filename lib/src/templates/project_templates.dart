@@ -43,20 +43,21 @@ class ProjectTemplates {
 
   /// Core/Data
   String get dataIndex => dataIndexTemplate();
-  String get domainUseCase => domainUseCaseTemplate();
+  String get domainUseCase => domainUseCaseTemplate(config);
   String get localAuthData => localAuthDataTemplate();
 
   /// Core/Data/Enums
   String get requestMethod => requestMethodTemplate();
 
   /// Core/Data/Models
-  String get errorResponse => errorResponseTemplate();
+  String get errorResponse => errorResponseTemplate(config);
   String get successResponse => successResponseTemplate();
   String get baseModel => baseModelTemplate();
 
   /// Core/Data/Services
   String get apiClientIndex => apiClientIndexTemplate();
   String get apiClient => apiClientTemplate(config);
+  String get apiError => apiErrorTemplate(config);
   String get apiInterceptor => apiInterceptorTemplate(config);
   String get interceptorStrings => interceptorStringsTemplate();
 

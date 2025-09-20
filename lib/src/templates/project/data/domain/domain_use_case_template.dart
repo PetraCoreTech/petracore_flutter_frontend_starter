@@ -1,15 +1,19 @@
+import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
 
-String domainUseCaseTemplate() => '''
+String domainUseCaseTemplate(ProjectConfig config) => '''
+import 'package:${config.projectName}/core/core.dart';
 import 'package:dartz/dartz.dart';
 
 /// Base class for all use cases
 abstract class UseCase<Type, Params> {
-  Future<Either<String, Type>> call(Params params);
+  Future<Either<Type, ErrorResponse>> call(Params params);
+  
+  Stream<Type> stream(Params params) async* {}
 }
 
 /// Use case with no parameters
 abstract class NoParamsUseCase<Type> {
-  Future<Either<String, Type>> call();
+  Future<Either<Type, NoParams>> call();
 }
 
 /// Parameters base class

@@ -5,7 +5,7 @@ class AppButtonStyle {
   AppButtonStyle({
     required this.type,
     required this.padding,
-    this.primaryColor,w
+    this.primaryColor,
     this.secondaryColor,
     this.errorColor,
     this.textColor,

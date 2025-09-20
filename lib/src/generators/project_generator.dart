@@ -225,6 +225,14 @@ class ProjectGenerator {
       );
 
       Logger.verbose('Updated pubspec.yaml with PetraCore dependencies');
+
+      Logger.verbose('Running flutter pub get');
+
+      await CommandUtils.runFlutterCommand(
+        ['pub', 'get'],
+        workingDirectory: config.projectPath,
+        showOutput: true,
+      );
     } catch (e) {
       Logger.error('Failed to create Flutter project: $e');
       throw StateError('Flutter create command failed: $e');
@@ -279,6 +287,7 @@ class ProjectGenerator {
       'lib/core/data/services/api_client/api_client.dart': templates.apiClient,
       'lib/core/data/services/api_client/api_interceptor.dart':
           templates.apiInterceptor,
+      'lib/core/data/services/api_client/api_error.dart': templates.apiError,
       'lib/core/data/services/api_client/interceptor_strings.dart':
           templates.interceptorStrings,
 
