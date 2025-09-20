@@ -308,25 +308,28 @@ class ProjectGenerator {
 
       /// Core/Components/AppBar
       'lib/core/components/app_bars/app_bar_v1.dart': templates.appBarV1,
+      'lib/core/components/app_bars/persistent_header_v1.dart':
+          templates.persistentHeaderV1,
       'lib/core/components/app_bars/tab_bar_v1.dart': templates.tabBarV1,
 
       /// Core/Components/Buttons
-      'lib/core/components/buttons/app_button.dart': templates.appButton,
-      'lib/core/components/buttons/app_button_style.dart':
+      'lib/core/components/buttons/app_button/app_button.dart':
+          templates.appButton,
+      'lib/core/components/buttons/app_button/app_button_style.dart':
           templates.appButtonStyle,
-      'lib/core/components/buttons/app_button_type.dart':
+      'lib/core/components/buttons/app_button/app_button_type.dart':
           templates.appButtonType,
-      'lib/core/components/buttons/app_outline_button.dart':
+      'lib/core/components/buttons/app_outline_button/app_outline_button.dart':
           templates.appOutlineButton,
-      'lib/core/components/buttons/app_outline_button_style.dart':
+      'lib/core/components/buttons/app_outline_button/app_outline_button_style.dart':
           templates.appOutlineButtonStyle,
-      'lib/core/components/buttons/app_outline_button_type.dart':
+      'lib/core/components/buttons/app_outline_button/app_outline_button_type.dart':
           templates.appOutlineButtonType,
-      'lib/core/components/buttons/app_text_button.dart':
+      'lib/core/components/buttons/app_text_button/app_text_button.dart':
           templates.appTextButton,
-      'lib/core/components/buttons/app_text_button_style.dart':
+      'lib/core/components/buttons/app_text_button/app_text_button_style.dart':
           templates.appTextButtonStyle,
-      'lib/core/components/buttons/app_text_button_type.dart':
+      'lib/core/components/buttons/app_text_button/app_text_button_type.dart':
           templates.appTextButtonType,
 
       /// Core/Components/Custom
@@ -456,7 +459,7 @@ class ProjectGenerator {
       'lib/features/shared/presentation/controllers/key_value.dart':
           templates.keyValue,
       'lib/features/shared/data/type_def.dart': templates.typeDef,
-      'lib/features/shared/data/shared_index.dart': templates.sharedIndex,
+      'lib/features/shared/shared_index.dart': templates.sharedIndex,
     };
 
     for (final entry in files.entries) {

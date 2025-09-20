@@ -34,9 +34,9 @@ class ProjectTemplates {
   String get themeColorToken => themeColorTokenTemplate();
   String get themeTextStyleToken => themeTextStyleTokenTemplate();
   String get themeRadiusToken => themeRadiusTokenTemplate();
-  String get baseTheme => baseThemeTemplate();
-  String get lightTheme => lightThemeTemplate();
-  String get darkTheme => darkThemeTemplate();
+  String get baseTheme => baseThemeTemplate(config);
+  String get lightTheme => lightThemeTemplate(config);
+  String get darkTheme => darkThemeTemplate(config);
 
   /// Core
   String get coreBarrel => coreBarrelTemplate(config);
@@ -80,9 +80,9 @@ class ProjectTemplates {
   String get componentsIndex => componentsIndexTemplate(config);
 
   /// Core/Component/AppBar
-  String get appBarV1 => appbarv1Template(config);
+  String get appBarV1 => appBarV1Template(config);
   String get persistentHeaderV1 => persistentHeaderV1Template(config);
-  String get tabBarV1 => tabbarv1Template(config);
+  String get tabBarV1 => tabBarV1Template(config);
 
   /// Core/Component/Buttons
   String get appButton => appButtonTemplate(config);
