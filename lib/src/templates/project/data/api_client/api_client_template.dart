@@ -3,12 +3,9 @@ import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_st
 String apiClientTemplate(ProjectConfig config) => '''
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:${config.projectName}/core/core.dart';
+import 'package:${config.projectName}/core/data/services/api_client/api_client_index.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'auth_data_source.dart';
-import 'api_interceptor.dart';
-import 'request_method.dart';
-
-import 'package:${config.projectName}/core/utils/env_config.dart';
 
 typedef Json = Map<String, dynamic>;
 
@@ -27,18 +24,20 @@ class ApiClient {
   ApiClient(this.dio) {
     if (kDebugMode) {
       dio.interceptors
-        ..add(PrettyDioLogger(
-          requestBody: true,
-          requestHeader: true,
-          responseHeader: true,
-          responseBody: true,
-          error: true,
-          compact: true,
-          maxWidth: 90,
-        ))
-        ..add(ApiInterceptor(authDataSource));
+        ..add(
+          PrettyDioLogger(
+            requestBody: true,
+            requestHeader: true,
+            responseHeader: true,
+            responseBody: true,
+            error: true,
+            compact: true,
+            maxWidth: 90,
+          ),
+        )
+        ..add(ApiInterceptor(localAuthData));
     } else {
-      dio.interceptors.add(ApiInterceptor(authDataSource));
+      dio.interceptors.add(ApiInterceptor(localAuthData));
     }
   }
 
@@ -50,7 +49,7 @@ class ApiClient {
   final _interString = InterceptorString();
 
   /// Make an HTTP request with automatic token handling
-  /// 
+  ///
   /// [path] - The API endpoint path
   /// [method] - HTTP method (GET, POST, PUT, PATCH, DELETE)
   /// [queryParams] - Query parameters for the request

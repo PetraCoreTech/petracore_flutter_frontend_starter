@@ -31,7 +31,7 @@ class LocalAuthData {
   }
 
   /// Clear all stored data
-  void clearStorage() => _secureStorage.deleteAll();
+  Future<void> clearStorage() async => await _secureStorage.deleteAll();
 
   // Storage keys
   static const String _tokenKey = 'access_token';

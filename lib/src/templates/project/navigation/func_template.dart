@@ -3,14 +3,12 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 String funcTemplate(ProjectConfig config) => """
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:${config.projectName}/app/app.dart';
-import 'package:${config.projectName}/app/app/string_values/content_strings.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 FutureOr<bool> goHome(BuildContext context) {
-  context.goNamed(NavigatorRoutes.journal.name);
+  context.goNamed('<Home>');
   return false;
 }
 
@@ -32,4 +30,5 @@ FutureOr<bool?> showExitDialog(BuildContext context) {
     ),
   );
 }
+
 """;

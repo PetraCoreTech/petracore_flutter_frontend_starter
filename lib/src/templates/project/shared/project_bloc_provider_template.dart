@@ -1,11 +1,8 @@
 String projectBlocProviderTemplate() => '''
-import 'package:provider/single_child_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-final List<SingleChildWidget> blocProviders = [
-  // Add your BLoC providers here
-  // Example:
-  // BlocProvider<AuthCubit>(
-  //   create: (_) => AuthCubit(),
-  // ),
+final List<BlocProvider> blocProviders = [
+  // Add your feature BLoC providers here
+  // Example: ...authBlocProvider
 ];
 ''';

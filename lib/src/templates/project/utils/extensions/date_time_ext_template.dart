@@ -1,8 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
 
 String dateTimeExtTemplate(ProjectConfig config) => """
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 extension DateTimeExtensions on DateTime {
@@ -244,12 +242,11 @@ extension DateTimeExtensions on DateTime {
   }
 
   DateTime forwardInfinity() {
-    return this.add(const Duration(days: 365 * 100000));
+    return add(const Duration(days: 365 * 100000));
   }
 
   DateTime backwardInfinity() {
-    return this.subtract(const Duration(days: 365 * 100000));
+    return subtract(const Duration(days: 365 * 100000));
   }
 }
-
 """;

@@ -3,7 +3,9 @@ import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_st
 String apiInterceptorTemplate(ProjectConfig config) => '''
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:${config.projectName}/core/core.dart';
+import 'package:${config.projectName}/core/data/data_index.dart';
 
 part 'interceptor_strings.dart';
 
@@ -81,7 +83,7 @@ class ApiInterceptor extends Interceptor {
       'refresh_token': refreshToken,
     };
 
-    final response = await networkService.makeRequest(
+    final response = await apiClient.makeRequest(
       '/auth/refresh',
       RequestMethod.post,
       data: requestBody,
@@ -103,7 +105,7 @@ class ApiInterceptor extends Interceptor {
   Future<Response<dynamic>> _retryRequest(RequestOptions requestOptions) async {
     final method = requestOptions.method.toRequestMethod();
     
-    return networkService.makeRequest(
+    return apiClient.makeRequest(
       requestOptions.path,
       method,
       reqToken: true,

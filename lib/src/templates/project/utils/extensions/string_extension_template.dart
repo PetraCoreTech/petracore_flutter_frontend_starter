@@ -10,7 +10,7 @@ extension StringExtensions on String {
     const symbol = '@';
 
     const emailRegExpString =
-        '''^((\$usernamePrefix+\$usernameSuffix|\$quotedString)\$symbol(\$ipAddress|(\$domainName+\$topDomainName))\$''';
+        '''^((\$usernamePrefix+\$usernameSuffix|\$quotedString)\$symbol(\$ipAddress|(\$domainName+\$topDomainName))''';
     final emailRegExp = RegExp(emailRegExpString);
     return emailRegExp.hasMatch(this);
   }
@@ -153,7 +153,7 @@ extension StringExtensions on String {
   /// Masks email address (shows first 2 chars and domain)
   /// Example: john.doe@example.com -> jo***@example.com
   String maskEmail() {
-    if (!isValidEmail()) return this;
+    if (!isEmail()) return this;
     
     final parts = split('@');
     if (parts.length != 2) return this;

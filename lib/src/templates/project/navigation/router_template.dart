@@ -13,7 +13,7 @@ final router = GoRouter(
     GoRoute(
       path: '/',
       name: 'splash',
-      builder: (context, state) => const PlaceHolder(),
+      builder: (context, state) => const Placeholder(),
     ),
   ],
 );

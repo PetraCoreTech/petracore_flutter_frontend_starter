@@ -5,7 +5,7 @@ class SuccessResponse {
     this.message,
   });
 
-  SuccessResponse.fromJson(Json json) {
+  SuccessResponse.fromJson(Map<String, dynamic> json) {
     success = json['success'] as bool?;
     message = json['message'] as String?;
   }
