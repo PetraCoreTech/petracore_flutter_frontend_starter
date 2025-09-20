@@ -1,8 +1,9 @@
-String lightThemeTemplate() => '''
-import 'package:flutter/material.dart';
-import '../color_values.dart';
-import '../design_tokens/theme_token.dart';
-import 'base_theme.dart';
+import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
+
+String lightThemeTemplate(ProjectConfig config) => '''
+import 'package:${config.projectName}/app/theme/color_values.dart';
+import 'package:${config.projectName}/app/theme/design_tokens/theme_token.dart';
+import 'package:${config.projectName}/app/theme/themes/base_theme.dart';
 
 /// Contains color mapping when device is in light theme mode
 final lightTheme = baseTheme.copyWith(
@@ -12,7 +13,7 @@ final lightTheme = baseTheme.copyWith(
     \$token.color.divider: AppColors.neutral100,
     \$token.color.dividerLight: AppColors.neutral100,
     \$token.color.error: AppColors.error,
-    \$token.color.errorBg: AppColors.error.withOpacity(0.08),
+    \$token.color.errorBg: AppColors.error.withValues(alpha: 0.08),
     \$token.color.errorBorder: AppColors.error,
     \$token.color.errorText: AppColors.error,
     \$token.color.fill: AppColors.white,
@@ -58,7 +59,7 @@ final lightTheme = baseTheme.copyWith(
     \$token.color.toastSuccess: AppColors.primaryDark,
     \$token.color.unSelectedNavItem: AppColors.neutral500,
     \$token.color.warning: AppColors.warning,
-    \$token.color.warningBg: AppColors.warning.withOpacity(0.08),
+    \$token.color.warningBg: AppColors.warning.withValues(alpha: 0.08),
   },
 );
 ''';

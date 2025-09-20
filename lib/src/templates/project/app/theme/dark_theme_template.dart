@@ -1,7 +1,9 @@
-String darkThemeTemplate() => '''
+import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
+
+String darkThemeTemplate(ProjectConfig config) => '''
 import 'package:flutter/material.dart';
-import '../design_tokens/theme_token.dart';
-import 'base_theme.dart';
+import 'package:${config.projectName}/app/theme/design_tokens/theme_token.dart';
+import 'package:${config.projectName}/app/theme/themes/base_theme.dart';
 
 /// Contains color mapping when device is in dark theme mode
 final darkTheme = baseTheme.copyWith(

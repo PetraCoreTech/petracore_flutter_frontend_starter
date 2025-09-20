@@ -2,7 +2,7 @@ String themeTextStyleTokenTemplate() => '''
 part of 'theme_token.dart';
 
 class ThemeTextStyleToken {
-
+  const ThemeTextStyleToken();
   /// Heading 1
   TextStyleToken get heading1 => const TextStyleToken('heading1');
 

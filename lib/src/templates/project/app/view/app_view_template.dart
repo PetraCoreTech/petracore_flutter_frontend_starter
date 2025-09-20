@@ -1,20 +1,18 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String appViewTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
 import 'package:${config.packageName}/app/app.dart';
 import 'package:${config.packageName}/core/core.dart';
 import 'package:${config.packageName}/features/shared/presentation/controllers/bloc_provider.dart';
-import 'package:${config.packageName}/navigation/router.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtil.builder(
-      designSize: AppConstants.designSize,
-      builder: (context, child) {
+    return Builder(
+      builder: (context) {
+        ScreenUtil.init(context, designSize: AppConstants.designSize);
         return MixTheme(
           data: lightTheme,
           child: MultiBlocProvider(
@@ -26,6 +24,7 @@ class App extends StatelessWidget {
               theme: ThemeData(
                 useMaterial3: true,
                 fontFamily: AppConstants.fontFamily,
+                colorScheme: ColorScheme.fromSeed(seedColor: colors.primary.resolve(context)),
               ),
             ),
           ),

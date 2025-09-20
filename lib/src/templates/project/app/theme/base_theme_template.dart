@@ -1,11 +1,11 @@
-String baseThemeTemplate() => '''
-import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
-import '../design_tokens/theme_token.dart';
+import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
 
-final defaultFont = TextStyle(
-  fontFamily: 'Times New Roman',
-);
+String baseThemeTemplate(ProjectConfig config) => '''
+import 'package:flutter/material.dart';
+import 'package:mix/mix.dart' hide \$token;
+import 'package:${config.projectName}/app/theme/design_tokens/theme_token.dart';
+
+const defaultFont = TextStyle(fontFamily: 'Times New Roman');
 
 /// Base theme: this houses all the text theme and Misc. styles
 final baseTheme = MixThemeData(

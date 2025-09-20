@@ -1,4 +1,4 @@
-import '../../generators/project_generator.dart';
+import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String pubspecYamlTemplate(ProjectConfig config) => '''
 name: ${config.packageName}
@@ -36,6 +36,8 @@ dependencies:
   lottie: ^2.2.0
   mix: ^1.4.5
   flutter_styled_toast: 2.2.1
+  intl_phone_field: ^3.2.0
+  loading_overlay: 0.3.0
 
   # Network & API
   dio: ^5.3.3
@@ -49,6 +51,7 @@ dependencies:
   intl: ^0.20.2
   uuid: ^4.3.3
   path: ^1.8.2
+  path_provider: ^2.1.4
   
   # Code Generation
   json_annotation: ^4.8.0
