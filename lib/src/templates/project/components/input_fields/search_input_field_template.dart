@@ -1,7 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String searchInputFieldTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
 import 'package:${config.projectName}/core/core.dart';
 import 'package:${config.projectName}/app/app.dart';
 
@@ -46,8 +45,8 @@ class SearchInputField<T> extends HookWidget {
           return FormField(
             builder: (state) => BaseTextField(
               readOnly: true,
-              label: label,
-              placeHolder: placeHolder,
+              labelText: label,
+              hintText: placeHolder,
               labelStyle: labelStyle,
               style: style,
               validator: required
@@ -67,7 +66,8 @@ class SearchInputField<T> extends HookWidget {
               },
             ),
           );
-        });
+        },
+      );
   }
 
   /// Update form field state [FormFieldFrame.onTap];
@@ -76,7 +76,7 @@ class SearchInputField<T> extends HookWidget {
     BuildContext context, {
     ValueChanged<T>? onChanged,
   }) {
-    return DialogHelper(context).showBottomSheet(
+    return DialogHelper<Widget?>(context).showBottomSheet(
       child: BottomSheetSelectContent(
         items: items,
         search: search,

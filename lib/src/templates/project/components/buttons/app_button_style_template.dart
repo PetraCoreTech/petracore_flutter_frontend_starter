@@ -49,7 +49,7 @@ class AppButtonStyle {
     final color = textColor ?? textStyle?.color;
     
     return Style(
-      \$text.style.fontFamily('Inter'), // You can customize this
+      \$text.style.fontFamily(AppConstants.fontFamily),
       AppButtonType.primary(
         \$text.style(
           color: color ?? \$token.color.onPrimary(),

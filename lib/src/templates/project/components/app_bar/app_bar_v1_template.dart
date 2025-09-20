@@ -1,153 +1,94 @@
-import '../../../../generators/project_generator.dart';
+import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
-String appbarv1Template(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
-import '../../theme/design_tokens/theme_token.dart';
+String appBarV1Template(ProjectConfig config) => '''
+import 'package:${config.projectName}/app/app.dart';
+import 'package:${config.projectName}/core/core.dart';
 
-/// Custom app bar with theming support for ${config.projectName}
-/// 
-/// A reusable app bar component that integrates with the app's design system
-/// and provides consistent styling across the application.
 class AppBarV1 extends StatelessWidget implements PreferredSizeWidget {
-  /// Title text to display in the app bar
-  final String? title;
-  
-  /// Custom title widget (overrides [title] if provided)
-  final Widget? titleWidget;
-  
-  /// Leading widget (usually back button or menu icon)
-  final Widget? leading;
-  
-  /// Action widgets to display on the right side
-  final List<Widget>? actions;
-  
-  /// Whether to show the back button automatically
-  final bool automaticallyImplyLeading;
-  
-  /// Background color override
-  final Color? backgroundColor;
-  
-  /// Foreground color override (affects text and icons)
-  final Color? foregroundColor;
-  
-  /// Elevation of the app bar
-  final double elevation;
-  
-  /// Whether to center the title
-  final bool centerTitle;
-  
-  /// Bottom widget (like TabBar)
-  final PreferredSizeWidget? bottom;
-  
-  /// Custom height for the app bar
-  final double? toolbarHeight;
-
-  /// Constructor
   const AppBarV1({
     super.key,
     this.title,
-    this.titleWidget,
-    this.leading,
-    this.actions,
-    this.automaticallyImplyLeading = true,
-    this.backgroundColor,
-    this.foregroundColor,
-    this.elevation = 0,
-    this.centerTitle = true,
-    this.bottom,
+    this.onBackPressed,
+    this.hasLeading = true,
+    this.centerTitle = false,
+    this.leadingWidth,
     this.toolbarHeight,
+    this.actions,
+    this.leading,
+    this.iconData,
+    this.shape,
+    this.titleAlt,
+    this.titleStyle,
+    this.backgroundColor,
+    this.bottom,
+    this.padding,
   });
+  final double? leadingWidth;
+  final double? toolbarHeight;
+  final bool hasLeading;
+  final bool centerTitle;
+  final String? title;
+  final IconData? iconData;
+  final Widget? leading;
+  final Widget? titleAlt;
+  final Color? backgroundColor;
+  final TextStyle? titleStyle;
+  final ShapeBorder? shape;
+  final List<Widget>? actions;
+  final VoidCallback? onBackPressed;
+  final PreferredSizeWidget? bottom;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
     final colors = \$token.color;
-    final textStyles = \$token.textStyle;
-    
-    return AppBar(
-      title: titleWidget ?? (title != null ? Text(
-        title!,
-        style: textStyles.titleMedium?.copyWith(
-          color: foregroundColor ?? colors.onPrimary,
-          fontWeight: FontWeight.w600,
-        ),
-      ) : null),
-      leading: leading,
-      actions: actions,
-      automaticallyImplyLeading: automaticallyImplyLeading,
-      backgroundColor: backgroundColor ?? colors.primary,
-      foregroundColor: foregroundColor ?? colors.onPrimary,
-      elevation: elevation,
-      centerTitle: centerTitle,
-      bottom: bottom,
-      toolbarHeight: toolbarHeight,
-      iconTheme: IconThemeData(
-        color: foregroundColor ?? colors.onPrimary,
-        size: 24,
-      ),
-      actionsIconTheme: IconThemeData(
-        color: foregroundColor ?? colors.onPrimary,
-        size: 24,
+    final surface = backgroundColor ?? colors.surface.resolve(context);
+    return Padding(
+      padding: padding ?? EdgeInsets.zero,
+      child: AppBar(
+        backgroundColor: surface,
+        surfaceTintColor: surface,
+        toolbarHeight: toolbarHeight,
+        leadingWidth: hasLeading ? (leadingWidth ?? 48) : 0,
+        titleSpacing: 0,
+        shape: shape,
+        leading: hasLeading
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (hasLeading)
+                    leading ??
+                        IconButton(
+                          onPressed: onBackPressed ?? Navigator.of(context).pop,
+                          icon: Icon(
+                            iconData ?? Icons.arrow_back_ios,
+                            size: 24,
+                            color: colors.onSurfaceBlack.resolve(context),
+                          ),
+                        ),
+                ],
+              )
+            : const SizedBox.shrink(),
+        title: title != null
+            ? Text(
+                title!,
+                style: titleStyle ??
+                    \$token.textStyle.label1.resolve(context).copyWith(
+                          color: \$token.color.onSurfaceBlack.resolve(context),
+                          fontWeight: FontWeight.w700,
+                          height: 1.5,
+                        ),
+              )
+            : titleAlt,
+        centerTitle: centerTitle,
+        bottom: bottom,
+        actions: actions ?? [const Gap(16)],
       ),
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(
-    (toolbarHeight ?? kToolbarHeight) + (bottom?.preferredSize.height ?? 0),
-  );
-}
-
-/// Transparent app bar variant
-class AppBarV1Transparent extends AppBarV1 {
-  const AppBarV1Transparent({
-    super.key,
-    super.title,
-    super.titleWidget,
-    super.leading,
-    super.actions,
-    super.automaticallyImplyLeading,
-    super.foregroundColor,
-    super.centerTitle,
-    super.bottom,
-    super.toolbarHeight,
-  }) : super(
-    backgroundColor: Colors.transparent,
-    elevation: 0,
-  );
-}
-
-/// Secondary themed app bar
-class AppBarV1Secondary extends AppBarV1 {
-  const AppBarV1Secondary({
-    super.key,
-    super.title,
-    super.titleWidget,
-    super.leading,
-    super.actions,
-    super.automaticallyImplyLeading,
-    super.centerTitle,
-    super.bottom,
-    super.toolbarHeight,
-    super.elevation,
-  });
-  
-  @override
-  Widget build(BuildContext context) {
-    final colors = \$token.color;
-    
-    return AppBarV1(
-      title: title,
-      titleWidget: titleWidget,
-      leading: leading,
-      actions: actions,
-      automaticallyImplyLeading: automaticallyImplyLeading,
-      backgroundColor: colors.surface,
-      foregroundColor: colors.onSurface,
-      elevation: elevation,
-      centerTitle: centerTitle,
-      bottom: bottom,
-      toolbarHeight: toolbarHeight,
-    );
-  }
+  Size get preferredSize => Size.fromHeight(toolbarHeight ?? kToolbarHeight);
 }
 ''';

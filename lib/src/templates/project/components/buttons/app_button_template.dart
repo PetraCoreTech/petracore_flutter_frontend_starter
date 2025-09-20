@@ -1,11 +1,9 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String appButtonTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mix/mix.dart';
-import 'package:gap/gap.dart';
-import 'package:${config.projectName}/app/theme/design_tokens/theme_token.dart';
+import 'package:${config.projectName}/app/app.dart';
+import 'package:${config.projectName}/core/core.dart';
 
 part 'app_button_style.dart';
 part 'app_button_type.dart';

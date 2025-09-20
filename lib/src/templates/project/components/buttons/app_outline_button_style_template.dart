@@ -61,7 +61,7 @@ class AppOutlineButtonStyle {
     final height = textStyle?.height ?? 1.5;
     final color = textColor ?? textStyle?.color;
     return Style(
-      \$text.style.fontFamily(LenaCore.instance.font),
+      \$text.style.fontFamily(AppConstants.fontFamily),
       AppOutlineButtonType.primary(
         \$text.style(
           color: color ?? \$token.color.primaryOutline(),

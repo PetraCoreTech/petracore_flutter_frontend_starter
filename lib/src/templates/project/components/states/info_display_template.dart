@@ -3,7 +3,6 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 String infoDisplayTemplate(ProjectConfig config) => '''
 import 'package:lottie/lottie.dart';
 import 'package:${config.projectName}/app/app.dart';
-import 'package:${config.projectName}/app/app/theme/color_values.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 /// Widget used for display of errors or info data loading a screen when no
@@ -72,7 +71,7 @@ class InfoDisplay extends StatelessWidget {
               style: titleStyle ??
                   \$token.textStyle.label2
                       .resolve(context)
-                      .copyWith(color: MhapyColors.black),
+                      .copyWith(color: Colors.black),
             ),
           if (subtitle != null || subtitleAlt != null) Gap(8.h),
           if (subtitle != null)

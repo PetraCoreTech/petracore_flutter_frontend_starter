@@ -1,7 +1,7 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String expansionTileV1Template(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
+import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class ExpansionTileV1 extends HookWidget {
@@ -39,7 +39,7 @@ class ExpansionTileV1 extends HookWidget {
                 ),
           ),
           if (!isExpanded.value) ...[
-            Gap(4.h),
+            const Gap(4),
             Text(
               subtitle,
               style: \$token.textStyle.paragraph4.resolve(context).copyWith(
@@ -54,7 +54,9 @@ class ExpansionTileV1 extends HookWidget {
       shape: _border(borderColor),
       collapsedShape: _border(borderColor),
       trailing: IconFrame(
-        iconData: isExpanded.value ? Iconsax.arrow_up_2 : Iconsax.arrow_down_1,
+        iconData: isExpanded.value
+            ? Icons.keyboard_arrow_up
+            : Icons.keyboard_arrow_down,
         padding: 8,
         size: 16,
         iconColor: colors.onSurfaceDark.resolve(context),

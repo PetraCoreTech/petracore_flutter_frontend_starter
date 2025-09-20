@@ -1,7 +1,7 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String scaffoldV1Template(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
+import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class ScaffoldV1 extends StatelessWidget {
@@ -49,8 +49,6 @@ class ScaffoldV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoadingOverlayV1(
-      logo: logo ?? LenaCore.instance.logoPath,
-      indicator: indicator,
       isLoading: isLoading ?? false,
       child: BaseScaffold(
         appBar: appBar,

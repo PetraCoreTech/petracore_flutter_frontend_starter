@@ -108,7 +108,7 @@ class DialogHelper<T> {
                 child: DividerV1(
                   width: 66,
                   height: 6,
-                  color: MhapyColors.blackLight,
+                  color: colors.border.resolve(context),
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),

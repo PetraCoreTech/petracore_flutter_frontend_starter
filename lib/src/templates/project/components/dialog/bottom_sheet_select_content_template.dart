@@ -3,9 +3,8 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 String bottomSheetSelectContentTemplate(ProjectConfig config) => '''
 // ignore_for_file: avoid_positional_boolean_parameters
 
-import 'package:flutter/material.dart';
-import 'package:${config.projectName}/lena_core.dart';
 import 'package:${config.projectName}/app/app.dart';
+import 'package:${config.projectName}/core/core.dart';
 
 class BottomSheetSelectContent<T> extends HookWidget {
   const BottomSheetSelectContent({
@@ -79,11 +78,7 @@ class BottomSheetSelectContent<T> extends HookWidget {
               showHighlighted: false,
               padding: itemPadding,
               highlightedValue: highlightedValue,
-              suffixIcon: CustomIcon(
-                icon: Assets.tickCircle,
-                height: 24,
-                color: primaryDark,
-              ),
+              suffixIcon: Icon(Icons.check, color: primaryDark),
               value: e.value,
               onHover: (value) {
                 highlightedValue.value = e.value;
@@ -121,7 +116,7 @@ class BottomSheetSelectContent<T> extends HookWidget {
                     },
                   ),
                 ),
-                Gap(8),
+                const Gap(8),
                 Flexible(child: itemsList),
               ],
             )
@@ -129,7 +124,6 @@ class BottomSheetSelectContent<T> extends HookWidget {
     );
   }
 }
-
 
 class SelectItemV2<T> extends StatelessWidget {
   const SelectItemV2({
@@ -173,7 +167,6 @@ class SelectItemV2<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = \$token.color;
     return ValueListenableBuilder(
       valueListenable: highlightedValue,
       builder: (context, highlight, _) {
@@ -252,11 +245,9 @@ class SelectItemV2<T> extends StatelessWidget {
   }
 }
 
-
 extension SearchInputExt<T> on List<InputItem<T>> {
   List<InputItem<T>> filteredByTitle(String query) {
-    return this
-        .where((e) => e.title.toLowerCase().contains(query.toLowerCase()))
+    return where((e) => e.title.toLowerCase().contains(query.toLowerCase()))
         .toList();
   }
 }

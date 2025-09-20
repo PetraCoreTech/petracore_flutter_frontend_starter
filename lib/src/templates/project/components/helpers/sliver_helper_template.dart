@@ -71,7 +71,7 @@ class SliverHelper {
               child: Text(
                 text,
                 style: label4.copyWith(
-                  color: LenaColors.neutral300,
+                  color: colors.onSurfaceLight.resolve(context),
                   fontWeight: FontWeight.w500,
                 ),
               ),

@@ -1,8 +1,7 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String listTileV1Template(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
-import 'package:${config.projectName}/core/components/components_index.dart';
+import 'package:${config.projectName}/core/core.dart';
 
 class ListTileV1 extends StatelessWidget {
   const ListTileV1({

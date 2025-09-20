@@ -1,8 +1,7 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String passwordStrengthCheckerTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class PasswordStrengthChecker extends StatelessWidget {

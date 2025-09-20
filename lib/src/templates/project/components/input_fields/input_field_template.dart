@@ -1,8 +1,8 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String inputFieldTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class InputField extends StatelessWidget {
@@ -78,7 +78,7 @@ class InputField extends StatelessWidget {
                   ),
         ),
         const Gap(4),
-        BaseTextFieldV2(
+        BaseTextField(
           hintText: hint,
           alignLabelWithHint: alignLabelWithHint,
           initialValue: initialValue,

@@ -1,8 +1,8 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String appOutlineButtonTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 part 'app_outline_button_style.dart';
@@ -86,7 +86,7 @@ class AppOutlineButton extends StatelessWidget {
       secondaryColor: secondaryColor,
       textColor: textColor,
       textStyle: textStyle,
-      padding: padding ?? context.buttonPadding(),
+      padding: padding ?? EdgeInsets.zero,
       radius: radius,
       height: height,
       width: width,
@@ -137,7 +137,7 @@ class _AppOutlineButtonWithIcon extends AppOutlineButton {
       errorColor: errorColor,
       textColor: textColor,
       textStyle: textStyle,
-      padding: padding ?? context.buttonPadding(),
+      padding: padding ?? EdgeInsets.zero,
       radius: radius,
       height: height,
       width: width,

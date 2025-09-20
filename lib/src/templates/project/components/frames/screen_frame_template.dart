@@ -57,8 +57,8 @@ class ScreenFrame extends StatelessWidget {
       persistentFooterButtons: persistentFooterButtons,
       drawer: drawer,
       endDrawer: endDrawer,
-      children: children,
       bottomSheet: bottomSheet,
+      children: children,
     );
   }
 

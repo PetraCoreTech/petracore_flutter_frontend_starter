@@ -86,7 +86,7 @@ class ToastV1 extends StatelessWidget {
             ),
             const Gap(16),
             DividerV1(
-              color: surface.withOpacity(0.12),
+              color: surface.withValues(alpha: 0.12),
               height: 32,
               width: 1,
             ),

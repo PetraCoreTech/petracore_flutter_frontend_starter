@@ -1,9 +1,12 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String phoneFieldTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:intl_phone_field/phone_number.dart';
+import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class PhoneField extends HookWidget {

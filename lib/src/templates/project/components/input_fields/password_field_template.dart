@@ -1,10 +1,8 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String passwordFieldTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:${config.projectName}/app/app/theme/color_values.dart';
-import 'package:${config.projectName}/core/components/components_index.dart';
+import 'package:${config.projectName}/app/app.dart';
+import 'package:${config.projectName}/core/core.dart';
 
 class PasswordField extends HookWidget {
   const PasswordField({
@@ -57,10 +55,9 @@ class PasswordField extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final obscureTxt = obscureText ?? useState<bool>(true);
-    final colors = \$token.color;
     return BaseTextField(
-      prefixIcon: const Padding(
-        padding: EdgeInsets.only(left: 16),
+      prefixIcon: Padding(
+        padding: const EdgeInsets.only(left: 16),
         child: Icon(
           Icons.lock_outline_rounded,
           color: colors.onSurface.resolve(context),
@@ -104,11 +101,10 @@ class _PasswordField extends PasswordField {
   @override
   Widget build(BuildContext context) {
     final obscureText = useState<bool>(true);
-    final colors = \$token.color;
-    return InputField(
+    return BaseTextField(
       borderColor: borderColor,
-      prefixIcon: const Padding(
-        padding: EdgeInsets.only(left: 16),
+      prefixIcon: Padding(
+        padding: const EdgeInsets.only(left: 16),
         child: Icon(
           Icons.lock_outline_rounded,
           color: colors.onSurface.resolve(context),

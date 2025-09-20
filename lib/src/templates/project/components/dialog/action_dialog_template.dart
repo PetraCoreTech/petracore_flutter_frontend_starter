@@ -1,10 +1,8 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String actionDialogTemplate(ProjectConfig config) => '''
-import 'package:flextras/flextras.dart';
-import 'package:flutter/material.dart';
 import 'package:${config.projectName}/app/app.dart';
-import 'package:${config.projectName}/core/components/components_index.dart';
+import 'package:${config.projectName}/core/core.dart';
 
 class ActionDialog extends StatelessWidget {
   const ActionDialog({
@@ -40,7 +38,6 @@ class ActionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final colors = \$token.colors;
     final paragraph2 = \$token.textStyle.paragraph2.resolve(context);
     final paragraph3 = \$token.textStyle.paragraph4.resolve(context);
     return SizedBox(
@@ -81,7 +78,6 @@ class ActionDialog extends StatelessWidget {
               else ...[
                 AppTextButton(
                   text: secondaryButtonText ?? ContentStrings.cancel,
-                  color: colors.onSurface.resolve(context),
                   height: 40,
                   padding: EdgeInsets.zero,
                   textStyle: secondaryTextStyle ??
@@ -98,7 +94,6 @@ class ActionDialog extends StatelessWidget {
               else
                 AppTextButton(
                   text: primaryButtonText ?? ContentStrings.confirm,
-                  textColor: colors.onSurface.resolve(context),
                   height: 40,
                   padding: EdgeInsets.zero,
                   textStyle: primaryTextStyle ??

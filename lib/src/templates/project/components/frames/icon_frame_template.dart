@@ -1,7 +1,7 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String iconFrameTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
+import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class IconFrame extends StatelessWidget {
@@ -39,7 +39,6 @@ class IconFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = \$token.color;
     final child = DecoratedBox(
       decoration: BoxDecoration(
         shape: shape ?? BoxShape.circle,
