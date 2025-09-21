@@ -1,6 +1,6 @@
 name: petracore_flutter_frontend_starter
 description: A powerful CLI tool and package for generating Flutter projects with clean architecture, Firebase integration, and best practices.
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/yourusername/petracore_flutter_frontend_starter
 repository: https://github.com/yourusername/petracore_flutter_frontend_starter
 issue_tracker: https://github.com/yourusername/petracore_flutter_frontend_starter/issues
