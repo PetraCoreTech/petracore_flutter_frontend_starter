@@ -75,10 +75,10 @@ test_feature() {
     fi
 }
 
-# Function to test auth flow generation
-test_auth() {
-    echo -e "${GREEN}🧪 Testing Auth Flow Generation (Basic)${NC}"
-    echo -e "${GREEN}=======================================${NC}"
+# Function to test auth flow generation (basic feature)
+test_auth_basic() {
+    echo -e "${GREEN}🧪 Testing Basic Auth Feature Generation${NC}"
+    echo -e "${GREEN}========================================${NC}"
     
     # Test basic auth feature (option 1)
     echo "1" | run_cli feature auth --verbose
@@ -89,6 +89,40 @@ test_auth() {
         echo -e "${RED}❌ Basic auth feature generation: FAILED${NC}"
         exit 1
     fi
+}
+
+# Function to test full auth flow generation
+test_auth_flow() {
+    echo -e "${GREEN}🧪 Testing Complete Auth Flow Generation${NC}"
+    echo -e "${GREEN}========================================${NC}"
+    
+    # Remove existing auth feature if it exists to test clean generation
+    if [ -d "lib/features/auth" ]; then
+        echo -e "${YELLOW}Removing existing auth feature for clean test...${NC}"
+        rm -rf "lib/features/auth"
+    fi
+    
+    # Test complete auth flow with non-interactive mode
+    run_cli auth --no-interactive --login --signup --email-verification --forgot-password --verbose
+    
+    # Check if auth flow was generated properly
+    if [ -d "lib/features/auth" ] && \
+       [ -f "lib/features/auth/data/models/user_model.dart" ] && \
+       [ -f "lib/features/auth/presentation/screens/login/login_screen.dart" ] && \
+       [ -f "lib/features/auth/presentation/screens/signup/signup_screen.dart" ] && \
+       [ -f "lib/features/auth/presentation/controllers/blocs/auth_bloc/auth_bloc.dart" ]; then
+        echo -e "${GREEN}✅ Complete auth flow generation: PASSED${NC}"
+    else
+        echo -e "${RED}❌ Complete auth flow generation: FAILED${NC}"
+        echo -e "${RED}Missing expected files in auth feature${NC}"
+        exit 1
+    fi
+}
+
+# Combined auth test function
+test_auth() {
+    test_auth_basic
+    test_auth_flow
 }
 
 # Function to run Flutter commands in generated project
@@ -127,11 +161,13 @@ interactive_mode() {
     echo "1. Full test suite (recommended)"
     echo "2. Test project initialization only"
     echo "3. Test feature generation only (requires existing project)"
-    echo "4. Test auth flow generation only (requires existing project)"
-    echo "5. Custom CLI command"
-    echo "6. Exit"
+    echo "4. Test basic auth feature only (requires existing project)"
+    echo "5. Test complete auth flow only (requires existing project)"
+    echo "6. Test both auth features (requires existing project)"
+    echo "7. Custom CLI command"
+    echo "8. Exit"
     echo ""
-    read -p "Enter your choice (1-6): " choice
+    read -p "Enter your choice (1-8): " choice
     
     case $choice in
         1)
@@ -154,14 +190,28 @@ interactive_mode() {
                 echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
                 exit 1
             }
-            test_auth
+            test_auth_basic
             ;;
         5)
+            cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+                echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
+                exit 1
+            }
+            test_auth_flow
+            ;;
+        6)
+            cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+                echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
+                exit 1
+            }
+            test_auth
+            ;;
+        7)
             echo -e "${YELLOW}Enter CLI command (without 'dart run bin/main.dart'):${NC}"
             read -p "> " custom_command
             run_cli $custom_command
             ;;
-        6)
+        8)
             echo -e "${BLUE}👋 Goodbye!${NC}"
             exit 0
             ;;
@@ -177,20 +227,23 @@ show_help() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
     echo "OPTIONS:"
-    echo "  -h, --help     Show this help message"
-    echo "  -i, --init     Test project initialization only"
-    echo "  -f, --feature  Test feature generation only"
-    echo "  -a, --auth     Test auth flow generation only"
-    echo "  -t, --test     Run full test suite"
-    echo "  -c, --clean    Clean up test directory"
+    echo "  -h, --help        Show this help message"
+    echo "  -i, --init        Test project initialization only"
+    echo "  -f, --feature     Test feature generation only"
+    echo "  -a, --auth        Test both auth features only"
+    echo "  --auth-basic      Test basic auth feature only"
+    echo "  --auth-flow       Test complete auth flow only"
+    echo "  -t, --test        Run full test suite"
+    echo "  -c, --clean       Clean up test directory"
     echo ""
     echo "If no options are provided, interactive mode will be launched."
     echo ""
     echo "Examples:"
-    echo "  $0              # Launch interactive mode"
-    echo "  $0 --test       # Run full test suite"
-    echo "  $0 --init       # Test project initialization only"
-    echo "  $0 --clean      # Clean up test directory"
+    echo "  $0                 # Launch interactive mode"
+    echo "  $0 --test          # Run full test suite"
+    echo "  $0 --init          # Test project initialization only"
+    echo "  $0 --auth-flow     # Test complete auth flow only"
+    echo "  $0 --clean         # Clean up test directory"
 }
 
 # Parse command line arguments
@@ -217,6 +270,20 @@ case "$1" in
             exit 1
         }
         test_auth
+        ;;
+    --auth-basic)
+        cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+            echo -e "${RED}❌ No existing project found. Run with --init first.${NC}"
+            exit 1
+        }
+        test_auth_basic
+        ;;
+    --auth-flow)
+        cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+            echo -e "${RED}❌ No existing project found. Run with --init first.${NC}"
+            exit 1
+        }
+        test_auth_flow
         ;;
     -t|--test)
         run_tests

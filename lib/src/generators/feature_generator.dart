@@ -66,11 +66,13 @@ class FeatureGenerator {
     Logger.step('Generating presentation layer...');
     await _generatePresentationLayer();
 
-    await CommandUtils.runCommand(
-      'dart',
-      ['run', 'build_runner', 'build', '--delete-conflicting-outputs'],
-      workingDirectory: config.projectConfig.projectPath,
-    );
+    if (config.includeModels) {
+      await CommandUtils.runCommand(
+        'dart',
+        ['run', 'build_runner', 'build', '--delete-conflicting-outputs'],
+        workingDirectory: config.projectConfig.projectPath,
+      );
+    }
 
     await CommandUtils.runCommand(
       'dart',

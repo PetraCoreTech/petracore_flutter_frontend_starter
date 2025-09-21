@@ -1,5 +1,4 @@
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
-import 'package:petracore_flutter_frontend_starter/src/templates/auth/presentation/auth_presentation_index_template.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/template_index.dart';
 
 class AuthTemplates {
@@ -34,6 +33,7 @@ class AuthTemplates {
   String get authBlocEvents => authBlocEventTemplate();
   String get authBlocStates => authBlocStateTemplate();
   String get authBloc => authBlocTemplate(config);
+  String get userCubit => userCubitTemplate(config);
 
   /// Auth/Presentation/Screens
   String get loginScreen => loginScreenTemplate(config);

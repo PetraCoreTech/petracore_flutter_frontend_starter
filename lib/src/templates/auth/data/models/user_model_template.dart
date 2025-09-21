@@ -21,7 +21,6 @@ class User extends BaseModel{
   
   factory User.fromJson(Map<String, dynamic> json) => _\$UserFromJson(json);
 
-  final String id;
   final String email;
   @JsonKey(name: 'first_name')
   final String firstname;

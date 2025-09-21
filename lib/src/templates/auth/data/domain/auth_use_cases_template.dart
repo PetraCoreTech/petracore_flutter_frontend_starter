@@ -28,16 +28,16 @@ class LoginUseCase extends UseCase<User, LoginDto> {
   }
 }
 
-/* Forgot Password Use Case */
-final forgotPasswordUseCase = ForgotPasswordUseCase();
+/* Reset Password Use Case */
+final resetPasswordUseCase = ResetPasswordUseCase();
 
-class ForgotPasswordUseCase
+class ResetPasswordUseCase
     extends UseCase<SuccessResponse, ResetPasswordDto> {
   @override
   Future<Either<SuccessResponse, ErrorResponse>> call(
     ResetPasswordDto params,
   ) async {
-    final res = await authRepository.forgotPassword(params);
+    final res = await authRepository.resetPassword(params);
     return res.fold(Left.new, Right.new);
   }
 }
@@ -45,23 +45,23 @@ class ForgotPasswordUseCase
 /* Check User Use Case */
 final checkUserUseCase = CheckUserUseCase();
 
-class CheckUserUseCase extends UseCase<SuccessResponse, String> {
+class CheckUserUseCase extends UseCase<SuccessResponse, CheckUserDto> {
   @override
   Future<Either<SuccessResponse, ErrorResponse>> call(
-    String params,
+    CheckUserDto params,
   ) async {
     final res = await authRepository.checkUser(params);
     return res.fold(Left.new, Right.new);
   }
 }
 
-/* Verify Email Use Case */
-final verifyEmailUseCase = VerifyEmailUseCase();
+/* Verify User Use Case */
+final verifyUserUseCase = VerifyUserUseCase();
 
-class VerifyEmailUseCase extends UseCase<SuccessResponse, VerifyDto> {
+class VerifyUserUseCase extends UseCase<SuccessResponse, VerifyDto> {
   @override
   Future<Either<SuccessResponse, ErrorResponse>> call(VerifyDto params) async {
-    final res = await authRepository.verifyEmail(params);
+    final res = await authRepository.verifyUser(params);
     return res.fold(Left.new, Right.new);
   }
 }
@@ -69,9 +69,9 @@ class VerifyEmailUseCase extends UseCase<SuccessResponse, VerifyDto> {
 /* Request Otp Use Case */
 final requestOtpUseCase = RequestOtpUseCase();
 
-class RequestOtpUseCase extends UseCase<SuccessResponse, String> {
+class RequestOtpUseCase extends UseCase<SuccessResponse, RequestOtpDto> {
   @override
-  Future<Either<SuccessResponse, ErrorResponse>> call(String params) async {
+  Future<Either<SuccessResponse, ErrorResponse>> call(RequestOtpDto params) async {
     final res = await authRepository.requestOtp(params);
     return res.fold(Left.new, Right.new);
   }

@@ -1,4 +1,4 @@
 String authIndexTemplate() => '''
-export 'data/data_index.dart';
-export 'presentation/presentation_index.dart';
+export 'data/auth_data_index.dart';
+export 'presentation/auth_presentation_index.dart';
 ''';

@@ -5,7 +5,7 @@ class VerifyDto {
   final String target;
   final String value;
 
-  Json Map<String, dynamic>toJson() {
+  Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
     json['target'] = target;
     json['value'] = value;

@@ -9,7 +9,7 @@ class ResetPasswordDto {
   final String password;
   final String? token;
 
-  Json toJson() {
+  Map<String, dynamic> toJson() {
     final json = Json();
     json['email'] = email;
     json['password'] = password;
