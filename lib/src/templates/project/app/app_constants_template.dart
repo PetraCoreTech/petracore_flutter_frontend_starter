@@ -12,6 +12,8 @@ class AppConstants {
   static const String appName = '${config.className}';
   
   static const String fontFamily = 'Times New Roman';
+  
+  static const int otpInput = 6;
 
   static const Size designSize = Size(390, 844);
 

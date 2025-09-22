@@ -43,11 +43,6 @@ class FeatureGenerator {
     Logger.step('Generating feature index...');
     await _generateFeatureIndex();
 
-    if (config.includeModels) {
-      Logger.step('Generating data models...');
-      await _generateDataModels();
-    }
-
     if (config.includeRepository) {
       Logger.step('Generating repository layer...');
       await _generateRepository();
@@ -67,6 +62,9 @@ class FeatureGenerator {
     await _generatePresentationLayer();
 
     if (config.includeModels) {
+      Logger.step('Generating data models...');
+      await _generateDataModels();
+      Logger.verbose('FeatureGenerator: Running build_runner (models enabled)');
       await CommandUtils.runCommand(
         'dart',
         ['run', 'build_runner', 'build', '--delete-conflicting-outputs'],

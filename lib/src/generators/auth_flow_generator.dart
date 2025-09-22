@@ -14,9 +14,7 @@ class AuthFlowConfig {
   // Auth features to generate
   final bool includeLogin;
   final bool includeSignup;
-  final bool includeEmailVerification;
   final bool includeForgotPassword;
-  final bool includePhoneVerification;
   final bool includeOtp;
 
   // Onboarding screens
@@ -33,9 +31,7 @@ class AuthFlowConfig {
     required this.outputPath,
     this.includeLogin = true,
     this.includeSignup = true,
-    this.includeEmailVerification = true,
     this.includeForgotPassword = true,
-    this.includePhoneVerification = false,
     this.includeOtp = true,
     this.includeSplashScreen = true,
     this.includeWelcomeScreen = true,
@@ -109,6 +105,7 @@ class AuthFlowGenerator {
     Logger.step('Reading project configuration...');
     final projectConfig = await ProjectConfigReader.readOrDefault();
 
+    Logger.verbose('AuthFlowGenerator: Running build_runner (final step)');
     await CommandUtils.runCommand(
       'dart',
       ['run', 'build_runner', 'build', '--delete-conflicting-outputs'],
@@ -161,6 +158,8 @@ class AuthFlowGenerator {
 
   Future<void> _generateAuthModels() async {
     final files = {
+      'lib/features/auth/data/models/auth_history_model.dart':
+          templates.authHistoryModel,
       'lib/features/auth/data/models/user_model.dart': templates.userModel,
       'lib/features/auth/data/models/models.dart': templates.authModelsIndex,
     };
@@ -190,14 +189,11 @@ class AuthFlowGenerator {
           templates.signUpDto;
     }
 
-    if (config.includeEmailVerification || config.includePhoneVerification) {
+    if (config.includeOtp) {
       files['lib/features/auth/data/remote/dto/verify_dto.dart'] =
           templates.verifyDto;
       files['lib/features/auth/data/remote/dto/check_user_dto.dart'] =
           templates.checkUserDto;
-    }
-
-    if (config.includeOtp) {
       files['lib/features/auth/data/remote/dto/request_otp_dto.dart'] =
           templates.requestOtpDto;
     }
@@ -237,12 +233,18 @@ class AuthFlowGenerator {
     final files = {
       'lib/features/auth/presentation/controllers/blocs/auth_bloc/auth_bloc.dart':
           templates.authBloc,
+      'lib/features/auth/presentation/controllers/auth_bloc_provider.dart':
+          templates.authBlocProvider,
       'lib/features/auth/presentation/controllers/blocs/auth_bloc/auth_event.dart':
           templates.authBlocEvents,
       'lib/features/auth/presentation/controllers/blocs/auth_bloc/auth_state.dart':
           templates.authBlocStates,
+      'lib/features/auth/presentation/controllers/cubits/email_cubit/email_cubit.dart':
+          templates.emailCubit,
       'lib/features/auth/presentation/controllers/cubits/user_cubit/user_cubit.dart':
           templates.userCubit,
+      'lib/features/auth/presentation/controllers/cubits/auth_history_cubit/auth_history_cubit.dart':
+          templates.authHistoryCubit,
     };
 
     for (final entry in files.entries) {
@@ -264,8 +266,26 @@ class AuthFlowGenerator {
           templates.signupScreen;
     }
 
+    if (config.includeOtp) {
+      files['lib/features/auth/presentation/screens/otp/verify_otp_screen.dart'] =
+          templates.verifyOtpScreen;
+      files['lib/features/auth/presentation/widgets/resend_code_display.dart'] =
+          templates.resendCodeDisplay;
+      files['lib/features/auth/presentation/widgets/resend_code_text.dart'] =
+          templates.resendCodeText;
+    }
+
+    if (config.includeForgotPassword) {
+      files['lib/features/auth/presentation/screens/password_recovery/forgot_password_screen.dart'] =
+          templates.forgotPasswordScreen;
+      files['lib/features/auth/presentation/screens/password_recovery/forgot_password_verify_screen.dart'] =
+          templates.forgotPwdVerifyScreen;
+      files['lib/features/auth/presentation/screens/password_recovery/reset_password_screen.dart'] =
+          templates.resetPasswordScreen;
+    }
+
     if (files.isNotEmpty) {
-      files['lib/features/auth/presentation/screens/screens.dart'] =
+      files['lib/features/auth/presentation/screens/auth_screen_index.dart'] =
           templates.authScreensIndex;
     }
 
@@ -279,6 +299,8 @@ class AuthFlowGenerator {
     final files = <String, String>{};
 
     if (config.includeLogin) {
+      files['lib/features/auth/presentation/helpers/auth_helper.dart'] =
+          templates.authHelper;
       files['lib/features/auth/presentation/helpers/login_controller.dart'] =
           templates.loginController;
     }
@@ -289,12 +311,24 @@ class AuthFlowGenerator {
     }
 
     if (config.includeGetStartedScreen) {
-      files['lib/features/auth/presentation/helpers/get_started_controller.dart'] =
-          templates.getStartedController;
+      files['lib/features/auth/presentation/helpers/email_controller.dart'] =
+          templates.emailController;
+    }
+
+    if (config.includeOtp) {
+      files['lib/features/auth/presentation/helpers/verify_otp_controller.dart'] =
+          templates.verifyOtpController;
+    }
+
+    if (config.includeForgotPassword) {
+      files['lib/features/auth/presentation/helpers/forgot_password_controller.dart'] =
+          templates.forgotPasswordController;
+      files['lib/features/auth/presentation/helpers/reset_password_controller.dart'] =
+          templates.resetPasswordController;
     }
 
     if (files.isNotEmpty) {
-      files['lib/features/auth/presentation/helpers/helpers.dart'] =
+      files['lib/features/auth/presentation/helpers/auth_helper_index.dart'] =
           templates.authHelpersIndex;
     }
 
@@ -334,8 +368,8 @@ class AuthFlowGenerator {
       'lib/features/auth/data/auth_data_index.dart': templates.authDataIndex,
       'lib/features/auth/presentation/auth_presentation_index.dart':
           templates.authPresentationIndex,
-      'lib/features/auth/presentation/controllers/auth_controllers_index.dart':
-          templates.authControllersIndex,
+      'lib/features/auth/presentation/controllers/auth_controller_index.dart':
+          templates.authControllerIndex,
     };
 
     for (final entry in files.entries) {
@@ -347,7 +381,7 @@ class AuthFlowGenerator {
   /// Interactive method to collect user preferences
   static Future<AuthFlowConfig> createInteractiveConfig(
       String projectPath) async {
-    Logger.header('🔐 Auth Flow Generator');
+    Logger.header('Auth Flow Generator');
     Logger.info('Let\'s set up authentication for your Flutter project!\n');
 
     // Try to read project config to get the actual project name
@@ -358,7 +392,7 @@ class AuthFlowGenerator {
     Logger.info('Location: $projectPath\n');
 
     // Ask about onboarding screens
-    Logger.info('🎬 Onboarding Screens:');
+    Logger.info('Onboarding Screens:');
     final includeSplashScreen =
         _askYesNo('Include Splash Screen?', defaultValue: true);
     final includeWelcomeScreen =
@@ -368,26 +402,22 @@ class AuthFlowGenerator {
         defaultValue: true);
 
     // Ask about core auth features
-    Logger.info('\n🔐 Core Authentication:');
+    Logger.info('\nCore Authentication:');
     final includeLogin =
         _askYesNo('Include Login functionality?', defaultValue: true);
     final includeSignup =
         _askYesNo('Include Signup functionality?', defaultValue: true);
 
     // Ask about additional features
-    Logger.info('\n📧 Additional Authentication Features:');
-    final includeEmailVerification =
-        _askYesNo('Include Email Verification?', defaultValue: false);
+    Logger.info('\nAdditional Authentication Features:');
     final includeForgotPassword =
         _askYesNo('Include Forgot Password?', defaultValue: false);
-    final includePhoneVerification =
-        _askYesNo('Include Phone Verification?', defaultValue: false);
     final includeOtp = _askYesNo(
         'Include OTP (One-Time Password) functionality?',
         defaultValue: false);
 
     // Ask about advanced features
-    Logger.info('\n🔧 Advanced Features:');
+    Logger.info('\nAdvanced Features:');
     final includeSocialAuth = _askYesNo(
         'Include Social Authentication placeholders?',
         defaultValue: false);
@@ -400,9 +430,7 @@ class AuthFlowGenerator {
       outputPath: projectPath,
       includeLogin: includeLogin,
       includeSignup: includeSignup,
-      includeEmailVerification: includeEmailVerification,
       includeForgotPassword: includeForgotPassword,
-      includePhoneVerification: includePhoneVerification,
       includeOtp: includeOtp,
       includeSplashScreen: includeSplashScreen,
       includeWelcomeScreen: includeWelcomeScreen,

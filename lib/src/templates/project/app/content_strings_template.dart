@@ -29,8 +29,10 @@ class ContentStrings {
  
   /// Text field label/hints
   static const String chooseUsername = 'Choose your username';
+  static const String email = 'Email';
   static const String firstname = 'First name';
   static const String lastname = 'First name';
+  static const String otp = 'OTP';
   static const String password = 'Password';
   static const String referralCode = 'Referral Code';
   static const String typeEmail = 'Type in your Email Address';

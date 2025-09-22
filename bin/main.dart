@@ -64,7 +64,7 @@ void main(List<String> arguments) async {
 
 void _printHelp(ArgParser parser) {
   print('''
-🏗️  PetraCore Flutter Frontend Starter
+PetraCore Flutter Frontend Starter
 
 A powerful CLI tool for generating Flutter projects with clean architecture,
 Firebase integration, and industry best practices.

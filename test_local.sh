@@ -103,7 +103,7 @@ test_auth_flow() {
     fi
     
     # Test complete auth flow with non-interactive mode
-    run_cli auth --no-interactive --login --signup --email-verification --forgot-password --verbose
+    run_cli auth --no-interactive --login --otp --signup --email-verification --forgot-password --verbose
     
     # Check if auth flow was generated properly
     if [ -d "lib/features/auth" ] && \

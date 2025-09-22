@@ -23,7 +23,7 @@ abstract class AuthServicesInterface {
 }
 
 class AuthService extends AuthServicesInterface{
-  const AuthService(this.apiClient);
+  AuthService(this.apiClient);
   final ApiClient apiClient;
   
   @override
@@ -59,7 +59,7 @@ class AuthService extends AuthServicesInterface{
   }
   
   @override
-  Future<Response> signup(SignUpDto data) async {
+  Future<Response> signup(SignupDto data) async {
     return await apiClient.post(
       '/auth/register',
       data: data.toJson(),

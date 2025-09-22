@@ -16,7 +16,7 @@ class LoginController {
   void initValues() {
       final user = context.read<UserCubit>().state;
       if(user?.email != null) {
-      email.text = user!.email!;
+      email.text = user!.email;
       }
   }
 

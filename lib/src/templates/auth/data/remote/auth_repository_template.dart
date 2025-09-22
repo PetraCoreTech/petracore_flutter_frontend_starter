@@ -2,14 +2,14 @@ import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_st
 
 String authRepositoryTemplate(ProjectConfig config) => '''
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:${config.projectName}/core/core.dart';
-import 'package:${config.projectName}/features/shared/data/type_def.dart';
 import 'package:${config.projectName}/features/auth/auth_index.dart';
 
 final authRepository = AuthRepository(authService);
 
 abstract class AuthRepositoryInterface {
-  Future<Either<User, ErrorResponse>> signup(SignUpDto data);
+  Future<Either<User, ErrorResponse>> signup(SignupDto data);
   Future<Either<User, ErrorResponse>> login(LoginDto data);
   Future<Either<SuccessResponse, ErrorResponse>> checkUser(CheckUserDto data);
   Future<Either<SuccessResponse, ErrorResponse>> verifyUser(VerifyDto data);
@@ -28,8 +28,8 @@ class AuthRepository implements AuthRepositoryInterface {
       final decoded = response.data as Json;
       final user = User.fromJson(decoded);
       
-      await _authDataSource.setToken(decoded['token'] as String);
-      // await _authDataSource.setRefreshToken(decoded['refresh_token'] as String);
+      await localAuthData.setToken(decoded['token'] as String);
+      // await localAuthData.setRefreshToken(decoded['refresh_token'] as String);
       return Left(user);
     } on DioException catch (e) {
       final errorResponse = ApiError.handleError(e);
@@ -41,14 +41,14 @@ class AuthRepository implements AuthRepositoryInterface {
   }
 
   @override
-  Future<Either<User, ErrorResponse>> signup(SignUpDto data) async {
+  Future<Either<User, ErrorResponse>> signup(SignupDto data) async {
     try {
       final response = await authService.signup(data);
       final decoded = response.data as Json;
       final user = User.fromJson(decoded);
       
-      await _authDataSource.setToken(decoded['token'] as String);
-      // await _authDataSource.setRefreshToken(decoded['refresh_token'] as String);
+      await localAuthData.setToken(decoded['token'] as String);
+      // await localAuthData.setRefreshToken(decoded['refresh_token'] as String);
       return Left(user);
     } on DioException catch (e) {
       final errorResponse = ApiError.handleError(e);

@@ -80,7 +80,7 @@ class InitCommand extends BaseCommand {
       }
     }
 
-    Logger.header('🏗️  Creating PetraCore Flutter Project: $projectName');
+    Logger.header('Creating PetraCore Flutter Project: $projectName');
 
     final config = ProjectConfig(
       projectName: projectName,
@@ -95,13 +95,13 @@ class InitCommand extends BaseCommand {
     try {
       await generator.generate();
       
-      Logger.success('🎉 Project created successfully!');
-      Logger.info('');
-      Logger.info('Next steps:');
-      Logger.info('  cd $projectName');
-      Logger.info('  flutter pub get  # Get updated dependencies');
-      Logger.info('  flutter packages pub run build_runner build  # Generate code for models');
-      Logger.info('  flutter run');
+      Logger.success('Project created successfully!');
+      
+      Logger.section('Next steps');
+      Logger.item('cd $projectName');
+      Logger.item('flutter pub get  # Get updated dependencies');
+      Logger.item('flutter packages pub run build_runner build  # Generate code for models');
+      Logger.item('flutter run');
       
     } catch (e) {
       Logger.error('Failed to create project: $e');

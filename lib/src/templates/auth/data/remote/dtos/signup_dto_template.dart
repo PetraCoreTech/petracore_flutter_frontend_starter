@@ -1,6 +1,6 @@
 String signupDtoTemplate() => '''
-class SignUpDto {
-  const SignUpDto({
+class SignupDto {
+  const SignupDto({
     required this.firstname,
     required this.lastname,
     required this.email,

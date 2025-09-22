@@ -1,16 +1,12 @@
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
 
 String signupScreenTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:${config.projectName}/core/core.dart';
 import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/features/auth/auth_index.dart';
 import 'package:${config.projectName}/navigation/navigation_index.dart';
-import '../helpers/helpers.dart';
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends StatefulHookWidget {
   const SignupScreen({super.key});
 
   @override
@@ -34,7 +30,10 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<SignupBloc>().state;
+    final heading4 = \$token.textStyle.heading4.resolve(context);
+    final onSurfaceDark = colors.onSurfaceDark.resolve(context);
+    final password = useState('');
+    final state = context.watch<AuthBloc>().state;
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthError) {
@@ -43,7 +42,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 content: state.error.message,
               );
         } else if (state is UserRegistered) {
-           AuthHelper(context).login(state.user);
+           // AuthHelper(context).login(state.user);
         }
       },
       child: ScreenFrame.unbounded(
@@ -66,7 +65,7 @@ class _SignupScreenState extends State<SignupScreen> {
               separatorBuilder: () => const Gap(16),
               children: [
                 BaseTextField(
-                  label: ContentString.firstname,
+                  labelText: ContentStrings.firstname,
                   keyboardType: TextInputType.name,
                   maxLines: 1,
                   textCapitalization: TextCapitalization.words,
@@ -75,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   controller: controller.firstname,
                 ),
                 BaseTextField(
-                  label: ContentString.lastname,
+                  labelText: ContentStrings.lastname,
                   maxLines: 1,
                   keyboardType: TextInputType.name,
                   validator: InputFieldValidator.required,
@@ -83,13 +82,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   controller: controller.lastname,
                 ),
                  BaseTextField(
+                    labelText: ContentStrings.email,
                     controller: controller.email,
                     keyboardType: TextInputType.emailAddress,
-                    validator: (_) => InputFieldValidator.email,
+                    validator: InputFieldValidator.email,
                     textInputAction: TextInputAction.next,
                   ),
                 PasswordField(
-                  label: ContentString.password,
                   validator: InputFieldValidator.password,
                   controller: controller.password,
                   onChange: (value) => password.value = value,
@@ -102,15 +101,15 @@ class _SignupScreenState extends State<SignupScreen> {
             alignment: Alignment.centerLeft,
             child: PasswordStrengthChecker(
               password: password,
-              activeIcon: Icons.check,
-              inactiveIcon: Icons.check,
+              activeIconData: Icons.check,
+              inactiveIconData: Icons.check,
               activeColor: colors.primaryDark.resolve(context),
-              inactiveColor: colors.bordeer.resolve(context),
+              inactiveColor: colors.border.resolve(context),
             ),
           ),
           const Gap(48),
           AppButton(
-            text: ContentString.createAccount,
+            text: '<ContentString.createAccount>',
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             onTap: controller.signup,
           ),

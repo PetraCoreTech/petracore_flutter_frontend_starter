@@ -129,9 +129,9 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/elijahpraise/.pub-cache/hosted/pub.dev/meta-1.17.0",
+      "rootUri": "file:///Users/elijahpraise/.pub-cache/hosted/pub.dev/meta-1.16.0",
       "packageUri": "lib/",
-      "languageVersion": "3.5"
+      "languageVersion": "2.12"
     },
     {
       "name": "mime",
@@ -320,7 +320,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2025-09-20T18:40:46.426301Z",
+  "generated": "2025-09-22T12:11:08.729213Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///usr/local/Caskroom/flutter/3.29.1/flutter",

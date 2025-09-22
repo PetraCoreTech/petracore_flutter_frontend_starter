@@ -3,14 +3,13 @@ import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_st
 String authBlocTemplate(ProjectConfig config) => '''
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
-
 import 'package:${config.projectName}/core/core.dart';
 import 'package:${config.projectName}/features/auth/auth_index.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
+
+final authBloc = AuthBloc();
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
@@ -25,7 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _register(RegisterUser event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
-    final data = SignUpDto(
+    final data = SignupDto(
       firstname: event.firstname,
       lastname: event.lastname,
       email: event.email,

@@ -4,7 +4,7 @@ String authHistoryCubitTemplate(ProjectConfig config) => '''
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:${config.projectName}/core/core.dart';
 import 'package:${config.projectName}/features/auth/auth_index.dart';
-import 'package:${config.projectName}/features/shared/presentation/controllers/key_values.dart';
+import 'package:${config.projectName}/features/shared/presentation/controllers/key_value.dart';
 
 final authHistoryCubit = AuthHistoryCubit();
 

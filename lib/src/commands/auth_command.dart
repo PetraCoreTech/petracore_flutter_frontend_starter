@@ -85,10 +85,12 @@ class AuthCommand extends BaseCommand {
 
     // Check if we're in a Flutter project (if generating in current directory)
     final outputDir = results['output'] as String? ?? Directory.current.path;
-    
-    if (results['output'] == null && !File(path.join(outputDir, 'pubspec.yaml')).existsSync()) {
+
+    if (results['output'] == null &&
+        !File(path.join(outputDir, 'pubspec.yaml')).existsSync()) {
       Logger.error('Not in a Flutter project directory');
-      Logger.info('Run this command from the root of your Flutter project or specify --output directory');
+      Logger.info(
+          'Run this command from the root of your Flutter project or specify --output directory');
       exit(1);
     }
 
@@ -117,16 +119,14 @@ class AuthCommand extends BaseCommand {
         outputPath: outputDir,
         includeLogin: results['login'] as bool,
         includeSignup: results['signup'] as bool,
-        includeEmailVerification: results['email-verification'] as bool,
         includeForgotPassword: results['forgot-password'] as bool,
-        includePhoneVerification: results['phone-verification'] as bool,
         includeOtp: results['otp'] as bool,
         includeSocialAuth: results['social-auth'] as bool,
         includeDeviceToken: results['device-token'] as bool,
       );
     }
 
-    Logger.header('🚀 Generating Auth Flow');
+    Logger.header('Generating Auth Flow');
     _logSelectedFeatures(config);
 
     final generator = AuthFlowGenerator(config);
@@ -134,7 +134,7 @@ class AuthCommand extends BaseCommand {
     try {
       await generator.generate();
 
-      Logger.success('✨ Authentication flow created successfully!');
+      Logger.success('Authentication flow created successfully!');
       _printPostGenerationInstructions(config);
     } catch (e) {
       Logger.error('Failed to generate auth flow: $e');
@@ -143,21 +143,19 @@ class AuthCommand extends BaseCommand {
   }
 
   void _logSelectedFeatures(AuthFlowConfig config) {
-    Logger.info('Selected features:');
-    if (config.includeLogin) Logger.info('  ✅ Login');
-    if (config.includeSignup) Logger.info('  ✅ Signup');
-    if (config.includeEmailVerification) Logger.info('  ✅ Email Verification');
-    if (config.includeForgotPassword) Logger.info('  ✅ Forgot Password');
-    if (config.includePhoneVerification) Logger.info('  ✅ Phone Verification');
-    if (config.includeOtp) Logger.info('  ✅ OTP functionality');
-    if (config.includeSocialAuth) Logger.info('  ✅ Social Auth placeholders');
-    if (config.includeDeviceToken) Logger.info('  ✅ Device Token support');
-    Logger.info('');
+    Logger.section('Selected features');
+    if (config.includeLogin) Logger.item('Login');
+    if (config.includeSignup) Logger.item('Signup');
+    if (config.includeForgotPassword) Logger.item('Forgot Password');
+    if (config.includeOtp) Logger.item('OTP functionality');
+    if (config.includeSocialAuth) Logger.item('Social Auth placeholders');
+    if (config.includeDeviceToken) Logger.item('Device Token support');
+    Logger.spacer();
   }
 
   void _printPostGenerationInstructions(AuthFlowConfig config) {
     Logger.info('');
-    Logger.info('📁 Generated files:');
+    Logger.info('Generated files:');
     Logger.info('  lib/features/auth/');
     Logger.info('  ├── data/');
     Logger.info('  │   ├── models/          (User model)');
@@ -169,8 +167,8 @@ class AuthCommand extends BaseCommand {
     Logger.info('      ├── screens/         (Login/Signup screens)');
     Logger.info('      └── helpers/         (Controllers)');
     Logger.info('');
-    
-    Logger.info('🔧 Next steps:');
+
+    Logger.info('Next steps:');
     Logger.info('  1. Add required dependencies to pubspec.yaml:');
     Logger.info('     - flutter_bloc');
     Logger.info('     - dartz');
@@ -189,7 +187,7 @@ class AuthCommand extends BaseCommand {
     Logger.info('  5. Add auth routes to your navigation system');
     Logger.info('  6. Configure your API base URL in environment variables');
     Logger.info('');
-    Logger.info('💡 Pro tip: Check the generated files for TODO comments');
+    Logger.info('Pro tip: Check the generated files for TODO comments');
     Logger.info('   that need your attention for full integration.');
   }
 
@@ -219,13 +217,13 @@ Examples:
   petracore auth -o /path/to/project --social-auth
 
 The auth flow includes:
-  📱 Complete BLoC state management
-  🏗️  Clean architecture (data/domain/presentation)
-  🔒 Secure token storage
-  🌐 Network service integration
-  📧 Email/Phone verification (optional)
-  🔑 Password reset (optional)
-  📱 OTP support (optional)
+  - Complete BLoC state management
+  - Clean architecture (data/domain/presentation)
+  - Secure token storage
+  - Network service integration
+  - Email/Phone verification (optional)
+  - Password reset (optional)
+  - OTP support (optional)
 
 Generated structure follows your lena_core patterns with:
   - DTOs for API communication

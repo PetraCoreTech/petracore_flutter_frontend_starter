@@ -13,6 +13,7 @@ class PasswordField extends HookWidget {
     this.controller,
     this.enabled,
     this.onChange,
+    this.onFieldSubmitted,
     this.placeholder,
     this.validator,
     this.obscureText,
@@ -25,6 +26,7 @@ class PasswordField extends HookWidget {
     TextEditingController? controller,
     bool? enabled,
     ValueChanged<String>? onChange,
+    ValueChanged<String>? onFieldSubmitted,
     String? placeholder,
     ValidatorCallback? validator,
     Color? borderColor,
@@ -33,6 +35,7 @@ class PasswordField extends HookWidget {
       style: style,
       borderColor: borderColor,
       onChange: onChange,
+      onFieldSubmitted: onFieldSubmitted,
       controller: controller,
       hintText: hintText,
       suffixIcon: suffixIcon,
@@ -49,6 +52,7 @@ class PasswordField extends HookWidget {
   final bool? enabled;
   final TextEditingController? controller;
   final ValueChanged<String>? onChange;
+  final ValueChanged<String>? onFieldSubmitted;
   final ValidatorCallback? validator;
   final ValueNotifier<bool>? obscureText;
 
@@ -56,18 +60,13 @@ class PasswordField extends HookWidget {
   Widget build(BuildContext context) {
     final obscureTxt = obscureText ?? useState<bool>(true);
     return BaseTextField(
-      prefixIcon: Padding(
-        padding: const EdgeInsets.only(left: 16),
-        child: Icon(
-          Icons.lock_outline_rounded,
-          color: colors.onSurface.resolve(context),
-        ),
-      ),
       maxLines: 1,
       hintText: hintText,
+      labelText: 'Password',
       keyboardType: TextInputType.visiblePassword,
       obscureText: obscureTxt.value,
       onChange: onChange,
+      onFieldSubmitted: onFieldSubmitted,
       controller: controller,
       validator: validator,
       suffixIcon: IconButton(
@@ -92,6 +91,7 @@ class _PasswordField extends PasswordField {
     super.controller,
     super.enabled,
     super.onChange,
+    super.onFieldSubmitted,
     super.placeholder,
     super.validator,
     this.borderColor,
@@ -103,18 +103,13 @@ class _PasswordField extends PasswordField {
     final obscureText = useState<bool>(true);
     return BaseTextField(
       borderColor: borderColor,
-      prefixIcon: Padding(
-        padding: const EdgeInsets.only(left: 16),
-        child: Icon(
-          Icons.lock_outline_rounded,
-          color: colors.onSurface.resolve(context),
-        ),
-      ),
       maxLines: 1,
       hintText: hintText,
+      labelText: 'Password',
       keyboardType: TextInputType.visiblePassword,
       obscureText: obscureText.value,
       onChange: onChange,
+      onFieldSubmitted: onFieldSubmitted,
       controller: controller,
       validator: validator,
       suffixIcon: IconButton(

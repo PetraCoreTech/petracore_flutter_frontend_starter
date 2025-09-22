@@ -121,7 +121,7 @@ class FeatureCommand extends BaseCommand {
       exit(1);
     }
 
-    Logger.header('🚀 Generating Feature: $featureName');
+    Logger.header('Generating Feature: $featureName');
 
     Logger.step('Reading project configuration...');
     final projectConfig = await ProjectConfigReader.readOrDefault();
@@ -141,18 +141,18 @@ class FeatureCommand extends BaseCommand {
     try {
       await generator.generate();
 
-      Logger.success('✨ Feature $featureName created successfully!');
-      Logger.info('');
-      Logger.info('Generated files:');
-      Logger.info('  📁 $featurePath/');
-      Logger.info('  📄 ${featureName}_index.dart');
-      Logger.info('  📁 data/ (models, repositories, use cases)');
-      Logger.info('  📁 presentation/ (screens, controllers)');
-      Logger.info('');
-      Logger.info('Next steps:');
-      Logger.info('  1. Add the feature to your main bloc provider');
-      Logger.info('  2. Update your navigation routes');
-      Logger.info('  3. Run: flutter packages pub run build_runner build');
+      Logger.success('Feature $featureName created successfully!');
+      
+      Logger.section('Generated files');
+      Logger.item('$featurePath/');
+      Logger.item('${featureName}_index.dart');
+      Logger.item('data/ (models, repositories, use cases)');
+      Logger.item('presentation/ (screens, controllers)');
+      
+      Logger.section('Next steps');
+      Logger.item('1. Add the feature to your main bloc provider');
+      Logger.item('2. Update your navigation routes');
+      Logger.item('3. Run: flutter packages pub run build_runner build');
     } catch (e) {
       Logger.error('Failed to generate feature: $e');
       exit(1);
@@ -161,22 +161,22 @@ class FeatureCommand extends BaseCommand {
 
   /// Handle the 'auth' keyword specially - offer full auth flow
   Future<void> _handleAuthKeyword() async {
-    Logger.header('🔐 Auth Feature Detected!');
-    Logger.info('');
+    Logger.header('Auth Feature Detected!');
+    
     Logger.info('I detected you want to generate an "auth" feature.');
     Logger.info('Would you like to:');
-    Logger.info('');
-    Logger.info(
-        '  1. 📦 Generate a basic auth feature (standard feature structure)');
-    Logger.info('  2. 🚀 Bootstrap complete authentication flow (recommended)');
-    Logger.info('      • Login & Signup screens');
-    Logger.info('      • BLoC state management');
-    Logger.info('      • Repository & Use Cases');
-    Logger.info('      • DTOs & Models');
-    Logger.info('      • Token storage & refresh');
-    Logger.info('      • Network service integration');
-    Logger.info('      • Optional: Email verification, OTP, etc.');
-    Logger.info('');
+    Logger.spacer();
+    
+    Logger.item('1. Generate a basic auth feature (standard feature structure)');
+    Logger.item('2. Bootstrap complete authentication flow (recommended)');
+    Logger.item('   • Login & Signup screens', indent: 6);
+    Logger.item('   • BLoC state management', indent: 6);
+    Logger.item('   • Repository & Use Cases', indent: 6);
+    Logger.item('   • DTOs & Models', indent: 6);
+    Logger.item('   • Token storage & refresh', indent: 6);
+    Logger.item('   • Network service integration', indent: 6);
+    Logger.item('   • Optional: Email verification, OTP, etc.', indent: 6);
+    Logger.spacer();
 
     stdout.write('Choose option (1 or 2, default: 2): ');
     final input = stdin.readLineSync()?.trim() ?? '';
@@ -185,7 +185,7 @@ class FeatureCommand extends BaseCommand {
       Logger.info('\nGenerating basic auth feature...');
       await _generateBasicAuthFeature();
     } else {
-      Logger.info('\n🎉 Great choice! Let\'s set up a complete auth flow.');
+      Logger.info('\nGreat choice! Let\'s set up a complete auth flow.');
       Logger.info('');
       await _generateFullAuthFlow();
     }
@@ -208,7 +208,7 @@ class FeatureCommand extends BaseCommand {
       exit(1);
     }
 
-    Logger.header('🚀 Generating Basic Auth Feature');
+    Logger.header('Generating Basic Auth Feature');
 
     // Read project configuration
     Logger.step('Reading project configuration...');
@@ -229,21 +229,22 @@ class FeatureCommand extends BaseCommand {
     try {
       await generator.generate();
 
-      Logger.success('✨ Basic auth feature created successfully!');
-      Logger.info('');
-      Logger.info('Generated files:');
-      Logger.info('  📁 $featurePath/');
-      Logger.info('  📄 auth_index.dart');
-      Logger.info('  📁 data/ (models, repositories, use cases)');
-      Logger.info('  📁 presentation/ (screens, controllers)');
-      Logger.info('');
-      Logger.info('Next steps:');
-      Logger.info('  1. Add the feature to your main bloc provider');
-      Logger.info('  2. Update your navigation routes');
-      Logger.info('  3. Run: flutter packages pub run build_runner build');
-      Logger.info('');
-      Logger.info('💡 Tip: Run "petracore auth" for a complete auth flow with');
-      Logger.info('   login/signup screens, token management, and more!');
+      Logger.success('Basic auth feature created successfully!');
+      
+      Logger.section('Generated files');
+      Logger.item('$featurePath/');
+      Logger.item('auth_index.dart');
+      Logger.item('data/ (models, repositories, use cases)');
+      Logger.item('presentation/ (screens, controllers)');
+      
+      Logger.section('Next steps');
+      Logger.item('1. Add the feature to your main bloc provider');
+      Logger.item('2. Update your navigation routes');
+      Logger.item('3. Run: flutter packages pub run build_runner build');
+      
+      Logger.section('Pro tip');
+      Logger.info('Run "petracore auth" for a complete auth flow with');
+      Logger.info('login/signup screens, token management, and more!');
     } catch (e) {
       Logger.error('Failed to generate basic auth feature: $e');
       exit(1);
@@ -276,7 +277,7 @@ class FeatureCommand extends BaseCommand {
     // Use the interactive config from AuthFlowGenerator
     final config = await AuthFlowGenerator.createInteractiveConfig(currentDir);
 
-    Logger.header('🚀 Generating Complete Auth Flow');
+    Logger.header('Generating Complete Auth Flow');
     _logSelectedFeatures(config);
 
     final generator = AuthFlowGenerator(config);
@@ -284,7 +285,7 @@ class FeatureCommand extends BaseCommand {
     try {
       await generator.generate();
 
-      Logger.success('✨ Complete authentication flow created successfully!');
+      Logger.success('Complete authentication flow created successfully!');
       _printAuthFlowPostInstructions(config);
     } catch (e) {
       Logger.error('Failed to generate auth flow: $e');
@@ -293,16 +294,14 @@ class FeatureCommand extends BaseCommand {
   }
 
   void _logSelectedFeatures(AuthFlowConfig config) {
-    Logger.info('Selected features:');
-    if (config.includeLogin) Logger.info('  ✅ Login');
-    if (config.includeSignup) Logger.info('  ✅ Signup');
-    if (config.includeEmailVerification) Logger.info('  ✅ Email Verification');
-    if (config.includeForgotPassword) Logger.info('  ✅ Forgot Password');
-    if (config.includePhoneVerification) Logger.info('  ✅ Phone Verification');
-    if (config.includeOtp) Logger.info('  ✅ OTP functionality');
-    if (config.includeSocialAuth) Logger.info('  ✅ Social Auth placeholders');
-    if (config.includeDeviceToken) Logger.info('  ✅ Device Token support');
-    Logger.info('');
+    Logger.section('Selected features');
+    if (config.includeLogin) Logger.item('Login');
+    if (config.includeSignup) Logger.item('Signup');
+    if (config.includeForgotPassword) Logger.item('Forgot Password');
+    if (config.includeOtp) Logger.item('OTP functionality');
+    if (config.includeSocialAuth) Logger.item('Social Auth placeholders');
+    if (config.includeDeviceToken) Logger.item('Device Token support');
+    Logger.spacer();
   }
 
   void _printAuthFlowPostInstructions(AuthFlowConfig config) {
