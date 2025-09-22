@@ -75,6 +75,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Better component documentation and usage examples
 - More consistent theming across all generated components
 
+## [1.0.3] - 2024-09-22
+
+### Fixed
+- **Build Runner Execution**: Fixed duplicate build_runner commands during auth flow generation
+  - Resolved command execution format issues in FeatureGenerator and AuthFlowGenerator
+  - Commands now properly split into command and arguments arrays
+  - Eliminated redundant build_runner calls when generating auth features
+- **Template Syntax Errors**: Fixed syntax error in verify_dto template
+  - Corrected `Json Map<String, dynamic>toJson()` to `Map<String, dynamic> toJson()`
+  - Resolved build_runner compilation errors in auth flow generation
+
+### Improved
+- **Logging System**: Complete overhaul of CLI logging for better readability and spacing
+  - Removed emoji-heavy logging in favor of clean, professional symbols
+  - Added proper visual hierarchy with box drawing characters and bullets
+  - Implemented consistent spacing and indentation throughout
+  - Added new logging methods: `spacer()`, `section()`, `item()`, `keyValue()`
+  - Replaced `mason_logger` dependency with lightweight custom implementation
+  - Enhanced header formatting with bordered boxes
+  - Improved step indicators with arrow symbols (→)
+  - Added success checkmarks (✓), warning symbols (⚠), and error marks (✗)
+- **Code Generation Logic**: Enhanced conditional DTO generation in AuthFlowGenerator
+  - `request_otp_dto.dart` now properly generates when `--otp` flag is enabled
+  - Improved feature flag handling for auth flow components
+  - Better separation of concerns between FeatureGenerator and AuthFlowGenerator
+
+### Enhanced
+- **Test Suite**: Expanded test coverage for auth flow generation
+  - Added comprehensive auth flow testing with both basic and complete options
+  - Enhanced test script with better command-line options and validation
+  - Added separate tests for OTP functionality and email verification
+  - Improved error reporting and test result validation
+- **CLI Output Formatting**: Significantly improved user experience
+  - Consistent formatting across all commands (init, feature, auth)
+  - Better structured success messages and next steps
+  - Enhanced selected features display with bullet points
+  - Improved file generation progress reporting
+  - Professional, clean appearance without visual clutter
+
+### Technical Improvements
+- **Command Architecture**: Refined command execution patterns
+  - Better error handling in CommandUtils.runCommand
+  - Improved working directory management
+  - Enhanced verbose logging for debugging
+- **Project Configuration**: Better project detection and configuration reading
+  - Improved ProjectConfigReader with fallback mechanisms
+  - Enhanced directory structure validation
+- **Code Quality**: Removed deprecated dependencies and cleaned up imports
+  - Eliminated unused mason_logger dependency
+  - Streamlined logging implementation
+  - Better separation of concerns in generator classes
+
 ## [Unreleased]
 
 ### Planned

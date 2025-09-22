@@ -1,6 +1,6 @@
-# 🏗️ PetraCore Flutter Frontend Starter
+# PetraCore Flutter Frontend Starter
 
-[![Pub Version](https://img.shields.io/pub/v/petracore_flutter_frontend_starter)](https://pub.dev/packages/petracore_flutter_frontend_starter)
+[![Pub Version](https://img.shields.io/badge/version-1.0.3-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful CLI tool and package for generating Flutter projects with **clean architecture**, **Firebase integration**, and **industry best practices**. Based on proven patterns from production applications.
@@ -12,10 +12,21 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 - 🎨 **Modern UI**: Material 3, responsive design, and comprehensive component library  
 - 🧩 **BLoC Pattern**: Predictable state management with Hydrated BLoC
 - 🚀 **CLI Tools**: Generate projects and features instantly
+- 🔐 **Complete Authentication**: Full auth flow with login, signup, OTP, email verification
 - 📱 **Multi-platform**: iOS, Android, Web, macOS, Windows, Linux support
 - 🔐 **Security**: Secure storage, environment variables, and authentication patterns
 - 🎯 **Best Practices**: Linting rules, code generation, and project structure
 - 📦 **Rich Packages**: Carefully selected and battle-tested dependencies
+- ✨ **Enhanced CLI**: Beautiful, professional logging with improved user experience
+
+## 🆕 Recent Improvements (v1.0.3)
+
+- **Fixed Build Runner Issues**: Resolved duplicate build_runner executions and command format issues
+- **Enhanced Auth Flow**: Complete authentication system with login, signup, OTP, email verification
+- **Professional CLI Logging**: Clean, well-spaced output with visual hierarchy and progress indicators
+- **Improved Error Handling**: Better error messages and debugging information
+- **Template Bug Fixes**: Resolved syntax errors in generated code templates
+- **Enhanced Test Suite**: Comprehensive testing for all auth flow components
 
 ## 📋 What You Get
 
@@ -89,7 +100,7 @@ petracore init existing_app --force
 
 ```bash
 # Generate a complete feature with all components
-petracore feature auth
+petracore feature user_profile
 
 # Generate feature without BLoC
 petracore feature simple_feature --no-bloc
@@ -102,6 +113,22 @@ petracore feature ui_feature --no-models
 
 # Alternative syntax
 petracore generate feature chat
+```
+
+### Generate Complete Authentication Flow
+
+```bash
+# Interactive mode - guided setup
+petracore auth
+
+# Non-interactive with specific features
+petracore auth --no-interactive --login --signup --forgot-password --otp
+
+# Full auth flow with all features
+petracore auth --login --signup --email-verification --forgot-password --phone-verification --otp --social-auth --device-token
+
+# Basic auth setup
+petracore auth --no-interactive --login --signup
 ```
 
 ### Available Options
@@ -118,6 +145,18 @@ petracore generate feature chat
 - `--use-cases` / `--no-use-cases`: Include use cases (default: true)
 - `--models` / `--no-models`: Include data models (default: true)
 - `--output`: Custom output directory (default: lib/features)
+
+#### Auth Command Options
+- `--login` / `--no-login`: Include login functionality (default: true)
+- `--signup` / `--no-signup`: Include signup functionality (default: true)
+- `--email-verification`: Include email verification (default: false)
+- `--forgot-password`: Include forgot password functionality (default: false)
+- `--phone-verification`: Include phone verification (default: false)
+- `--otp`: Include OTP (One-Time Password) functionality (default: false)
+- `--social-auth`: Include social authentication placeholders (default: false)
+- `--device-token`: Include device token support for push notifications (default: false)
+- `--interactive` / `--no-interactive`: Use interactive mode (default: true)
+- `--output`: Output directory (default: current directory)
 
 ## 🔧 Generated Architecture
 
@@ -298,11 +337,29 @@ flutter packages pub run build_runner build
 flutter run
 ```
 
+### Authentication Flow Examples
+
+```bash
+# Complete authentication flow (interactive)
+petracore auth
+
+# Full-featured auth with all options
+petracore auth --no-interactive \
+  --login --signup --email-verification \
+  --forgot-password --otp --social-auth
+
+# Basic login/signup only
+petracore auth --no-interactive --login --signup
+
+# Auth with OTP verification
+petracore auth --no-interactive --login --signup --otp
+```
+
 ### Feature Generation Examples
 
 ```bash
-# Authentication feature with full architecture
-petracore feature auth
+# Basic feature generation
+petracore feature user_profile
 
 # Simple UI-only feature  
 petracore feature settings --no-bloc --no-repository --no-use-cases
@@ -331,10 +388,6 @@ The generated projects include:
 - Testing setup
 - Build configuration
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
 ### Development Setup
 
 ```bash
@@ -361,10 +414,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆘 Support
 
-- 📧 Email: support@petracore.com
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/petracore_flutter_frontend_starter/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/yourusername/petracore_flutter_frontend_starter/discussions)
-
+[//]: # (- 📧 Email: support@petracore.com)
+- 🐛 Issues: [GitHub Issues](https://github.com/PetraCoreTech/petracore_flutter_frontend_starter/issues)
 ---
 
 **Made with ❤️ by the PetraCore Team**
