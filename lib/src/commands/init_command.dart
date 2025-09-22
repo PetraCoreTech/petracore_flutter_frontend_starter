@@ -14,7 +14,6 @@ ArgParser initCommandParser() {
       help: 'Show help for init command',
       negatable: false,
     )
-    
     ..addOption(
       'org',
       help: 'Organization identifier (e.g., com.example)',
@@ -37,7 +36,8 @@ class InitCommand extends BaseCommand {
   String get name => 'init';
 
   @override
-  String get description => 'Initialize a new Flutter project with PetraCore architecture';
+  String get description =>
+      'Initialize a new Flutter project with PetraCore architecture';
 
   @override
   Future<void> run(ArgResults results) async {
@@ -47,7 +47,7 @@ class InitCommand extends BaseCommand {
     }
 
     final projectName = results.rest.isNotEmpty ? results.rest.first : null;
-    
+
     if (projectName == null) {
       Logger.error('Project name is required');
       _printHelp();
@@ -56,7 +56,8 @@ class InitCommand extends BaseCommand {
 
     if (!Validation.isValidDartPackageName(projectName)) {
       Logger.error('Invalid project name: $projectName');
-      Logger.info('Project name must be a valid Dart package name (lowercase, underscores only)');
+      Logger.info(
+          'Project name must be a valid Dart package name (lowercase, underscores only)');
       exit(1);
     }
 
@@ -65,10 +66,12 @@ class InitCommand extends BaseCommand {
 
     if (projectDir.existsSync()) {
       if (results['force'] != true) {
-        Logger.error('Directory $projectName already exists. Use --force to overwrite.');
+        Logger.error(
+            'Directory $projectName already exists. Use --force to overwrite.');
         exit(1);
       } else {
-        Logger.warning('Directory $projectName exists. Cleaning up for fresh Flutter project creation...');
+        Logger.warning(
+            'Directory $projectName exists. Cleaning up for fresh Flutter project creation...');
         // Delete the existing directory to ensure clean flutter create
         try {
           await projectDir.delete(recursive: true);
@@ -86,23 +89,22 @@ class InitCommand extends BaseCommand {
       projectName: projectName,
       organization: results['org'] as String,
       description: results['description'] as String,
-      
       projectPath: projectPath,
     );
 
     final generator = ProjectGenerator(config);
-    
+
     try {
       await generator.generate();
-      
+
       Logger.success('Project created successfully!');
-      
+
       Logger.section('Next steps');
       Logger.item('cd $projectName');
       Logger.item('flutter pub get  # Get updated dependencies');
-      Logger.item('flutter packages pub run build_runner build  # Generate code for models');
+      Logger.item(
+          'flutter packages pub run build_runner build  # Generate code for models');
       Logger.item('flutter run');
-      
     } catch (e) {
       Logger.error('Failed to create project: $e');
       exit(1);

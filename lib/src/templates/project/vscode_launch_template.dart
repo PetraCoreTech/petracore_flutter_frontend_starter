@@ -1,4 +1,3 @@
-
 import '../../generators/project_generator.dart';
 
 String vscodeLaunchTemplate(ProjectConfig config) => '''

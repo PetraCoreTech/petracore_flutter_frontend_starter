@@ -28,7 +28,7 @@ void main(List<String> arguments) async {
 
   try {
     final results = parser.parse(arguments);
-    
+
     // Set logging level
     if (results['verbose'] == true) {
       Logger.enableVerbose();

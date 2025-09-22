@@ -1,4 +1,3 @@
-
 String vscodeSettingsTemplate() => '''
 {
     "java.configuration.updateBuildConfiguration": "interactive",

@@ -142,13 +142,13 @@ class FeatureCommand extends BaseCommand {
       await generator.generate();
 
       Logger.success('Feature $featureName created successfully!');
-      
+
       Logger.section('Generated files');
       Logger.item('$featurePath/');
       Logger.item('${featureName}_index.dart');
       Logger.item('data/ (models, repositories, use cases)');
       Logger.item('presentation/ (screens, controllers)');
-      
+
       Logger.section('Next steps');
       Logger.item('1. Add the feature to your main bloc provider');
       Logger.item('2. Update your navigation routes');
@@ -162,12 +162,13 @@ class FeatureCommand extends BaseCommand {
   /// Handle the 'auth' keyword specially - offer full auth flow
   Future<void> _handleAuthKeyword() async {
     Logger.header('Auth Feature Detected!');
-    
+
     Logger.info('I detected you want to generate an "auth" feature.');
     Logger.info('Would you like to:');
     Logger.spacer();
-    
-    Logger.item('1. Generate a basic auth feature (standard feature structure)');
+
+    Logger.item(
+        '1. Generate a basic auth feature (standard feature structure)');
     Logger.item('2. Bootstrap complete authentication flow (recommended)');
     Logger.item('   • Login & Signup screens', indent: 6);
     Logger.item('   • BLoC state management', indent: 6);
@@ -230,18 +231,18 @@ class FeatureCommand extends BaseCommand {
       await generator.generate();
 
       Logger.success('Basic auth feature created successfully!');
-      
+
       Logger.section('Generated files');
       Logger.item('$featurePath/');
       Logger.item('auth_index.dart');
       Logger.item('data/ (models, repositories, use cases)');
       Logger.item('presentation/ (screens, controllers)');
-      
+
       Logger.section('Next steps');
       Logger.item('1. Add the feature to your main bloc provider');
       Logger.item('2. Update your navigation routes');
       Logger.item('3. Run: flutter packages pub run build_runner build');
-      
+
       Logger.section('Pro tip');
       Logger.info('Run "petracore auth" for a complete auth flow with');
       Logger.info('login/signup screens, token management, and more!');

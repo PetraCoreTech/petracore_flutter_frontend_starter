@@ -11,7 +11,7 @@ class CommandUtils {
     bool throwOnError = true,
   }) async {
     Logger.verbose('Running: $command ${arguments.join(' ')}');
-    
+
     if (workingDirectory != null) {
       Logger.verbose('Working directory: $workingDirectory');
     }
