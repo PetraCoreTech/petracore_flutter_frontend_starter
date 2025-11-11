@@ -441,13 +441,13 @@ class ProjectGenerator {
       'lib/app/app.dart': templates.appBarrel,
 
       /// App/View
-      'lib/app/app/view/app.dart': templates.appView,
+      'lib/app/view/app.dart': templates.appView,
 
       /// App/Constants
-      'lib/app/app/constants/app_constants.dart': templates.appConstants,
+      'lib/app/constants/app_constants.dart': templates.appConstants,
 
       /// App/StringValues
-      'lib/app/app/constants/content_strings.dart': templates.contentStrings,
+      'lib/app/constants/content_strings.dart': templates.contentStrings,
 
       /// Theme system files
       'lib/app/theme/theme.dart': templates.themeBarrel,
