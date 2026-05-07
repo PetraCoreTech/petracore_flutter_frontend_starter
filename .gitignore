@@ -1,4 +1,3 @@
-petracore/
-.dart_tool/
+.dart_tool/pub/bin/test/
+.dart_tool/test/
 agent-docs/
-.idea/
