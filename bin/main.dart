@@ -31,7 +31,7 @@ void main(List<String> arguments) async {
 
     // Set logging level
     if (results['verbose'] == true) {
-      Logger.enableVerbose();
+      Logger.setLogLevel(LogLevel.verbose);
     }
 
     if (results['help'] == true || results.command == null) {

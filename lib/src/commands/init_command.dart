@@ -41,13 +41,25 @@ class InitCommand extends BaseCommand {
 
   @override
   Future<void> run(ArgResults results) async {
-    if (results['help'] == true) {
-      _printHelp();
-      return;
-    }
-
     final projectName = results.rest.isNotEmpty ? results.rest.first : null;
+    _validateProjectName(projectName);
 
+    final projectPath = path.join(Directory.current.path, projectName!);
+    await _handleProjectDirectory(projectName, projectPath, results['force'] as bool);
+
+    Logger.header('Creating PetraCore Flutter Project: $projectName');
+
+    final config = ProjectConfig(
+      projectName: projectName,
+      organization: results['org'] as String,
+      description: results['description'] as String,
+      projectPath: projectPath,
+    );
+
+    await _generateProject(config);
+  }
+
+  void _validateProjectName(String? projectName) {
     if (projectName == null) {
       Logger.error('Project name is required');
       _printHelp();
@@ -60,19 +72,19 @@ class InitCommand extends BaseCommand {
           'Project name must be a valid Dart package name (lowercase, underscores only)');
       exit(1);
     }
+  }
 
-    final projectPath = path.join(Directory.current.path, projectName);
+  Future<void> _handleProjectDirectory(String projectName, String projectPath, bool force) async {
     final projectDir = Directory(projectPath);
 
     if (projectDir.existsSync()) {
-      if (results['force'] != true) {
+      if (!force) {
         Logger.error(
             'Directory $projectName already exists. Use --force to overwrite.');
         exit(1);
       } else {
         Logger.warning(
             'Directory $projectName exists. Cleaning up for fresh Flutter project creation...');
-        // Delete the existing directory to ensure clean flutter create
         try {
           await projectDir.delete(recursive: true);
           Logger.verbose('Deleted existing directory');
@@ -82,16 +94,9 @@ class InitCommand extends BaseCommand {
         }
       }
     }
+  }
 
-    Logger.header('Creating PetraCore Flutter Project: $projectName');
-
-    final config = ProjectConfig(
-      projectName: projectName,
-      organization: results['org'] as String,
-      description: results['description'] as String,
-      projectPath: projectPath,
-    );
-
+  Future<void> _generateProject(ProjectConfig config) async {
     final generator = ProjectGenerator(config);
 
     try {
@@ -100,7 +105,7 @@ class InitCommand extends BaseCommand {
       Logger.success('Project created successfully!');
 
       Logger.section('Next steps');
-      Logger.item('cd $projectName');
+      Logger.item('cd ${config.projectName}');
       Logger.item('flutter pub get  # Get updated dependencies');
       Logger.item(
           'flutter packages pub run build_runner build  # Generate code for models');

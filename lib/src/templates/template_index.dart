@@ -65,6 +65,7 @@ export 'feature/presentation/controllers/data_bloc_state_template.dart';
 export 'feature/presentation/controllers/data_bloc_template.dart';
 export 'feature/presentation/presentation_barrel_template.dart';
 export 'feature/presentation/screens/screens_barrel_template.dart';
+export 'feature/presentation/screens/list_screen_template.dart';
 export 'project/analysis_options_template.dart';
 
 /// App
