@@ -17,7 +17,7 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 - 🔐 **Security**: Secure storage, environment variables, and authentication patterns
 - 🎯 **Best Practices**: Linting rules, code generation, and project structure
 - 📦 **Rich Packages**: Carefully selected and battle-tested dependencies
-- ✨ **Enhanced CLI**: Beautiful, professional logging with improved user experience
+- ✨ **Enhanced CLI**: Beautiful, professional logging with levels (debug, info, warning, error, success) and colored output for improved user experience
 
 ## 🆕 Recent Improvements (v1.0.3)
 
@@ -144,6 +144,7 @@ petracore auth --no-interactive --login --signup
 - `--repository` / `--no-repository`: Include repository pattern (default: true)
 - `--use-cases` / `--no-use-cases`: Include use cases (default: true)
 - `--models` / `--no-models`: Include data models (default: true)
+- `--list`: Include a list screen for the feature (default: false)
 - `--output`: Custom output directory (default: lib/features)
 
 #### Auth Command Options

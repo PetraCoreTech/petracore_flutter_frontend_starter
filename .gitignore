@@ -1,1 +1,4 @@
-petracore
+petracore/
+.dart_tool/
+agent-docs/
+.idea/
