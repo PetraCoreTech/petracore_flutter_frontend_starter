@@ -33,6 +33,7 @@ class FeatureTemplates {
   String get blocProvider => blocProviderTemplate(config);
   String get controllersBarrel => controllersBarrelTemplate(config);
   String get screen => screenTemplate(config);
-  String get screensBarrel => screensBarrelTemplate();
+  String get listScreen => listScreenTemplate(config);
+  String get screensBarrel => screensBarrelTemplate(config);
   String get presentationBarrel => presentationBarrelTemplate(config);
 }

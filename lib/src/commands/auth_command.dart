@@ -119,6 +119,8 @@ class AuthCommand extends BaseCommand {
         outputPath: outputDir,
         includeLogin: results['login'] as bool,
         includeSignup: results['signup'] as bool,
+        includeEmailVerification: results['email-verification'] as bool,
+        includePhoneVerification: results['phone-verification'] as bool,
         includeForgotPassword: results['forgot-password'] as bool,
         includeOtp: results['otp'] as bool,
         includeSocialAuth: results['social-auth'] as bool,
@@ -146,6 +148,8 @@ class AuthCommand extends BaseCommand {
     Logger.section('Selected features');
     if (config.includeLogin) Logger.item('Login');
     if (config.includeSignup) Logger.item('Signup');
+    if (config.includeEmailVerification) Logger.item('Email verification');
+    if (config.includePhoneVerification) Logger.item('Phone verification');
     if (config.includeForgotPassword) Logger.item('Forgot Password');
     if (config.includeOtp) Logger.item('OTP functionality');
     if (config.includeSocialAuth) Logger.item('Social Auth placeholders');

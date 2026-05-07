@@ -14,6 +14,8 @@ class AuthFlowConfig {
   // Auth features to generate
   final bool includeLogin;
   final bool includeSignup;
+  final bool includeEmailVerification;
+  final bool includePhoneVerification;
   final bool includeForgotPassword;
   final bool includeOtp;
 
@@ -25,12 +27,15 @@ class AuthFlowConfig {
   // Additional options
   final bool includeSocialAuth;
   final bool includeDeviceToken;
+  final bool runPostGenerationActions;
 
   AuthFlowConfig({
     required this.projectName,
     required this.outputPath,
     this.includeLogin = true,
     this.includeSignup = true,
+    this.includeEmailVerification = false,
+    this.includePhoneVerification = false,
     this.includeForgotPassword = true,
     this.includeOtp = true,
     this.includeSplashScreen = true,
@@ -38,12 +43,52 @@ class AuthFlowConfig {
     this.includeGetStartedScreen = true,
     this.includeDeviceToken = true,
     this.includeSocialAuth = false,
+    this.runPostGenerationActions = true,
   });
 
   String get className => projectName
       .split('_')
       .map((word) => word[0].toUpperCase() + word.substring(1))
       .join();
+
+  AuthFlowConfig copyWith({
+    String? projectName,
+    String? outputPath,
+    bool? includeLogin,
+    bool? includeSignup,
+    bool? includeEmailVerification,
+    bool? includePhoneVerification,
+    bool? includeForgotPassword,
+    bool? includeOtp,
+    bool? includeSplashScreen,
+    bool? includeWelcomeScreen,
+    bool? includeGetStartedScreen,
+    bool? includeSocialAuth,
+    bool? includeDeviceToken,
+    bool? runPostGenerationActions,
+  }) {
+    return AuthFlowConfig(
+      projectName: projectName ?? this.projectName,
+      outputPath: outputPath ?? this.outputPath,
+      includeLogin: includeLogin ?? this.includeLogin,
+      includeSignup: includeSignup ?? this.includeSignup,
+      includeEmailVerification:
+          includeEmailVerification ?? this.includeEmailVerification,
+      includePhoneVerification:
+          includePhoneVerification ?? this.includePhoneVerification,
+      includeForgotPassword:
+          includeForgotPassword ?? this.includeForgotPassword,
+      includeOtp: includeOtp ?? this.includeOtp,
+      includeSplashScreen: includeSplashScreen ?? this.includeSplashScreen,
+      includeWelcomeScreen: includeWelcomeScreen ?? this.includeWelcomeScreen,
+      includeGetStartedScreen:
+          includeGetStartedScreen ?? this.includeGetStartedScreen,
+      includeSocialAuth: includeSocialAuth ?? this.includeSocialAuth,
+      includeDeviceToken: includeDeviceToken ?? this.includeDeviceToken,
+      runPostGenerationActions:
+          runPostGenerationActions ?? this.runPostGenerationActions,
+    );
+  }
 }
 
 class AuthFlowGenerator {

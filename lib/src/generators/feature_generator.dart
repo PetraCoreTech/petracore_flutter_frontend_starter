@@ -13,6 +13,7 @@ class FeatureConfig {
   final bool includeRepository;
   final bool includeUseCases;
   final bool includeModels;
+  final bool includeList;
   final ProjectConfig projectConfig;
 
   FeatureConfig({
@@ -23,6 +24,7 @@ class FeatureConfig {
     this.includeRepository = true,
     this.includeUseCases = true,
     this.includeModels = true,
+    this.includeList = false,
   });
 
   String get className => ReCase(featureName).pascalCase;
@@ -184,6 +186,9 @@ class FeatureGenerator {
     final files = {
       'presentation/screens/${config.featureName}_screen.dart':
           templates.screen,
+      if (config.includeList)
+        'presentation/screens/${config.featureName}_list_screen.dart':
+            templates.listScreen,
       'presentation/screens/${config.featureName}_screens_index.dart':
           templates.screensBarrel,
       'presentation/presentation.dart': templates.presentationBarrel,

@@ -38,6 +38,11 @@ ArgParser featureCommandParser() {
       help: 'Include data models with JSON serialization',
       defaultsTo: true,
     )
+    ..addFlag(
+      'list',
+      help: 'Include a list screen for the feature',
+      defaultsTo: false,
+    )
     ..addOption(
       'output',
       abbr: 'o',
@@ -133,6 +138,7 @@ class FeatureCommand extends BaseCommand {
       includeRepository: featureResults['repository'] as bool,
       includeUseCases: featureResults['use-cases'] as bool,
       includeModels: featureResults['models'] as bool,
+      includeList: featureResults['list'] as bool,
       projectConfig: projectConfig,
     );
 
@@ -356,6 +362,7 @@ Options:
   --repository     Include repository pattern (default: true)
   --use-cases      Include use cases for business logic (default: true)
   --models         Include data models with JSON serialization (default: true)
+  --list           Include a list screen for the feature (default: false)
   --output, -o     Output directory (default: lib/features)
   --help, -h       Show this help
 
