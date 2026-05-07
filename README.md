@@ -1,6 +1,6 @@
 # PetraCore Flutter Frontend Starter
 
-[![Pub Version](https://img.shields.io/badge/version-1.0.3-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
+[![Pub Version](https://img.shields.io/badge/version-1.0.4-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful CLI tool and package for generating Flutter projects with **clean architecture**, **Firebase integration**, and **industry best practices**. Based on proven patterns from production applications.
@@ -9,7 +9,8 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 
 - 🏗️ **Clean Architecture**: Feature-based modular structure with clear separation of concerns
 - 🔥 **Firebase Integration**: Pre-configured Firestore, Analytics, and Cloud Messaging
-- 🎨 **Modern UI**: Material 3, responsive design, and comprehensive component library  
+- 🎨 **Dual Theme System**: Choose between Material 3 or custom Mix design tokens
+- 🎨 **Modern UI**: Responsive design and comprehensive component library  
 - 🧩 **BLoC Pattern**: Predictable state management with Hydrated BLoC
 - 🚀 **CLI Tools**: Generate projects and features instantly
 - 🔐 **Complete Authentication**: Full auth flow with login, signup, OTP, email verification
@@ -19,8 +20,13 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 - 📦 **Rich Packages**: Carefully selected and battle-tested dependencies
 - ✨ **Enhanced CLI**: Beautiful, professional logging with levels (debug, info, warning, error, success) and colored output for improved user experience
 
-## 🆕 Recent Improvements (v1.0.3)
+## 🆕 Recent Improvements (v1.0.4)
 
+- **Dual Theme System**: Added Material 3 theme generation option alongside existing Mix theme support
+- **Universal Color Values**: `color_values.dart` now generated for BOTH theme types as shared brand color palette
+- **Conditional Mix Injection**: `AppConstants` template now conditionally includes Mix `$token` code only for non-Material projects
+- **Pure Material 3 Implementation**: Completely rewrote Material theme template with explicit `ThemeData` configuration - no Mix dependencies
+- **Theme File Routing**: Updated `project_generator.dart` to correctly route theme files based on selected theme type
 - **Fixed Build Runner Issues**: Resolved duplicate build_runner executions and command format issues
 - **Enhanced Auth Flow**: Complete authentication system with login, signup, OTP, email verification
 - **Professional CLI Logging**: Clean, well-spaced output with visual hierarchy and progress indicators
@@ -35,8 +41,13 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 your_project/
 ├── lib/
 │   ├── app/                    # App-level configuration
-│   │   ├── app/               # App constants and main app widget
-│   │   └── theme/             # Theming configuration
+│   │   ├── constants/          # App constants and string values
+│   │   ├── view/               # Main app widget
+│   │   └── theme/              # Theming configuration
+│   │       ├── color_values.dart # Shared brand color palette (always generated)
+│   │       ├── theme.dart        # Material 3 theme (if --theme material)
+│   │       ├── design_tokens/    # Mix design tokens (if --theme mix)
+│   │       └── themes/           # Mix theme files (if --theme mix)
 │   ├── core/                   # Shared utilities and components
 │   │   ├── components/        # Reusable UI components
 │   │   ├── data/              # Core data services and domain logic
@@ -80,8 +91,11 @@ dart pub add petracore_flutter_frontend_starter
 ### Create a New Project
 
 ```bash
-# Basic project
+# Basic project (Mix theme)
 petracore init my_awesome_app
+
+# With Material 3 theme
+petracore init my_material_app --theme material
 
 # With custom organization
 petracore init my_app --org com.mycompany
@@ -134,6 +148,7 @@ petracore auth --no-interactive --login --signup
 ### Available Options
 
 #### Init Command Options
+- `--theme`: Theme type - `mix` (default) or `material`
 - `--org`: Organization identifier (default: com.petracore)
 - `--description`: Project description
 - `--force`: Force creation even if directory exists
@@ -284,11 +299,41 @@ firebase_messaging: ^15.2.4    # Cloud Messaging
    flutter packages pub run build_runner build
    ```
 
+## 🎨 Dual Theme System
+
+PetraCore supports two theme architectures:
+
+### Material 3 Theme
+Pure Flutter Material 3 implementation using standard `ThemeData`:
+- Generated files: `lib/app/theme/theme.dart`
+- Uses `AppColors` from `color_values.dart` for all color references
+- Components use `Theme.of(context)` for styling
+- No external dependencies beyond Flutter Material
+
+### Mix Theme
+Petracore's custom design token system:
+- Generated files: `lib/app/theme/design_tokens/` and `lib/app/theme/themes/`
+- Uses `$token.color` for accessing design tokens
+- Components use Mix design system patterns
+- Full design token architecture with color, radius, and text style tokens
+
+### Shared: Color Values
+`color_values.dart` is generated for **both** theme types as the source of truth for brand colors:
+- Primary, secondary, technical colors
+- Neutral palette (50-600 scale)
+- Error, success, warning, info states
+- Surface colors (white, black, overlays)
+
+### Theme Customization
+- **Material**: Modify `AppColors` in `color_values.dart` - all theme colors derive from these values
+- **Mix**: Modify design tokens in `design_tokens/` and theme files in `themes/`
+- **Both**: Update `AppConstants.fontFamily` for typography changes
+
 ## 🎨 Customization
 
 ### Themes and Design
 - Modify `lib/app/theme/` for custom themes
-- Update `lib/app/app/constants/app_constants.dart` for design tokens
+- Update `lib/app/constants/app_constants.dart` for design tokens
 - Add custom fonts to `fonts/` directory
 
 ### Components

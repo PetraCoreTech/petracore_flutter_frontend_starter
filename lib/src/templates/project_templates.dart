@@ -6,6 +6,8 @@ class ProjectTemplates {
 
   final ProjectConfig config;
 
+  bool get _isMaterial => config.themeType == ThemeType.material;
+
   /// Project Files
   String get analysisOptions => analysisOptionsTemplate();
   String get gitignore => gitignoreTemplate();
@@ -23,12 +25,16 @@ class ProjectTemplates {
 
   /// App
   String get appBarrel => appBarrelTemplate();
-  String get appView => appViewTemplate(config);
+  String get appView => _isMaterial
+      ? materialAppViewTemplate(config)
+      : appViewTemplate(config);
   String get appConstants => appConstantsTemplate(config);
   String get contentStrings => contentStringsTemplate();
 
   /// App/Theme
-  String get themeBarrel => themeBarrelTemplate();
+  String get themeBarrel => _isMaterial
+      ? materialThemeBarrelTemplate()
+      : themeBarrelTemplate();
   String get colorValues => colorValuesTemplate();
   String get themeToken => themeTokenTemplate();
   String get themeColorToken => themeColorTokenTemplate();
@@ -37,6 +43,7 @@ class ProjectTemplates {
   String get baseTheme => baseThemeTemplate(config);
   String get lightTheme => lightThemeTemplate(config);
   String get darkTheme => darkThemeTemplate(config);
+  String get materialTheme => materialThemeTemplate(config);
 
   /// Core
   String get coreBarrel => coreBarrelTemplate(config);
@@ -67,7 +74,7 @@ class ProjectTemplates {
   /// Core/Utils
   String get utilsIndex => utilsIndexTemplate();
   String get boolExtension => boolExtensionTemplate();
-  String get contextExtensions => contextExtensionsTemplate();
+  String get contextExtensions => contextExtensionsTemplate(config);
   String get ctxResponsiveExt => ctxResponsiveExtTemplate();
   String get dateTimeExtension => dateTimeExtTemplate(config);
   String get intExtension => intExtensionTemplate();
@@ -81,69 +88,133 @@ class ProjectTemplates {
   String get componentsIndex => componentsIndexTemplate(config);
 
   /// Core/Component/AppBar
-  String get appBarV1 => appBarV1Template(config);
+  String get appBarV1 => _isMaterial
+      ? materialAppBarV1Template(config)
+      : appBarV1Template(config);
   String get persistentHeaderV1 => persistentHeaderV1Template(config);
-  String get tabBarV1 => tabBarV1Template(config);
+  String get tabBarV1 => _isMaterial
+      ? materialTabBarV1Template(config)
+      : tabBarV1Template(config);
 
   /// Core/Component/Buttons
-  String get appButton => appButtonTemplate(config);
-  String get appButtonStyle => appButtonStyleTemplate();
-  String get appButtonType => appButtonTypeTemplate();
-  String get appOutlineButton => appOutlineButtonTemplate(config);
-  String get appOutlineButtonStyle => appOutlineButtonStyleTemplate();
-  String get appOutlineButtonType => appOutlineButtonTypeTemplate();
-  String get appTextButton => appTextButtonTemplate(config);
-  String get appTextButtonStyle => appTextButtonStyleTemplate();
-  String get appTextButtonType => appTextButtonTypeTemplate();
+  String get appButton => _isMaterial
+      ? materialAppButtonTemplate(config)
+      : appButtonTemplate(config);
+  String get appButtonStyle => _isMaterial ? '' : appButtonStyleTemplate();
+  String get appButtonType => _isMaterial
+      ? materialAppButtonTypeTemplate()
+      : appButtonTypeTemplate();
+  String get appOutlineButton => _isMaterial
+      ? materialAppOutlineButtonTemplate(config)
+      : appOutlineButtonTemplate(config);
+  String get appOutlineButtonStyle =>
+      _isMaterial ? '' : appOutlineButtonStyleTemplate();
+  String get appOutlineButtonType => _isMaterial
+      ? materialAppOutlineButtonTypeTemplate()
+      : appOutlineButtonTypeTemplate();
+  String get appTextButton => _isMaterial
+      ? materialAppTextButtonTemplate(config)
+      : appTextButtonTemplate(config);
+  String get appTextButtonStyle => _isMaterial ? '' : appTextButtonStyleTemplate();
+  String get appTextButtonType => _isMaterial
+      ? materialAppTextButtonTypeTemplate()
+      : appTextButtonTypeTemplate();
 
   ///Core/Component/Custom
   String get customIcon => customIconTemplate();
-  String get dividerV1 => dividerV1Template(config);
-  String get dot => dotTemplate(config);
-  String get expansionTileV1 => expansionTileV1Template(config);
-  String get hyperLinkText => hyperLinkTextTemplate(config);
-  String get initialsDisplay => initialsDisplayTemplate(config);
-  String get listTileV1 => listTileV1Template(config);
-  String get passwordStrengthChecker => passwordStrengthCheckerTemplate(config);
+  String get dividerV1 => _isMaterial
+      ? materialDividerV1Template(config)
+      : dividerV1Template(config);
+  String get dot =>
+      _isMaterial ? materialDotTemplate(config) : dotTemplate(config);
+  String get expansionTileV1 => _isMaterial
+      ? materialExpansionTileV1Template(config)
+      : expansionTileV1Template(config);
+  String get hyperLinkText => _isMaterial
+      ? materialHyperLinkTextTemplate(config)
+      : hyperLinkTextTemplate(config);
+  String get initialsDisplay => _isMaterial
+      ? materialInitialsDisplayTemplate(config)
+      : initialsDisplayTemplate(config);
+  String get listTileV1 => _isMaterial
+      ? materialListTileV1Template(config)
+      : listTileV1Template(config);
+  String get passwordStrengthChecker => _isMaterial
+      ? materialPasswordStrengthCheckerTemplate(config)
+      : passwordStrengthCheckerTemplate(config);
 
   /// Core/Component/Dialog
-  String get actionDialog => actionDialogTemplate(config);
-  String get bottomSheetSelectContent =>
-      bottomSheetSelectContentTemplate(config);
-  String get toastV1 => toastV1Template(config);
+  String get actionDialog => _isMaterial
+      ? materialActionDialogTemplate(config)
+      : actionDialogTemplate(config);
+  String get bottomSheetSelectContent => _isMaterial
+      ? materialBottomSheetSelectContentTemplate(config)
+      : bottomSheetSelectContentTemplate(config);
+  String get toastV1 =>
+      _isMaterial ? materialToastV1Template(config) : toastV1Template(config);
 
   /// Core/Component/Frames
   String get iconFrame => iconFrameTemplate(config);
-  String get listFrame => listFrameTemplate(config);
-  String get profileFrame => profileFrameTemplate(config);
-  String get screenFrame => screenFrameTemplate(config);
+  String get listFrame => _isMaterial
+      ? materialListFrameTemplate(config)
+      : listFrameTemplate(config);
+  String get profileFrame => _isMaterial
+      ? materialProfileFrameTemplate(config)
+      : profileFrameTemplate(config);
+  String get screenFrame => _isMaterial
+      ? materialScreenFrameTemplate(config)
+      : screenFrameTemplate(config);
 
   /// Core/Component/Helpers
-  String get dateTimeHelper => dateTimeHelperTemplate(config);
-  String get dialogHelper => dialogHelperTemplate(config);
+  String get dateTimeHelper => _isMaterial
+      ? materialDateTimeHelperTemplate(config)
+      : dateTimeHelperTemplate(config);
+  String get dialogHelper => _isMaterial
+      ? materialDialogHelperTemplate(config)
+      : dialogHelperTemplate(config);
   String get interactionHelper => interactionHelperTemplate(config);
-  String get sliverHelper => sliverHelperTemplate(config);
-  String get snackBarHelper => snackBarHelperTemplate(config);
-  String get toastHelper => toastHelperTemplate(config);
+  String get sliverHelper => _isMaterial
+      ? materialSliverHelperTemplate(config)
+      : sliverHelperTemplate(config);
+  String get snackBarHelper => _isMaterial
+      ? materialSnackBarHelperTemplate(config)
+      : snackBarHelperTemplate(config);
+  String get toastHelper => _isMaterial
+      ? materialToastHelperTemplate(config)
+      : toastHelperTemplate(config);
 
   /// Core/Component/InputFields
-  String get baseTextField => baseTextFieldTemplate(config);
-  String get inputField => inputFieldTemplate(config);
+  String get baseTextField => _isMaterial
+      ? materialBaseTextFieldTemplate(config)
+      : baseTextFieldTemplate(config);
+  String get inputField => _isMaterial
+      ? materialInputFieldTemplate(config)
+      : inputFieldTemplate(config);
   String get inputItem => inputItemTemplate(config);
   String get passwordField => passwordFieldTemplate(config);
-  String get phoneField => phoneFieldTemplate(config);
-  String get searchFeatureField => searchFeatureFieldTemplate(config);
+  String get phoneField => _isMaterial
+      ? materialPhoneFieldTemplate(config)
+      : phoneFieldTemplate(config);
+  String get searchFeatureField => _isMaterial
+      ? materialSearchFeatureFieldTemplate(config)
+      : searchFeatureFieldTemplate(config);
   String get searchInputField => searchInputFieldTemplate(config);
 
   /// Core/Component/Scaffolds
   String get baseScaffold => baseScaffoldTemplate();
-  String get scaffoldV1 => scaffoldV1Template(config);
+  String get scaffoldV1 => _isMaterial
+      ? materialScaffoldV1Template(config)
+      : scaffoldV1Template(config);
 
   /// Core/Component/States
-  String get infoDisplay => infoDisplayTemplate(config);
+  String get infoDisplay => _isMaterial
+      ? materialInfoDisplayTemplate(config)
+      : infoDisplayTemplate(config);
   String get loadingIndicator => loadingIndicatorTemplate(config);
   String get loadingOverlayV1 => loadingOverlayV1Template(config);
-  String get loadingShimmer => loadingShimmerTemplate(config);
+  String get loadingShimmer => _isMaterial
+      ? materialLoadingShimmerTemplate(config)
+      : loadingShimmerTemplate(config);
 
   /// Navigation
   String get routes => routesTemplate();

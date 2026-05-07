@@ -24,6 +24,12 @@ ArgParser initCommandParser() {
       help: 'Project description',
       defaultsTo: 'A new Flutter project built with PetraCore architecture.',
     )
+    ..addOption(
+      'theme',
+      help: 'Theme system to use: mix (default) or material',
+      defaultsTo: 'mix',
+      allowed: ['mix', 'material'],
+    )
     ..addFlag(
       'force',
       help: 'Force creation even if directory exists',
@@ -54,6 +60,7 @@ class InitCommand extends BaseCommand {
       organization: results['org'] as String,
       description: results['description'] as String,
       projectPath: projectPath,
+      themeType: _parseThemeType(results['theme'] as String),
     );
 
     await _generateProject(config);
@@ -116,6 +123,15 @@ class InitCommand extends BaseCommand {
     }
   }
 
+  ThemeType _parseThemeType(String theme) {
+    switch (theme) {
+      case 'material':
+        return ThemeType.material;
+      default:
+        return ThemeType.mix;
+    }
+  }
+
   void _printHelp() {
     print('''
 Initialize a new Flutter project with PetraCore architecture
@@ -125,12 +141,13 @@ Usage: petracore init <project_name> [options]
 
   --org             Organization identifier (default: com.petracore)
   --description     Project description
+  --theme           Theme system: mix (default) or material
   --force           Force creation even if directory exists
   --help, -h        Show this help
 
 Examples:
   petracore init my_awesome_app
-  petracore init my_app --org com.mycompany --no-firebase
+  petracore init my_app --org com.mycompany --theme material
   petracore init test_app --force --description "A test application"
 ''');
   }

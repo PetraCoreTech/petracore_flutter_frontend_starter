@@ -1,0 +1,164 @@
+import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
+
+String materialAppTextButtonTemplate(ProjectConfig config) => '''
+import 'package:flutter/services.dart';
+import 'package:${config.projectName}/app/app.dart';
+import 'package:${config.projectName}/core/core.dart';
+
+part 'app_text_button_type.dart';
+
+class AppTextButton extends StatelessWidget {
+  const AppTextButton({
+    required this.text,
+    super.key,
+    this.type = AppTextButtonType.primary,
+    this.onTap,
+    this.height,
+    this.width,
+    this.padding,
+    this.radius,
+    this.textColor,
+    this.textStyle,
+  });
+
+  factory AppTextButton.icon({
+    required String text,
+    required Widget icon,
+    Key? key,
+    double? height,
+    double? width,
+    double? radius,
+    VoidCallback? onTap,
+    Color? textColor,
+    TextStyle? textStyle,
+    EdgeInsetsGeometry? padding,
+    AppTextButtonType type = AppTextButtonType.primary,
+    IconAlignment iconAlignment = IconAlignment.start,
+  }) {
+    return _AppTextButtonWithIcon(
+      key: key,
+      type: type,
+      text: text,
+      icon: icon,
+      height: height,
+      width: width,
+      iconAlignment: iconAlignment,
+      onTap: onTap,
+      textColor: textColor,
+      textStyle: textStyle,
+      padding: padding,
+      radius: radius,
+    );
+  }
+
+  final double? height;
+  final double? width;
+  final double? radius;
+  final String text;
+  final Color? textColor;
+  final TextStyle? textStyle;
+  final EdgeInsetsGeometry? padding;
+  final VoidCallback? onTap;
+  final AppTextButtonType type;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final effectiveTextColor = textColor ?? _getTextColor(context);
+
+    return SizedBox(
+      width: width,
+      height: height,
+      child: TextButton(
+        onPressed: onTap == null ? null : () {
+          SystemChannels.textInput.invokeMethod('TextInput.hide');
+          onTap!();
+        },
+        style: TextButton.styleFrom(
+          foregroundColor: effectiveTextColor,
+          padding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radius ?? 8),
+          ),
+          textStyle: textStyle ?? theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        child: Text(text),
+      ),
+    );
+  }
+
+  Color _getTextColor(BuildContext context) {
+    if (textColor != null) return textColor!;
+    final theme = Theme.of(context);
+    return switch (type) {
+      AppTextButtonType.primary => theme.colorScheme.primary,
+      AppTextButtonType.secondary => theme.colorScheme.secondary,
+      AppTextButtonType.error => theme.colorScheme.error,
+    };
+  }
+}
+
+class _AppTextButtonWithIcon extends AppTextButton {
+  const _AppTextButtonWithIcon({
+    required super.text,
+    required this.icon,
+    required this.iconAlignment,
+    super.key,
+    super.height,
+    super.width,
+    super.padding,
+    super.radius,
+    super.textColor,
+    super.textStyle,
+    super.onTap,
+    super.type = AppTextButtonType.primary,
+  });
+
+  final Widget icon;
+  final IconAlignment iconAlignment;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final effectiveTextColor = textColor ?? _getTextColor(context);
+
+    return SizedBox(
+      width: width,
+      height: height,
+      child: TextButton(
+        onPressed: onTap == null ? null : () {
+          SystemChannels.textInput.invokeMethod('TextInput.hide');
+          onTap!();
+        },
+        style: TextButton.styleFrom(
+          foregroundColor: effectiveTextColor,
+          padding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radius ?? 8),
+          ),
+          textStyle: textStyle ?? theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (iconAlignment == IconAlignment.start) ...[icon, const SizedBox(width: 8)],
+            Text(text),
+            if (iconAlignment == IconAlignment.end) ...[const SizedBox(width: 8), icon],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getTextColor(BuildContext context) {
+    if (textColor != null) return textColor!;
+    final theme = Theme.of(context);
+    return switch (type) {
+      AppTextButtonType.primary => theme.colorScheme.primary,
+      AppTextButtonType.secondary => theme.colorScheme.secondary,
+      AppTextButtonType.error => theme.colorScheme.error,
+    };
+  }
+}
+''';
