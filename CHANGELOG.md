@@ -127,6 +127,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Streamlined logging implementation
   - Better separation of concerns in generator classes
 
+## [Unreleased]
+
+### Planned
+- 📱 Additional UI components (date pickers, modals, etc.)
+- 🔧 Custom theme generator
+- 🧪 Enhanced testing templates
+- 🚀 CI/CD workflow templates
+- 📱 Platform-specific optimizations
+- 🎨 Design system generator
+- 🔌 Plugin integration templates
+- 📊 Analytics dashboard template
+- 🔐 Advanced authentication patterns
+- 🌐 Internationalization setup
+
 ## [1.0.4] - 2026-05-09
 
 ### Added
@@ -171,17 +185,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - ♻️ **Refactored Generators**: Both `FeatureGenerator` and `AuthFlowGenerator` now read actual project config instead of hardcoded defaults
 - 🧹 **Code Organization**: Cleaner separation between feature-level and project-level concerns
-
-## [Unreleased]
-
-### Planned
-- 📱 Additional UI components (date pickers, modals, etc.)
-- 🔧 Custom theme generator
-- 🧪 Enhanced testing templates
-- 🚀 CI/CD workflow templates
-- 📱 Platform-specific optimizations
-- 🎨 Design system generator
-- 🔌 Plugin integration templates
-- 📊 Analytics dashboard template
-- 🔐 Advanced authentication patterns
-- 🌐 Internationalization setup
