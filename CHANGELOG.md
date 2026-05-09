@@ -127,6 +127,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Streamlined logging implementation
   - Better separation of concerns in generator classes
 
+## [1.0.4] - 2026-05-09
+
+### Added
+- 🎨 **Material 3 Theme Support**: Full Material Design 3 theme support alongside existing Mix theme
+  - `--theme material` flag for project initialization
+  - Structured theme files: `theme.dart` barrels `material_theme.dart`
+  - Theme type auto-detection in `ProjectConfigReader`
+- 📱 **Material Auth Screens**: 11 material variant auth screen/widget templates
+  - Login, Signup, Splash, Welcome, Get Started, Verify OTP
+  - Forgot Password, Forgot Password Verify, Reset Password
+  - Resend Code Display, Resend Code Text
+  - Uses `Theme.of(context)` (no Mix `$token` / `colors.*` references)
+  - `AuthTemplates` class with theme-aware `_isMaterial` branching
+- 🔌 **Material Core Components**: Material variants for 6 core components
+  - IconFrame, PasswordField, SearchInputField, LoadingIndicator
+  - PasswordStrengthChecker, InfoDisplay
+- 🔄 **Automatic BLoC Provider Registration**: Features auto-register their BLoC providers
+  - `_updateSharedBlocProvider()` in both `FeatureGenerator` and `AuthFlowGenerator`
+  - Appends feature BLoC provider import + spread entry to shared `bloc_provider.dart`
+- 🛣️ **Automatic Route Registration**: Auth screens auto-register in router
+  - `_updateRouterWithAuthRoutes()` inserts GoRoute entries into `router.dart`
+  - `_updateAppRoutes()` inserts route name constants into `routes.dart` `AppRoutes` class
+  - Conditional routes matching enabled auth feature flags
+  - Idempotent regex-based replacement for re-runs
+
+### Fixed
+- 🗑️ **Removed Redundant Models Barrel**: Eliminated duplicate `data/models/models.dart` generation
+  - Removed `models_barrel_template.dart` and `models_template.dart`
+  - Feature index (`feature_name_index.dart`) already exports models directly
+  - Dead code cleanup from `template_index.dart` and generators
+- 🐛 **Ambiguous Extension Members**: Fixed duplicate `capitalize()` and `stringOrNull()` methods
+  - Removed `StringExt` from `context_extensions_template.dart`
+  - Eliminated all `ambiguous_extension_member_access` errors
+- 🎯 **Template Syntax Fixes**: Various template corrections
+  - Added `AppConstants` import to `material_theme_template.dart`
+  - Fixed `progressBarTheme` → `progressIndicatorTheme`
+  - Added `List<BlocProvider>` type annotation to `auth_bloc_provider_template.dart`
+  - Conditional `package:mix/mix.dart` exclusion in `core_barrel_template.dart` for material theme
+  - `dart fix --apply` at end of `AuthFlowGenerator.generate()`
+- 📖 **Updated Documentation**: README.md and CHANGELOG.md updated for all improvements
+
+### Changed
+- ♻️ **Refactored Generators**: Both `FeatureGenerator` and `AuthFlowGenerator` now read actual project config instead of hardcoded defaults
+- 🧹 **Code Organization**: Cleaner separation between feature-level and project-level concerns
+
 ## [Unreleased]
 
 ### Planned
