@@ -33,6 +33,11 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 - **Improved Error Handling**: Better error messages and debugging information
 - **Template Bug Fixes**: Resolved syntax errors in generated code templates
 - **Enhanced Test Suite**: Comprehensive testing for all auth flow components
+- **Removed Redundant Models Barrel**: `models.dart` barrel export no longer generated in features, since `feature_index.dart` already exports models directly
+- **Automatic BLoC Provider Registration**: Feature and auth generators now auto-register their BLoC providers in the shared `bloc_provider.dart` - no manual step needed
+- **Automatic Router Updates**: Auth flow generator now auto-populates `router.dart` and `routes.dart` with all generated auth screen routes
+- **Material Theme Auth Support**: Auth screens now fully support Material 3 theme with `Theme.of(context)` styling instead of Mix-specific tokens
+- **Theme Type Detection**: `ProjectConfigReader` now detects the project's theme type automatically for correct template selection
 
 ## 📋 What You Get
 
@@ -113,7 +118,7 @@ petracore init existing_app --force
 ### Generate Features
 
 ```bash
-# Generate a complete feature with all components
+# Generate a complete feature with all components (BLoC provider auto-registered)
 petracore feature user_profile
 
 # Generate feature without BLoC
@@ -128,6 +133,8 @@ petracore feature ui_feature --no-models
 # Alternative syntax
 petracore generate feature chat
 ```
+
+> **Note**: When generating features with BLoC enabled, the CLI automatically registers the feature's BLoC provider in `lib/features/shared/presentation/controllers/bloc_provider.dart`. No manual editing needed.
 
 ### Generate Complete Authentication Flow
 
@@ -181,29 +188,38 @@ Each generated feature follows this structure:
 
 ```
 features/your_feature/
-├── your_feature_index.dart           # Barrel export file
+├── your_feature_index.dart           # Barrel export file (exports models directly)
 ├── data/
 │   ├── models/
-│   │   ├── your_feature_model.dart   # Data models with JSON serialization
-│   │   └── models.dart               # Models barrel export
-│   ├── repositories/
+│   │   └── your_feature_model.dart   # Data models with JSON serialization
+│   ├── remote/
+│   │   ├── your_feature_service.dart     # API service
 │   │   ├── your_feature_repository.dart  # Repository interface & implementation
-│   │   └── repositories.dart         # Repositories barrel export
-│   └── use_cases/
-│       ├── get_your_feature_use_case.dart  # Business logic use cases
-│       └── use_cases.dart            # Use cases barrel export
+│   │   └── dto/
+│   │       ├── create_your_feature_dto.dart
+│   │       ├── update_your_feature_dto.dart
+│   │       └── your_feature_params.dart
+│   └── domain/
+│       └── your_feature_use_cases.dart   # Business logic use cases
 └── presentation/
     ├── controllers/
-    │   ├── your_feature_cubit.dart   # State management
-    │   ├── your_feature_state.dart   # State definitions
-    │   ├── your_feature_bloc_provider.dart  # BLoC provider
-    │   └── controllers.dart          # Controllers barrel export
+    │   ├── cubits/
+    │   │   └── your_feature_cubit.dart   # Cubit state management
+    │   ├── blocs/
+    │   │   ├── multiple_your_feature_bloc/  # Data BLoC (multi-state)
+    │   │   │   ├── multiple_your_feature_bloc.dart
+    │   │   │   ├── multiple_your_feature_event.dart
+    │   │   │   └── multiple_your_feature_state.dart
+    │   │   └── your_feature_action_bloc/   # Action BLoC (single-state)
+    │   │       ├── your_feature_action_bloc.dart
+    │   │       ├── your_feature_action_event.dart
+    │   │       └── your_feature_action_state.dart
+    │   ├── your_feature_bloc_provider.dart  # BLoC provider (auto-registered)
+    │   └── your_feature_controller_index.dart
     ├── screens/
     │   ├── your_feature_screen.dart  # Main feature screen
-    │   └── screens.dart              # Screens barrel export
+    │   └── your_feature_screens_index.dart
     ├── widgets/
-    │   ├── your_feature_widget.dart  # Feature-specific widgets
-    │   └── widgets.dart              # Widgets barrel export
     └── presentation.dart             # Presentation barrel export
 ```
 
@@ -281,23 +297,15 @@ firebase_messaging: ^15.2.4    # Cloud Messaging
    petracore feature user_profile
    ```
 
-2. **Add to BLoC providers**:
-   Update `lib/features/shared/presentation/controllers/bloc_provider.dart`:
-   ```dart
-   final List<SingleChildWidget> blocProviders = [
-     // Add your new feature provider
-     ...userProfileBlocProvider,
-     // existing providers...
-   ];
-   ```
+2. **BLoC provider auto-registered**: The CLI automatically adds the feature's BLoC provider to `lib/features/shared/presentation/controllers/bloc_provider.dart` - no manual step needed.
 
-3. **Add navigation routes**:
-   Update `lib/navigation/router.dart` with new routes.
-
-4. **Generate code** (if using models):
+3. **Generate code** (if using models):
    ```bash
    flutter packages pub run build_runner build
    ```
+
+4. **Add navigation routes**:
+   Update `lib/navigation/router.dart` with new routes (for auth features, routes are auto-populated).
 
 ## 🎨 Dual Theme System
 
