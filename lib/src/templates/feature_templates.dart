@@ -13,7 +13,6 @@ class FeatureTemplates {
 
   /// Feature/Data
   String get dataModel => dataModelTemplate(config);
-  String get modelsBarrel => modelsBarrelTemplate(config);
   String get createDto => createDtoTemplate(config);
   String get updateDto => updateDtoTemplate(config);
   String get params => paramsTemplate(config);

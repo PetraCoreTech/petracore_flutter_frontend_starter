@@ -10,17 +10,6 @@ extension ContextColorSchemeExt on BuildContext {
   ColorScheme get colors => Theme.of(this).colorScheme;
 }
 
-extension StringExt on String {
-  String capitalize() {
-    if (isEmpty) return this;
-    return this[0].toUpperCase() + substring(1);
-  }
-
-  String? stringOrNull() {
-    return isEmpty ? null : this;
-  }
-}
-
 extension IntExt on int {
   String times(String value) {
     return value * this;

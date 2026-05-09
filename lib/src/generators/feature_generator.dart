@@ -6,6 +6,23 @@ import 'package:petracore_flutter_frontend_starter/src/templates/feature_templat
 import 'package:petracore_flutter_frontend_starter/src/utils/command_utils.dart';
 import 'package:recase/recase.dart';
 
+class DataLayerConfig {
+  final String entityName;
+  final String serviceName;
+  final String repositoryName;
+
+  DataLayerConfig({
+    required this.entityName,
+    String? serviceName,
+    String? repositoryName,
+  })  : serviceName = serviceName ?? '${entityName}_service',
+        repositoryName = repositoryName ?? '${entityName}_repository';
+
+  String get pascalEntity => ReCase(entityName).pascalCase;
+  String get camelEntity => ReCase(entityName).camelCase;
+  String get snakeEntity => ReCase(entityName).snakeCase;
+}
+
 class FeatureConfig {
   final String featureName;
   final String outputPath;
@@ -15,6 +32,7 @@ class FeatureConfig {
   final bool includeModels;
   final bool includeList;
   final ProjectConfig projectConfig;
+  final DataLayerConfig? dataLayerConfig;
 
   FeatureConfig({
     required this.featureName,
@@ -25,11 +43,18 @@ class FeatureConfig {
     this.includeUseCases = true,
     this.includeModels = true,
     this.includeList = false,
+    this.dataLayerConfig,
   });
 
   String get className => ReCase(featureName).pascalCase;
   String get camelCase => ReCase(featureName).camelCase;
   String get pascalCase => ReCase(featureName).pascalCase;
+
+  String get entityName => dataLayerConfig?.entityName ?? featureName;
+  String get pascalEntity => dataLayerConfig?.pascalEntity ?? pascalCase;
+  String get camelEntity => dataLayerConfig?.camelEntity ?? camelCase;
+  String get serviceName => dataLayerConfig?.serviceName ?? '${featureName}_service';
+  String get repositoryName => dataLayerConfig?.repositoryName ?? '${featureName}_repository';
 }
 
 class FeatureGenerator {
@@ -58,6 +83,7 @@ class FeatureGenerator {
     if (config.includeBloc) {
       Logger.step('Generating BLoC/Cubit...');
       await _generateBloc();
+      await _updateSharedBlocProvider();
     }
 
     Logger.step('Generating presentation layer...');
@@ -112,8 +138,7 @@ class FeatureGenerator {
 
   Future<void> _generateDataModels() async {
     final files = {
-      'data/models/${config.featureName}_model.dart': templates.dataModel,
-      'data/models/models.dart': templates.modelsBarrel,
+      'data/models/${config.entityName}_model.dart': templates.dataModel,
     };
 
     for (final entry in files.entries) {
@@ -125,13 +150,13 @@ class FeatureGenerator {
 
   Future<void> _generateRepository() async {
     final files = {
-      'data/remote/${config.featureName}_service.dart': templates.service,
-      'data/remote/${config.featureName}_repository.dart': templates.repository,
-      'data/remote/dto/create_${config.featureName}_dto.dart':
+      'data/remote/${config.serviceName}.dart': templates.service,
+      'data/remote/${config.repositoryName}.dart': templates.repository,
+      'data/remote/dto/create_${config.entityName}_dto.dart':
           templates.createDto,
-      'data/remote/dto/update_${config.featureName}_dto.dart':
+      'data/remote/dto/update_${config.entityName}_dto.dart':
           templates.updateDto,
-      'data/remote/dto/${config.featureName}_params.dart': templates.params,
+      'data/remote/dto/${config.entityName}_params.dart': templates.params,
     };
 
     for (final entry in files.entries) {
@@ -199,5 +224,52 @@ class FeatureGenerator {
       await FileUtils.writeFile(filePath, entry.value);
       Logger.verbose('Generated: ${entry.key}');
     }
+  }
+
+  Future<void> _updateSharedBlocProvider() async {
+    final sharedPath = path.join(
+      config.projectConfig.projectPath,
+      'lib/features/shared/presentation/controllers/bloc_provider.dart',
+    );
+
+    final file = File(sharedPath);
+    if (!await file.exists()) {
+      Logger.verbose('Shared bloc_provider.dart not found, skipping update');
+      return;
+    }
+
+    var content = await file.readAsString();
+
+    final importLine =
+        "import 'package:${config.projectConfig.projectName}/features/${config.featureName}/presentation/controllers/${config.featureName}_bloc_provider.dart';";
+
+    if (content.contains(importLine)) {
+      Logger.verbose(
+          'Shared bloc_provider.dart already has import for ${config.featureName}');
+      return;
+    }
+
+    content = content.replaceFirst(
+      "import 'package:flutter_bloc/flutter_bloc.dart';",
+      "import 'package:flutter_bloc/flutter_bloc.dart';\n$importLine",
+    );
+
+    final spreadEntry = '  ...${config.camelEntity}BlocProvider,';
+
+    if (content.contains(spreadEntry)) {
+      Logger.verbose(
+          'Shared bloc_provider.dart already has entry for ${config.featureName}');
+      await FileUtils.writeFile(sharedPath, content);
+      return;
+    }
+
+    content = content.replaceFirst(
+      '  // Add your feature BLoC providers here',
+      '$spreadEntry\n  // Add your feature BLoC providers here',
+    );
+
+    await FileUtils.writeFile(sharedPath, content);
+    Logger.verbose(
+        'Updated shared bloc_provider.dart with ${config.featureName} provider');
   }
 }

@@ -8,50 +8,50 @@ import 'package:${config.projectConfig.projectName}/features/${config.featureNam
 part '${config.featureName}_action_event.dart';
 part '${config.featureName}_action_state.dart';
 
-final ${config.camelCase}ActionBloc = ${config.pascalCase}ActionBloc();
+final ${config.camelEntity}ActionBloc = ${config.pascalEntity}ActionBloc();
 
-class ${config.pascalCase}ActionBloc extends Bloc<${config.pascalCase}ActionEvent, ${config.pascalCase}ActionState> {
-  ${config.pascalCase}ActionBloc() : super(${config.pascalCase}ActionInitial()) {
-    on<Create${config.pascalCase}>(_create${config.pascalCase});
-    on<Delete${config.pascalCase}>(_delete${config.pascalCase});
-    on<Update${config.pascalCase}>(_update${config.pascalCase});
+class ${config.pascalEntity}ActionBloc extends Bloc<${config.pascalEntity}ActionEvent, ${config.pascalEntity}ActionState> {
+  ${config.pascalEntity}ActionBloc() : super(${config.pascalEntity}ActionInitial()) {
+    on<Create${config.pascalEntity}>(_create${config.pascalEntity});
+    on<Delete${config.pascalEntity}>(_delete${config.pascalEntity});
+    on<Update${config.pascalEntity}>(_update${config.pascalEntity});
   }
 
-  Future<void> _create${config.pascalCase}(
-    Create${config.pascalCase} event,
-    Emitter<${config.pascalCase}ActionState> emit,
+  Future<void> _create${config.pascalEntity}(
+    Create${config.pascalEntity} event,
+    Emitter<${config.pascalEntity}ActionState> emit,
   ) async {
-    emit(${config.pascalCase}ActionLoading());
-    final params = Create${config.pascalCase}Dto();
-    final res = await create${config.pascalCase}UseCase.call(params);
+    emit(${config.pascalEntity}ActionLoading());
+    final params = Create${config.pascalEntity}Dto();
+    final res = await create${config.pascalEntity}UseCase.call(params);
     res.fold(
-      (l) => emit(${config.pascalCase}Created(l)),
-      (r) => emit(${config.pascalCase}ActionError(r)),
+      (l) => emit(${config.pascalEntity}Created(l)),
+      (r) => emit(${config.pascalEntity}ActionError(r)),
     );
   }
 
-  Future<void> _delete${config.pascalCase}(
-    Delete${config.pascalCase} event,
-    Emitter<${config.pascalCase}ActionState> emit,
+  Future<void> _delete${config.pascalEntity}(
+    Delete${config.pascalEntity} event,
+    Emitter<${config.pascalEntity}ActionState> emit,
   ) async {
-    emit(${config.pascalCase}ActionLoading());
-    final res = await delete${config.pascalCase}UseCase.call(event.id);
+    emit(${config.pascalEntity}ActionLoading());
+    final res = await delete${config.pascalEntity}UseCase.call(event.id);
     res.fold(
-      (l) => emit(${config.pascalCase}Deleted(l)),
-      (r) => emit(${config.pascalCase}ActionError(r)),
+      (l) => emit(${config.pascalEntity}Deleted(l)),
+      (r) => emit(${config.pascalEntity}ActionError(r)),
     );
   }
   
-  Future<void> _update${config.pascalCase}(
-    Update${config.pascalCase} event,
-    Emitter<${config.pascalCase}ActionState> emit,
+  Future<void> _update${config.pascalEntity}(
+    Update${config.pascalEntity} event,
+    Emitter<${config.pascalEntity}ActionState> emit,
   ) async {
-    emit(${config.pascalCase}ActionLoading());
-    final params = Update${config.pascalCase}Dto(id: event.id);
-    final res = await update${config.pascalCase}UseCase.call(params);
+    emit(${config.pascalEntity}ActionLoading());
+    final params = Update${config.pascalEntity}Dto(id: event.id);
+    final res = await update${config.pascalEntity}UseCase.call(params);
     res.fold(
-      (l) => emit(${config.pascalCase}Updated(l)),
-      (r) => emit(${config.pascalCase}ActionError(r)),
+      (l) => emit(${config.pascalEntity}Updated(l)),
+      (r) => emit(${config.pascalEntity}ActionError(r)),
     );
   }
 }  

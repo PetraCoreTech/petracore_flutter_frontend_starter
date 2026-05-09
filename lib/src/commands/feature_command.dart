@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:path/path.dart' as path;
+import 'package:recase/recase.dart';
 
 import '../generators/auth_flow_generator.dart';
 import '../generators/feature_generator.dart';
@@ -42,6 +43,24 @@ ArgParser featureCommandParser() {
       'list',
       help: 'Include a list screen for the feature',
       defaultsTo: false,
+    )
+    ..addFlag(
+      'no-interactive',
+      help: 'Skip prompts and use feature name for data layer',
+      defaultsTo: false,
+      negatable: false,
+    )
+    ..addOption(
+      'entity',
+      help: 'Data entity name (snake_case). Skips interactive prompt.',
+    )
+    ..addOption(
+      'service',
+      help: 'Service file name (e.g., blog_service). Skips interactive prompt.',
+    )
+    ..addOption(
+      'repository-name',
+      help: 'Repository file name (e.g., blog_repository). Skips interactive prompt.',
     )
     ..addOption(
       'output',
@@ -131,6 +150,18 @@ class FeatureCommand extends BaseCommand {
     Logger.step('Reading project configuration...');
     final projectConfig = await ProjectConfigReader.readOrDefault();
 
+    // Determine data layer config
+    final noInteractive = featureResults['no-interactive'] as bool;
+    final entityOpt = featureResults['entity'] as String?;
+    final serviceOpt = featureResults['service'] as String?;
+    final repoOpt = featureResults['repository-name'] as String?;
+
+    final hasExplicitDataFlags = entityOpt != null || serviceOpt != null || repoOpt != null;
+    final shouldPrompt = !noInteractive && !hasExplicitDataFlags;
+    final dataLayerConfig = shouldPrompt
+        ? _promptForDataLayer(featureName)
+        : _buildDataLayerFromArgs(featureName, entityOpt, serviceOpt, repoOpt);
+
     final config = FeatureConfig(
       featureName: featureName,
       outputPath: featurePath,
@@ -140,6 +171,7 @@ class FeatureCommand extends BaseCommand {
       includeModels: featureResults['models'] as bool,
       includeList: featureResults['list'] as bool,
       projectConfig: projectConfig,
+      dataLayerConfig: dataLayerConfig,
     );
 
     final generator = FeatureGenerator(config);
@@ -155,6 +187,13 @@ class FeatureCommand extends BaseCommand {
       Logger.item('data/ (models, repositories, use cases)');
       Logger.item('presentation/ (screens, controllers)');
 
+      if (dataLayerConfig != null) {
+        Logger.spacer();
+        Logger.info('Data layer entity: ${dataLayerConfig.entityName}');
+        Logger.info('Service: ${dataLayerConfig.serviceName}.dart');
+        Logger.info('Repository: ${dataLayerConfig.repositoryName}.dart');
+      }
+
       Logger.section('Next steps');
       Logger.item('1. Add the feature to your main bloc provider');
       Logger.item('2. Update your navigation routes');
@@ -163,6 +202,72 @@ class FeatureCommand extends BaseCommand {
       Logger.error('Failed to generate feature: $e');
       exit(1);
     }
+  }
+
+  DataLayerConfig? _buildDataLayerFromArgs(
+    String featureName,
+    String? entityOpt,
+    String? serviceOpt,
+    String? repoOpt,
+  ) {
+    final entity = entityOpt ?? featureName;
+    if (!Validation.isValidFeatureName(entity)) {
+      Logger.error('Invalid entity name: $entity');
+      Logger.info('Entity name must be lowercase with underscores (snake_case)');
+      exit(1);
+    }
+    if (serviceOpt != null && !Validation.isValidFeatureName(serviceOpt)) {
+      Logger.error('Invalid service name: $serviceOpt');
+      exit(1);
+    }
+    if (repoOpt != null && !Validation.isValidFeatureName(repoOpt)) {
+      Logger.error('Invalid repository name: $repoOpt');
+      exit(1);
+    }
+    return DataLayerConfig(entityName: entity, serviceName: serviceOpt, repositoryName: repoOpt);
+  }
+
+  DataLayerConfig? _promptForDataLayer(String featureName) {
+    Logger.section('Data Layer Configuration');
+    Logger.info(
+        'Define the data entity for this feature, or press Enter to use defaults.');
+    Logger.spacer();
+
+    stdout.write('Entity name (snake_case, default: $featureName): ');
+    final entityInput = stdin.readLineSync()?.trim() ?? '';
+    final entity = entityInput.isNotEmpty ? entityInput : featureName;
+
+    if (!Validation.isValidFeatureName(entity)) {
+      Logger.error('Invalid entity name: $entity');
+      Logger.info('Entity name must be lowercase with underscores (snake_case)');
+      exit(1);
+    }
+
+    final defaultService = '${entity}_service';
+    stdout.write('Service name (default: $defaultService): ');
+    final serviceInput = stdin.readLineSync()?.trim() ?? '';
+    final serviceName = serviceInput.isNotEmpty ? serviceInput : defaultService;
+
+    final defaultRepo = '${entity}_repository';
+    stdout.write('Repository name (default: $defaultRepo): ');
+    final repoInput = stdin.readLineSync()?.trim() ?? '';
+    final repoName = repoInput.isNotEmpty ? repoInput : defaultRepo;
+
+    Logger.spacer();
+    Logger.info('Data layer will use:');
+    Logger.item('Model: ${ReCase(entity).pascalCase} -> data/models/${entity}_model.dart');
+    Logger.item('Service: ${ReCase(serviceName).pascalCase} -> data/remote/$serviceName.dart');
+    Logger.item('Repository: ${ReCase(repoName).pascalCase} -> data/remote/$repoName.dart');
+    Logger.item('CreateDto: Create${ReCase(entity).pascalCase}Dto');
+    Logger.item('UpdateDto: Update${ReCase(entity).pascalCase}Dto');
+    Logger.item('Params: ${ReCase(entity).pascalCase}Params');
+    Logger.spacer();
+
+    return DataLayerConfig(
+      entityName: entity,
+      serviceName: serviceName,
+      repositoryName: repoName,
+    );
   }
 
   /// Handle the 'auth' keyword specially - offer full auth flow
@@ -358,22 +463,35 @@ Usage:
   petracore generate feature <feature_name> [options]
 
 Options:
-  --bloc           Include BLoC/Cubit for state management (default: true)
-  --repository     Include repository pattern (default: true)
-  --use-cases      Include use cases for business logic (default: true)
-  --models         Include data models with JSON serialization (default: true)
-  --list           Include a list screen for the feature (default: false)
-  --output, -o     Output directory (default: lib/features)
-  --help, -h       Show this help
+  --bloc              Include BLoC/Cubit for state management (default: true)
+  --repository        Include repository pattern (default: true)
+  --use-cases         Include use cases for business logic (default: true)
+  --models            Include data models with JSON serialization (default: true)
+  --list              Include a list screen for the feature (default: false)
+  --no-interactive    Skip interactive prompts for data layer naming
+  --entity <name>     Data entity name in snake_case (skips prompt)
+  --service <name>    Service file name (skips prompt)
+  --repository-name <name> Repository file name (skips prompt)
+  --output, -o <dir>  Output directory (default: lib/features)
+  --help, -h          Show this help
+
+Data Layer Naming:
+  By default, you will be prompted to customize the data layer:
+  - Entity name determines the model, DTOs, and Params classes
+  - Service and repository file names can be set independently
+
+  Use --no-interactive or explicit --entity/--service/--repository flags
+  to skip prompts and use the feature name as the entity name.
 
 Examples:
-  petracore feature auth                   # Detects auth and offers full flow
+  petracore feature auth                       # Detects auth and offers full flow
   petracore feature user_profile --no-bloc
   petracore generate feature chat --output lib/modules
+  petracore feature profile --entity user --service auth_service
+  petracore feature blog --no-interactive      # Uses "blog" for everything
 
 Special Keywords:
-  🔐 auth    - Offers to generate complete authentication flow
-             including login, signup, BLoC, repository, and more
+  auth    - Offers to generate complete authentication flow
 ''');
   }
 }

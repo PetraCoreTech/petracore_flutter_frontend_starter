@@ -25,5 +25,9 @@ extension RouterCtxExt on BuildContext {
     final scaleAnimation = animation.drive(tween);
     return ScaleTransition(scale: scaleAnimation, child: child);
   }
+
+  void popDialog() {
+    Navigator.of(this, rootNavigator: true).pop();
+  }
 }
 ''';

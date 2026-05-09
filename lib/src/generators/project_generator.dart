@@ -460,7 +460,8 @@ class ProjectGenerator {
     files['lib/app/theme/color_values.dart'] = templates.colorValues;
 
     if (isMaterial) {
-      files['lib/app/theme/theme.dart'] = templates.materialTheme;
+      files['lib/app/theme/theme.dart'] = templates.themeBarrel;
+      files['lib/app/theme/material_theme.dart'] = templates.materialTheme;
     } else {
       files['lib/app/theme/theme.dart'] = templates.themeBarrel;
       files['lib/app/theme/design_tokens/theme_token.dart'] = templates.themeToken;

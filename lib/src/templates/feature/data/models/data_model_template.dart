@@ -4,24 +4,24 @@ String dataModelTemplate(FeatureConfig config) => '''
 import 'package:json_annotation/json_annotation.dart';
 import 'package:${config.projectConfig.projectName}/core/core.dart';
 
-part '${config.featureName}_model.g.dart';
+part '${config.entityName}_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class ${config.pascalCase} extends BaseModel {
-  const ${config.pascalCase} ({
+class ${config.pascalEntity} extends BaseModel {
+  const ${config.pascalEntity} ({
     required super.id,
    super.dateCreated,
    super.lastUpdated,
   });
 
-  factory ${config.pascalCase}.fromJson(Map<String, dynamic> json) =>
-      _\$${config.pascalCase}FromJson(json);
+  factory ${config.pascalEntity}.fromJson(Map<String, dynamic> json) =>
+      _\$${config.pascalEntity}FromJson(json);
       
-  Map<String, dynamic> toJson() => _\$${config.pascalCase}ToJson(this);
+  Map<String, dynamic> toJson() => _\$${config.pascalEntity}ToJson(this);
       
-  static ${config.pascalCase}? maybeFromJson(Map<String, dynamic>? json) {
+  static ${config.pascalEntity}? maybeFromJson(Map<String, dynamic>? json) {
     if (json != null) {
-      return ${config.pascalCase}.fromJson(json);
+      return ${config.pascalEntity}.fromJson(json);
     }
     return null;
   }

@@ -1,5 +1,6 @@
 String authDataIndexTemplate() => '''
-export 'models/models.dart';
+export 'models/auth_history_model.dart';
+export 'models/user_model.dart';
 export 'remote/dto/auth_dtos.dart';
 export 'remote/auth_repository.dart';
 export 'remote/auth_service.dart';

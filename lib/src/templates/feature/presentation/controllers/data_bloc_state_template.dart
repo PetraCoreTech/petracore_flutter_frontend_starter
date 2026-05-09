@@ -4,19 +4,19 @@ String dataBlocStateTemplate(FeatureConfig config) => '''
 part of 'multiple_${config.featureName}_bloc.dart';
 
 @immutable
-sealed class Multiple${config.pascalCase}State {}
+sealed class Multiple${config.pascalEntity}State {}
 
-final class Multiple${config.pascalCase}Initial extends Multiple${config.pascalCase}State {}
+final class Multiple${config.pascalEntity}Initial extends Multiple${config.pascalEntity}State {}
 
-final class Multiple${config.pascalCase}Loading extends Multiple${config.pascalCase}State {}
+final class Multiple${config.pascalEntity}Loading extends Multiple${config.pascalEntity}State {}
 
-final class Multiple${config.pascalCase}Loaded extends Multiple${config.pascalCase}State {
-  Multiple${config.pascalCase}Loaded(this.${config.camelCase}s);
-  final List<${config.pascalCase}> ${config.camelCase}s;
+final class Multiple${config.pascalEntity}Loaded extends Multiple${config.pascalEntity}State {
+  Multiple${config.pascalEntity}Loaded(this.${config.camelEntity}s);
+  final List<${config.pascalEntity}> ${config.camelEntity}s;
 }
 
-final class Multiple${config.pascalCase}Error extends Multiple${config.pascalCase}State {
-  Multiple${config.pascalCase}Error(this.error);
+final class Multiple${config.pascalEntity}Error extends Multiple${config.pascalEntity}State {
+  Multiple${config.pascalEntity}Error(this.error);
   final ErrorResponse error;
 }
 ''';

@@ -5,6 +5,7 @@ String appConstantsTemplate(ProjectConfig config) {
 
   return '''
 import 'package:flutter/material.dart';
+${isMaterial ? '' : "import 'package:${config.projectName}/app/theme/design_tokens/theme_token.dart';"}
 
 class AppConstants {
   AppConstants._();

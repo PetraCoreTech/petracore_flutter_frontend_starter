@@ -2,6 +2,7 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String materialThemeTemplate(ProjectConfig config) => '''
 import 'package:flutter/material.dart';
+import 'package:${config.projectName}/app/constants/app_constants.dart';
 import 'package:${config.projectName}/app/theme/color_values.dart';
 
 /// Central theme configuration for the app.
@@ -42,7 +43,7 @@ class AppTheme {
         switchTheme: _switchTheme,
         checkboxTheme: _checkboxTheme,
         radioTheme: _radioTheme,
-        progressBarTheme: _progressIndicatorTheme,
+        progressIndicatorTheme: _progressIndicatorTheme,
         sliderTheme: _sliderTheme,
       );
 
@@ -69,14 +70,14 @@ class AppTheme {
         switchTheme: _switchTheme,
         checkboxTheme: _checkboxTheme,
         radioTheme: _radioTheme,
-        progressBarTheme: _progressIndicatorTheme,
+        progressIndicatorTheme: _progressIndicatorTheme,
         sliderTheme: _sliderTheme,
       );
 
   // ==================== COLOR SCHEMES ====================
 
   /// Light mode ColorScheme derived from the seed color
-  static const _lightColorScheme = ColorScheme(
+  static final _lightColorScheme = ColorScheme(
     brightness: Brightness.light,
     primary: AppColors.primary,
     onPrimary: AppColors.surface001,
@@ -115,7 +116,7 @@ class AppTheme {
   );
 
   /// Dark mode ColorScheme derived from the same palette
-  static const _darkColorScheme = ColorScheme(
+  static final _darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
     primary: AppColors.primaryGrading,
     onPrimary: AppColors.primaryDark,
@@ -271,10 +272,6 @@ class AppTheme {
         width: 1,
       ),
       disabledForegroundColor: _lightColorScheme.onSurface.withOpacity(0.38),
-      disabledSide: BorderSide(
-        color: _lightColorScheme.onSurface.withOpacity(0.12),
-        width: 1,
-      ),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),

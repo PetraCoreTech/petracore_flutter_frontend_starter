@@ -154,7 +154,9 @@ class ProjectTemplates {
       _isMaterial ? materialToastV1Template(config) : toastV1Template(config);
 
   /// Core/Component/Frames
-  String get iconFrame => iconFrameTemplate(config);
+  String get iconFrame => _isMaterial
+      ? materialIconFrameTemplate(config)
+      : iconFrameTemplate(config);
   String get listFrame => _isMaterial
       ? materialListFrameTemplate(config)
       : listFrameTemplate(config);
@@ -191,14 +193,18 @@ class ProjectTemplates {
       ? materialInputFieldTemplate(config)
       : inputFieldTemplate(config);
   String get inputItem => inputItemTemplate(config);
-  String get passwordField => passwordFieldTemplate(config);
+  String get passwordField => _isMaterial
+      ? materialPasswordFieldTemplate(config)
+      : passwordFieldTemplate(config);
   String get phoneField => _isMaterial
       ? materialPhoneFieldTemplate(config)
       : phoneFieldTemplate(config);
   String get searchFeatureField => _isMaterial
       ? materialSearchFeatureFieldTemplate(config)
       : searchFeatureFieldTemplate(config);
-  String get searchInputField => searchInputFieldTemplate(config);
+  String get searchInputField => _isMaterial
+      ? materialSearchInputFieldTemplate(config)
+      : searchInputFieldTemplate(config);
 
   /// Core/Component/Scaffolds
   String get baseScaffold => baseScaffoldTemplate();
@@ -210,7 +216,9 @@ class ProjectTemplates {
   String get infoDisplay => _isMaterial
       ? materialInfoDisplayTemplate(config)
       : infoDisplayTemplate(config);
-  String get loadingIndicator => loadingIndicatorTemplate(config);
+  String get loadingIndicator => _isMaterial
+      ? materialLoadingIndicatorTemplate(config)
+      : loadingIndicatorTemplate(config);
   String get loadingOverlayV1 => loadingOverlayV1Template(config);
   String get loadingShimmer => _isMaterial
       ? materialLoadingShimmerTemplate(config)

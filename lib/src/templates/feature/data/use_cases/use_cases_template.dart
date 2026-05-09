@@ -5,60 +5,60 @@ import 'package:dartz/dartz.dart';
 import 'package:${config.projectConfig.projectName}/core/core.dart';
 import 'package:${config.projectConfig.projectName}/features/${config.featureName}/${config.featureName}_index.dart';
 
-/* Create ${config.pascalCase} Use Case */
-final create${config.pascalCase}UseCase = Create${config.pascalCase}UseCase();
+/* Create ${config.pascalEntity} Use Case */
+final create${config.pascalEntity}UseCase = Create${config.pascalEntity}UseCase();
 
-class Create${config.pascalCase}UseCase extends UseCase<${config.pascalCase}, Create${config.pascalCase}Dto> {
+class Create${config.pascalEntity}UseCase extends UseCase<${config.pascalEntity}, Create${config.pascalEntity}Dto> {
   @override
-  Future<Either<${config.pascalCase}, ErrorResponse>> call(Create${config.pascalCase}Dto params) async {
-    final res = await ${config.camelCase}Repository.create${config.pascalCase}(params);
+  Future<Either<${config.pascalEntity}, ErrorResponse>> call(Create${config.pascalEntity}Dto params) async {
+    final res = await ${config.camelEntity}Repository.create${config.pascalEntity}(params);
     return res.fold(Left.new, Right.new);
   }
 }
 
 
-/* Delete ${config.pascalCase} Use Case */
-final delete${config.pascalCase}UseCase = Delete${config.pascalCase}UseCase();
+/* Delete ${config.pascalEntity} Use Case */
+final delete${config.pascalEntity}UseCase = Delete${config.pascalEntity}UseCase();
 
-class Delete${config.pascalCase}UseCase extends UseCase<SuccessResponse, String> {
+class Delete${config.pascalEntity}UseCase extends UseCase<SuccessResponse, String> {
   @override
   Future<Either<SuccessResponse, ErrorResponse>> call(String params) async {
-    final res = await ${config.camelCase}Repository.delete${config.pascalCase}(params);
+    final res = await ${config.camelEntity}Repository.delete${config.pascalEntity}(params);
     return res.fold(Left.new, Right.new);
   }
 }
 
-/* Multiple ${config.pascalCase} Use Case */
-final multiple${config.pascalCase}UseCase = Multiple${config.pascalCase}UseCase();
+/* Multiple ${config.pascalEntity} Use Case */
+final multiple${config.pascalEntity}UseCase = Multiple${config.pascalEntity}UseCase();
 
-class Multiple${config.pascalCase}UseCase extends UseCase<List<${config.pascalCase}>, ${config.pascalCase}Params> {
+class Multiple${config.pascalEntity}UseCase extends UseCase<List<${config.pascalEntity}>, ${config.pascalEntity}Params> {
   @override
-  Future<Either<List<${config.pascalCase}>, ErrorResponse>> call(
-    ${config.pascalCase}Params? params,
+  Future<Either<List<${config.pascalEntity}>, ErrorResponse>> call(
+    ${config.pascalEntity}Params? params,
   ) async {
-    final res = await ${config.camelCase}Repository.get${config.pascalCase}s(params);
+    final res = await ${config.camelEntity}Repository.get${config.pascalEntity}s(params);
     return res.fold(Left.new, Right.new);
   }
 }
 
-/* Single ${config.pascalCase} Use Case */
-final single${config.pascalCase}UseCase = Single${config.pascalCase}UseCase();
+/* Single ${config.pascalEntity} Use Case */
+final single${config.pascalEntity}UseCase = Single${config.pascalEntity}UseCase();
 
-class Single${config.pascalCase}UseCase extends UseCase<${config.pascalCase}, String> {
+class Single${config.pascalEntity}UseCase extends UseCase<${config.pascalEntity}, String> {
   @override
-  Future<Either<${config.pascalCase}, ErrorResponse>> call(String params) async {
-    final res = await ${config.camelCase}Repository.get${config.pascalCase}(params);
+  Future<Either<${config.pascalEntity}, ErrorResponse>> call(String params) async {
+    final res = await ${config.camelEntity}Repository.get${config.pascalEntity}(params);
     return res.fold(Left.new, Right.new);
   }
 }
 
-/* Update ${config.pascalCase} Use Case */
-final update${config.pascalCase}UseCase = Update${config.pascalCase}UseCase();
+/* Update ${config.pascalEntity} Use Case */
+final update${config.pascalEntity}UseCase = Update${config.pascalEntity}UseCase();
 
-class Update${config.pascalCase}UseCase extends UseCase<${config.pascalCase}, Update${config.pascalCase}Dto> {
+class Update${config.pascalEntity}UseCase extends UseCase<${config.pascalEntity}, Update${config.pascalEntity}Dto> {
   @override
-  Future<Either<${config.pascalCase}, ErrorResponse>> call(Update${config.pascalCase}Dto params) async {
-    final res = await ${config.camelCase}Repository.update${config.pascalCase}(params);
+  Future<Either<${config.pascalEntity}, ErrorResponse>> call(Update${config.pascalEntity}Dto params) async {
+    final res = await ${config.camelEntity}Repository.update${config.pascalEntity}(params);
     return res.fold(Left.new, Right.new);
   }
 }

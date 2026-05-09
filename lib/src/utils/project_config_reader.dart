@@ -53,11 +53,15 @@ class ProjectConfigReader {
 
       final projectPath = Directory.current.path;
 
+      /// Detect theme type from project structure
+      final themeType = await _detectThemeType(projectPath);
+
       final config = ProjectConfig(
         projectName: projectName,
         organization: organization,
         description: description,
         projectPath: projectPath,
+        themeType: themeType,
       );
 
       Logger.verbose('Detected project config:');
@@ -86,6 +90,17 @@ class ProjectConfigReader {
       description: 'A Flutter project built with PetraCore architecture.',
       projectPath: defaultPath,
     );
+  }
+
+  /// Detect theme type by checking if material_theme.dart exists
+  static Future<ThemeType> _detectThemeType(String projectPath) async {
+    final materialThemeFile = File(
+      path.join(projectPath, 'lib', 'app', 'theme', 'material_theme.dart'),
+    );
+    if (await materialThemeFile.exists()) {
+      return ThemeType.material;
+    }
+    return ThemeType.mix;
   }
 
   /// Reads project config with fallback to default

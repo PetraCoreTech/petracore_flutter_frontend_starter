@@ -4,7 +4,7 @@ String authBlocProviderTemplate(ProjectConfig config) => '''
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:${config.projectName}/features/auth/presentation/controllers/auth_controller_index.dart';
 
-final authBlocProvider = [
+final List<BlocProvider> authBlocProvider = [
   /** Blocs */
   BlocProvider<AuthBloc>(create: (context) => authBloc),
 

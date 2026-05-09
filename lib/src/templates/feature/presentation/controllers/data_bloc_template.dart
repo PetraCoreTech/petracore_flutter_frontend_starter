@@ -7,23 +7,23 @@ import 'package:${config.projectConfig.projectName}/features/${config.featureNam
 part 'multiple_${config.featureName}_event.dart';
 part 'multiple_${config.featureName}_state.dart';
 
-final multiple${config.pascalCase}Bloc = Multiple${config.pascalCase}Bloc();
+final multiple${config.pascalEntity}Bloc = Multiple${config.pascalEntity}Bloc();
 
-class Multiple${config.pascalCase}Bloc extends Bloc<Multiple${config.pascalCase}Event, Multiple${config.pascalCase}State> {
-  Multiple${config.pascalCase}Bloc() : super(Multiple${config.pascalCase}Initial()) {
-    on<FetchMultiple${config.pascalCase}>(_fetch${config.pascalCase});
+class Multiple${config.pascalEntity}Bloc extends Bloc<Multiple${config.pascalEntity}Event, Multiple${config.pascalEntity}State> {
+  Multiple${config.pascalEntity}Bloc() : super(Multiple${config.pascalEntity}Initial()) {
+    on<FetchMultiple${config.pascalEntity}>(_fetch${config.pascalEntity});
   }
 
-  Future<void> _fetch${config.pascalCase}(
-    FetchMultiple${config.pascalCase} event,
-    Emitter<Multiple${config.pascalCase}State> emit,
+  Future<void> _fetch${config.pascalEntity}(
+    FetchMultiple${config.pascalEntity} event,
+    Emitter<Multiple${config.pascalEntity}State> emit,
   ) async {
-    emit(Multiple${config.pascalCase}Loading());
-    final params = ${config.pascalCase}Params();
-    final res = await multiple${config.pascalCase}UseCase.call(params);
+    emit(Multiple${config.pascalEntity}Loading());
+    final params = ${config.pascalEntity}Params();
+    final res = await multiple${config.pascalEntity}UseCase.call(params);
     res.fold(
-      (l) => emit(Multiple${config.pascalCase}Loaded(l)),
-      (r) => emit(Multiple${config.pascalCase}Error(r)),
+      (l) => emit(Multiple${config.pascalEntity}Loaded(l)),
+      (r) => emit(Multiple${config.pascalEntity}Error(r)),
     );
   }
 }

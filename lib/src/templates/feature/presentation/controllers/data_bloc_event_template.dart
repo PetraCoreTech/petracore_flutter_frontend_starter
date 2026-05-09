@@ -4,9 +4,9 @@ String dataBlocEventTemplate(FeatureConfig config) => '''
 part of 'multiple_${config.featureName}_bloc.dart';
 
 @immutable
-sealed class Multiple${config.pascalCase}Event {}
+sealed class Multiple${config.pascalEntity}Event {}
 
-final class FetchMultiple${config.pascalCase} extends Multiple${config.pascalCase}Event {
-  FetchMultiple${config.pascalCase}();
+final class FetchMultiple${config.pascalEntity} extends Multiple${config.pascalEntity}Event {
+  FetchMultiple${config.pascalEntity}();
 }
 ''';
