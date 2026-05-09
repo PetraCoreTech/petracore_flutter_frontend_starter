@@ -41,6 +41,9 @@ class ProjectGenerator {
     Logger.step('Creating Flutter project...');
     await _generateFlutterProject();
 
+    Logger.step('Configuring Android NDK version...');
+    await _updateAndroidNdkVersion();
+
     Logger.step('Creating additional directory structure...');
     await _createAdditionalDirectories();
 
@@ -57,6 +60,37 @@ class ProjectGenerator {
     await _generateAppFiles();
 
     Logger.verbose('Project generation completed');
+  }
+
+  Future<void> _updateAndroidNdkVersion() async {
+    final buildGradlePath = path.join(
+      config.projectPath,
+      'android',
+      'app',
+      'build.gradle.kts',
+    );
+    final buildGradleFile = File(buildGradlePath);
+
+    if (!await buildGradleFile.exists()) {
+      Logger.verbose('Android build.gradle.kts not found, skipping NDK config');
+      return;
+    }
+
+    var content = await buildGradleFile.readAsString();
+    final androidBlock = RegExp(r'android\s*\{');
+    final ndkRegex = RegExp(r'ndkVersion\s*=\s*"[^"]*"');
+
+    if (ndkRegex.hasMatch(content)) {
+      content = content.replaceAll(ndkRegex, 'ndkVersion = "27.3.13750724"');
+    } else {
+      content = content.replaceFirst(
+        androidBlock,
+        'android {\n    ndkVersion = "27.3.13750724"',
+      );
+    }
+
+    await buildGradleFile.writeAsString(content);
+    Logger.verbose('Android NDK version set to 27.3.13750724');
   }
 
   Future<void> _createAdditionalDirectories() async {

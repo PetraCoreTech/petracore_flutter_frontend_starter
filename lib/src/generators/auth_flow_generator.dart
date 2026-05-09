@@ -145,6 +145,10 @@ class AuthFlowGenerator {
     Logger.step('Generating index files...');
     await _generateIndexFiles();
 
+    Logger.step('Updating router with auth routes...');
+    await _updateRouterWithAuthRoutes();
+    await _updateAppRoutes();
+
     Logger.verbose('AuthFlowGenerator: Running build_runner (final step)');
     await CommandUtils.runCommand(
       'dart',
@@ -471,6 +475,112 @@ class AuthFlowGenerator {
     await FileUtils.writeFile(sharedPath, content);
     Logger.verbose(
         'Updated shared bloc_provider.dart with auth provider');
+  }
+
+  Future<void> _updateRouterWithAuthRoutes() async {
+    final routerPath = path.join(
+      config.outputPath,
+      'lib/navigation/router.dart',
+    );
+
+    final file = File(routerPath);
+    if (!await file.exists()) {
+      Logger.verbose('router.dart not found, skipping update');
+      return;
+    }
+
+    var content = await file.readAsString();
+
+    final authImport =
+        "import 'package:${projectConfig.packageName}/features/auth/auth_index.dart';";
+    if (!content.contains(authImport)) {
+      content = content.replaceFirst(
+        "import 'package:${projectConfig.packageName}/core/core.dart';",
+        "import 'package:${projectConfig.packageName}/core/core.dart';\n$authImport",
+      );
+    }
+
+    final routeEntries = StringBuffer();
+    void addRoute(String path, String name, String widget) {
+      routeEntries.writeln('    GoRoute(');
+      routeEntries.writeln("      path: '$path',");
+      routeEntries.writeln("      name: '$name',");
+      routeEntries.writeln('      builder: (context, state) => const $widget(),');
+      routeEntries.writeln('    ),');
+    }
+
+    addRoute('/', 'splash', 'SplashScreen');
+    if (config.includeWelcomeScreen) {
+      addRoute('/welcome', 'welcome', 'WelcomeScreen');
+    }
+    if (config.includeGetStartedScreen) {
+      addRoute('/get-started', 'getStarted', 'GetStartedScreen');
+    }
+    if (config.includeLogin) {
+      addRoute('/login', 'login', 'LoginScreen');
+    }
+    if (config.includeSignup) {
+      addRoute('/signup', 'signup', 'SignupScreen');
+    }
+    if (config.includeOtp) {
+      addRoute('/verify-otp', 'verifyOtp', 'VerifyOtpScreen');
+    }
+    if (config.includeForgotPassword) {
+      addRoute('/forgot-password', 'forgotPassword', 'ForgotPasswordScreen');
+      addRoute('/forgot-password-verify', 'forgotPasswordVerify',
+          'ForgotPasswordVerifyScreen');
+      addRoute('/reset-password', 'resetPassword', 'ResetPasswordScreen');
+    }
+
+    final routeBlock = '  routes: [\n${routeEntries.toString()}  ],';
+
+    content = content.replaceFirstMapped(
+      RegExp(r'  routes: \[[\s\S]*?\],'),
+      (_) => routeBlock,
+    );
+
+    await FileUtils.writeFile(routerPath, content);
+    Logger.verbose('Updated router.dart with auth routes');
+  }
+
+  Future<void> _updateAppRoutes() async {
+    final routesPath = path.join(
+      config.outputPath,
+      'lib/navigation/routes.dart',
+    );
+
+    final file = File(routesPath);
+    if (!await file.exists()) {
+      Logger.verbose('routes.dart not found, skipping update');
+      return;
+    }
+
+    var content = await file.readAsString();
+
+    final routeConstants = StringBuffer();
+    void addConstant(String name) {
+      routeConstants.writeln("  static const $name = '$name';");
+    }
+
+    addConstant('splash');
+    if (config.includeWelcomeScreen) addConstant('welcome');
+    if (config.includeGetStartedScreen) addConstant('getStarted');
+    if (config.includeLogin) addConstant('login');
+    if (config.includeSignup) addConstant('signup');
+    if (config.includeOtp) addConstant('verifyOtp');
+    if (config.includeForgotPassword) {
+      addConstant('forgotPassword');
+      addConstant('forgotPasswordVerify');
+      addConstant('resetPassword');
+    }
+
+    content = content.replaceFirstMapped(
+      RegExp(r'class AppRoutes \{[\s\S]*?\}'),
+      (_) => 'class AppRoutes {\n${routeConstants.toString()}}',
+    );
+
+    await FileUtils.writeFile(routesPath, content);
+    Logger.verbose('Updated routes.dart with auth route constants');
   }
 
   /// Interactive method to collect user preferences
