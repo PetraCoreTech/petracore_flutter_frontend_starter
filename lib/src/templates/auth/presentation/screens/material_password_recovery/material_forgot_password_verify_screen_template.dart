@@ -87,7 +87,7 @@ class _ForgotPasswordVerifyScreenState
             alignment: Alignment.centerLeft,
             child: ResendCodeDisplay(
               target: email,
-              title: 'Didn\'t get a code? ',
+              title: 'Didn\u2019t get a code? ',
               count: controller.count,
             ),
           ),

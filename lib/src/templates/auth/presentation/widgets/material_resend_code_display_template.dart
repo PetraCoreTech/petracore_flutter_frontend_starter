@@ -26,7 +26,7 @@ class ResendCodeDisplay extends StatelessWidget {
     return Text.rich(
       textAlign: TextAlign.center,
       TextSpan(
-        text: title ?? 'Can\'t fnd your code? Check your spam or ',
+        text: title ?? 'Can\u2019t fnd your code? Check your spam or ',
         style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         children: [
           WidgetSpan(
