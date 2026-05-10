@@ -3,10 +3,6 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 String materialBottomSheetSelectContentTemplate(ProjectConfig config) => '''
 // ignore_for_file: avoid_positional_boolean_parameters
 
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:gap/gap.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class BottomSheetSelectContent<T> extends HookWidget {

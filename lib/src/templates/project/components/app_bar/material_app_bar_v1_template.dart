@@ -1,7 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String materialAppBarV1Template(ProjectConfig config) => '''
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class AppBarV1 extends StatelessWidget implements PreferredSizeWidget {

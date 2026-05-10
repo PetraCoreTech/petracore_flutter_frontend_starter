@@ -1,8 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String materialListFrameTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class ListFrame extends StatelessWidget {

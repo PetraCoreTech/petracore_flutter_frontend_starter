@@ -1,6 +1,12 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
+import 'package:petracore_flutter_frontend_starter/src/templates/feature/pagination/pagination_index_template.dart';
+import 'package:petracore_flutter_frontend_starter/src/templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_bloc_template.dart';
+import 'package:petracore_flutter_frontend_starter/src/templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_event_template.dart';
+import 'package:petracore_flutter_frontend_starter/src/templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_state_template.dart';
+import 'package:petracore_flutter_frontend_starter/src/templates/feature/pagination/presentation/widgets/paginated_list_builder_template.dart';
+import 'package:petracore_flutter_frontend_starter/src/templates/feature/pagination/presentation/widgets/paginated_list_view_template.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/main_app/main_app_templates.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/project_templates.dart';
 import 'package:petracore_flutter_frontend_starter/src/utils/command_utils.dart';
@@ -63,7 +69,69 @@ class ProjectGenerator {
     Logger.step('Generating main_app feature...');
     await _generateMainApp();
 
-    Logger.verbose('Project generation completed');
+    Logger.step('Generating pagination feature...');
+    await _generatePaginationFeature();
+  }
+
+  Future<void> _generatePaginationFeature() async {
+    final String projectName = config.projectName;
+    final String featurePath = path.join(config.projectPath, 'lib', 'features', 'pagination');
+
+    // Create directories
+    final List<String> dirs = [
+      featurePath,
+      path.join(featurePath, 'presentation'),
+      path.join(featurePath, 'presentation', 'controllers'),
+      path.join(featurePath, 'presentation', 'controllers', 'pagination_bloc'),
+      path.join(featurePath, 'presentation', 'widgets'),
+    ];
+
+    for (final String dir in dirs) {
+      await Directory(dir).create(recursive: true);
+      Logger.verbose('Created directory: $dir');
+    }
+
+    // Generate pagination_index.dart
+    await FileUtils.writeFile(
+      path.join(featurePath, 'pagination_index.dart'),
+      paginationIndexTemplate(projectName),
+    );
+    Logger.verbose('Generated: pagination_index.dart');
+
+    // Generate pagination_event.dart
+    await FileUtils.writeFile(
+      path.join(featurePath, 'presentation', 'controllers', 'pagination_bloc', 'pagination_event.dart'),
+      paginationEventTemplate(projectName),
+    );
+    Logger.verbose('Generated: pagination_event.dart');
+
+    // Generate pagination_state.dart
+    await FileUtils.writeFile(
+      path.join(featurePath, 'presentation', 'controllers', 'pagination_bloc', 'pagination_state.dart'),
+      paginationStateTemplate(projectName),
+    );
+    Logger.verbose('Generated: pagination_state.dart');
+
+    // Generate pagination_bloc.dart
+    await FileUtils.writeFile(
+      path.join(featurePath, 'presentation', 'controllers', 'pagination_bloc', 'pagination_bloc.dart'),
+      paginationBlocTemplate(projectName),
+    );
+    Logger.verbose('Generated: pagination_bloc.dart');
+
+    // Generate paginated_list_view.dart
+    await FileUtils.writeFile(
+      path.join(featurePath, 'presentation', 'widgets', 'paginated_list_view.dart'),
+      paginatedListViewTemplate(projectName),
+    );
+    Logger.verbose('Generated: paginated_list_view.dart');
+
+    // Generate paginated_list_builder.dart
+    await FileUtils.writeFile(
+      path.join(featurePath, 'presentation', 'widgets', 'paginated_list_builder.dart'),
+      paginatedListBuilderTemplate(projectName),
+    );
+    Logger.verbose('Generated: paginated_list_builder.dart');
   }
 
   Future<void> _updateAndroidNdkVersion() async {

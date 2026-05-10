@@ -2,7 +2,6 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String materialBaseTextFieldTemplate(ProjectConfig config) => '''
 import 'package:flutter/services.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 typedef ValidatorCallback = String? Function(String?);
@@ -148,7 +147,7 @@ class BaseTextField extends StatelessWidget {
     );
   }
 
-  InputBorder _border(Color color, {double? radius, required ThemeData theme}) {
+  InputBorder _border(Color color, {required ThemeData theme, double? radius}) {
     final rad = radius ?? (theme.inputDecorationTheme.border as OutlineInputBorder?)?.borderRadius.topLeft.x ?? 8;
     if (border != null) {
       return border!.copyWith(

@@ -1,9 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String materialExpansionTileV1Template(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class ExpansionTileV1 extends HookWidget {

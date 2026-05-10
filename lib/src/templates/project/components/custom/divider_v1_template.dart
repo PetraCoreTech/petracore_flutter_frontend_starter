@@ -2,7 +2,6 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String dividerV1Template(ProjectConfig config) => '''
 import 'package:flutter/material.dart';
-import 'package:${config.projectName}/app/app.dart';
 
 class DividerV1 extends StatelessWidget {
   const DividerV1({

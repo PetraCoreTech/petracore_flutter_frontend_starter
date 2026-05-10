@@ -2,7 +2,6 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String materialAppTextButtonTemplate(ProjectConfig config) => '''
 import 'package:flutter/services.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 part 'app_text_button_type.dart';
@@ -151,6 +150,7 @@ class _AppTextButtonWithIcon extends AppTextButton {
     );
   }
 
+  @override
   Color _getTextColor(BuildContext context) {
     if (textColor != null) return textColor!;
     final theme = Theme.of(context);

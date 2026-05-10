@@ -17,8 +17,6 @@ import 'package:${config.projectName}/app/theme/color_values.dart';
 class AppTheme {
   AppTheme._();
 
-  /// Primary seed color used to generate the Material 3 color scheme
-  static const _seedColor = AppColors.primary;
 
   /// Light theme configuration
   static ThemeData get lightTheme => ThemeData(
@@ -250,8 +248,8 @@ class AppTheme {
     style: ElevatedButton.styleFrom(
       backgroundColor: _lightColorScheme.primary,
       foregroundColor: _lightColorScheme.onPrimary,
-      disabledBackgroundColor: _lightColorScheme.onSurface.withOpacity(0.12),
-      disabledForegroundColor: _lightColorScheme.onSurface.withOpacity(0.38),
+      disabledBackgroundColor: _lightColorScheme.onSurface.withValues(alpha: 0.12),
+      disabledForegroundColor: _lightColorScheme.onSurface.withValues(alpha: 0.38),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -271,7 +269,7 @@ class AppTheme {
         color: _lightColorScheme.outline,
         width: 1,
       ),
-      disabledForegroundColor: _lightColorScheme.onSurface.withOpacity(0.38),
+      disabledForegroundColor: _lightColorScheme.onSurface.withValues(alpha: 0.38),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -286,7 +284,7 @@ class AppTheme {
   static final _textButtonTheme = TextButtonThemeData(
     style: TextButton.styleFrom(
       foregroundColor: _lightColorScheme.primary,
-      disabledForegroundColor: _lightColorScheme.onSurface.withOpacity(0.38),
+      disabledForegroundColor: _lightColorScheme.onSurface.withValues(alpha: 0.38),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -339,7 +337,7 @@ class AppTheme {
     ),
     disabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
-      borderSide: BorderSide(color: _lightColorScheme.onSurface.withOpacity(0.12)),
+      borderSide: BorderSide(color: _lightColorScheme.onSurface.withValues(alpha: 0.12)),
     ),
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     labelStyle: _textTheme.bodySmall,
@@ -471,7 +469,7 @@ class AppTheme {
     }),
     trackColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
-        return _lightColorScheme.primary.withOpacity(0.5);
+        return _lightColorScheme.primary.withValues(alpha: 0.5);
       }
       return _lightColorScheme.surfaceContainerHighest;
     }),
@@ -513,11 +511,11 @@ class AppTheme {
 
   static final _sliderTheme = SliderThemeData(
     activeTrackColor: _lightColorScheme.primary,
-    inactiveTrackColor: _lightColorScheme.primary.withOpacity(0.24),
+    inactiveTrackColor: _lightColorScheme.primary.withValues(alpha: 0.24),
     thumbColor: _lightColorScheme.primary,
-    overlayColor: _lightColorScheme.primary.withOpacity(0.12),
+    overlayColor: _lightColorScheme.primary.withValues(alpha: 0.12),
     activeTickMarkColor: _lightColorScheme.onPrimary,
-    inactiveTickMarkColor: _lightColorScheme.primary.withOpacity(0.38),
+    inactiveTickMarkColor: _lightColorScheme.primary.withValues(alpha: 0.38),
   );
 
   // ==================== APP BAR THEMES ====================
