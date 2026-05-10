@@ -210,10 +210,13 @@ class AuthFlowGenerator {
       'lib/features/auth/data/models/user_model.dart': templates.userModel,
     };
 
+    final progress = Logger.fileProgress('Auth models');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateAuthDtos() async {
@@ -249,10 +252,13 @@ class AuthFlowGenerator {
           templates.resetPasswordDto;
     }
 
+    final progress = Logger.fileProgress('Auth DTOs');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateRepositoryLayer() async {
@@ -262,17 +268,23 @@ class AuthFlowGenerator {
       'lib/features/auth/data/remote/auth_service.dart': templates.authService,
     };
 
+    final progress = Logger.fileProgress('Auth repository');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateUseCases() async {
     final filePath = path.join(
         'lib', 'features', 'auth', 'data', 'domain', 'auth_use_cases.dart');
+    final progress = Logger.fileProgress('Auth use cases');
+    progress.start(1);
     await FileUtils.writeFile(filePath, templates.authUseCases);
-    Logger.verbose('Generated: $filePath');
+    progress.tick();
+    progress.done();
   }
 
   Future<void> _generateAuthBloc() async {
@@ -293,10 +305,13 @@ class AuthFlowGenerator {
           templates.authHistoryCubit,
     };
 
+    final progress = Logger.fileProgress('Auth BLoC');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateAuthScreens() async {
@@ -335,10 +350,13 @@ class AuthFlowGenerator {
           templates.authScreensIndex;
     }
 
+    final progress = Logger.fileProgress('Auth screens');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateAuthControllers() async {
@@ -375,10 +393,13 @@ class AuthFlowGenerator {
           templates.authHelpersIndex;
     }
 
+    final progress = Logger.fileProgress('Auth controllers');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateOnboardingScreens() async {
@@ -394,10 +415,13 @@ class AuthFlowGenerator {
           templates.welcomeScreen;
     }
 
+    final progress = Logger.fileProgress('Onboarding screens');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateIndexFiles() async {
@@ -410,10 +434,13 @@ class AuthFlowGenerator {
           templates.authControllerIndex,
     };
 
+    final progress = Logger.fileProgress('Index files');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _updateSharedBlocProvider() async {

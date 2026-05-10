@@ -21,58 +21,65 @@ class Logger {
     _currentLogLevel = level;
   }
 
-  static void _log(LogLevel level, String message, {int indent = 0}) {
-    // For verbose and debug, we check against the current log level directly
-    // For other levels, we only log if the level is higher or equal to the current log level
-    if ((level == LogLevel.verbose && _currentLogLevel.index > LogLevel.verbose.index) ||
-        (level == LogLevel.debug && _currentLogLevel.index > LogLevel.debug.index) ||
-        (level.index < _currentLogLevel.index && level != LogLevel.verbose && level != LogLevel.debug)) {
-      return;
+  static bool _shouldLog(LogLevel level) {
+    if (level == LogLevel.verbose &&
+        _currentLogLevel.index > LogLevel.verbose.index) {
+      return false;
     }
+    if (level == LogLevel.debug &&
+        _currentLogLevel.index > LogLevel.debug.index) {
+      return false;
+    }
+    if (level.index < _currentLogLevel.index &&
+        level != LogLevel.verbose &&
+        level != LogLevel.debug) {
+      return false;
+    }
+    return true;
+  }
+
+  static void _log(LogLevel level, String message, {int indent = 0}) {
+    if (!_shouldLog(level)) return;
 
     String prefix = '';
     String color = '';
-    String resetColor = '\x1B[0m'; // ANSI escape code for reset
+    final reset = '\x1B[0m';
 
     switch (level) {
       case LogLevel.debug:
-        prefix = '[DEBUG] ';
+        prefix = '· ';
         color = '\x1B[34m'; // Blue
         break;
       case LogLevel.info:
-        prefix = '[INFO] ';
+        prefix = '  ';
         color = '\x1B[37m'; // White
         break;
       case LogLevel.warning:
-        prefix = '[WARN] ';
+        prefix = '▲ ';
         color = '\x1B[33m'; // Yellow
         break;
       case LogLevel.error:
-        prefix = '[ERROR] ';
+        prefix = '✗ ';
         color = '\x1B[31m'; // Red
         break;
       case LogLevel.success:
-        prefix = '✓ ';
+        prefix = '✔ ';
         color = '\x1B[32m'; // Green
         break;
       case LogLevel.verbose:
-        prefix = '  ';
-        color = '\x1B[90m'; // Bright Black (Gray)
+        prefix = '   ';
+        color = '\x1B[90m'; // Gray
         break;
       case LogLevel.step:
         prefix = '→ ';
         color = '\x1B[36m'; // Cyan
         break;
-      case LogLevel.header:
-      case LogLevel.section:
-      case LogLevel.item:
-      case LogLevel.keyValue:
-        // Handled by specific methods, no generic prefix/color here
+      default:
         break;
     }
 
-    final indentedMessage = '${' ' * indent}$message';
-    final output = '$color$prefix$indentedMessage$resetColor';
+    final indented = '${' ' * indent}$message';
+    final output = '$color$prefix$indented$reset';
 
     if (level == LogLevel.error) {
       stderr.writeln(output);
@@ -81,61 +88,96 @@ class Logger {
     }
   }
 
-  static void info(String message) {
-    _log(LogLevel.info, message);
-  }
+  static void info(String message) => _log(LogLevel.info, message);
+  static void success(String message) => _log(LogLevel.success, message);
+  static void warning(String message) => _log(LogLevel.warning, message);
+  static void error(String message) => _log(LogLevel.error, message);
+  static void verbose(String message) => _log(LogLevel.verbose, message);
+  static void debug(String message) => _log(LogLevel.debug, message);
+  static void step(String message) => _log(LogLevel.step, message);
 
-  static void success(String message) {
-    _log(LogLevel.success, message);
-  }
-
-  static void warning(String message) {
-    _log(LogLevel.warning, message);
-  }
-
-  static void error(String message) {
-    _log(LogLevel.error, message);
-  }
-
-  static void verbose(String message) {
-    _log(LogLevel.verbose, message);
-  }
-
-  static void debug(String message) {
-    _log(LogLevel.debug, message);
-  }
-
-  static void step(String message) {
-    _log(LogLevel.step, message);
-  }
-
+  /// Clean header with a diamond and subtle underline
   static void header(String message) {
-    final border = '═' * (message.length + 4);
-    stdout.writeln('');
-    stdout.writeln('\x1B[35m  $border\x1B[0m'); // Magenta
-    stdout.writeln('\x1B[35m  │ $message │\x1B[0m');
-    stdout.writeln('\x1B[35m  $border\x1B[0m');
-    stdout.writeln('');
+    if (!_shouldLog(LogLevel.header)) return;
+    final reset = '\x1B[0m';
+    final magenta = '\x1B[35m';
+    final dim = '\x1B[2m';
+    final line = '─' * (message.length + 2);
+    stdout.writeln();
+    stdout.writeln('$magenta  ◆  $message$reset');
+    stdout.writeln('$dim   $line$reset');
+    stdout.writeln();
   }
 
-  /// Add a blank line for spacing
-  static void spacer() {
-    stdout.writeln('');
-  }
+  static void spacer() => stdout.writeln();
 
-  /// Print a section title with subtle styling
+  /// Section title with subtle dot prefix
   static void section(String title) {
-    stdout.writeln('');
-    stdout.writeln('\x1B[36m── $title ──\x1B[0m'); // Cyan
+    if (!_shouldLog(LogLevel.section)) return;
+    final reset = '\x1B[0m';
+    final cyan = '\x1B[36m';
+    stdout.writeln('$cyan  · $title$reset');
   }
 
-  /// Print an indented item (useful for lists)
+  /// Indented item for lists
   static void item(String message, {int indent = 2}) {
     _log(LogLevel.item, message, indent: indent);
   }
 
-  /// Print a key-value pair with consistent formatting
+  /// Key-value pair with consistent formatting
   static void keyValue(String key, String value) {
-    stdout.writeln('\x1B[37m$key:\x1B[0m \x1B[36m$value\x1B[0m'); // White key, Cyan value
+    if (!_shouldLog(LogLevel.keyValue)) return;
+    final reset = '\x1B[0m';
+    final white = '\x1B[37m';
+    final cyan = '\x1B[36m';
+    stdout.writeln('$white  $key:$reset $cyan$value$reset');
+  }
+
+  /// Track and display file generation progress as a compact summary.
+  /// Call [start] before generating, then [tick] for each file, then [done].
+  static FileProgress fileProgress(String label) => FileProgress(label);
+}
+
+class FileProgress {
+  final String label;
+  int _total = 0;
+  int _done = 0;
+  int _lastOutputLength = 0;
+
+  FileProgress(this.label);
+
+  void start(int total) {
+    _total = total;
+    _done = 0;
+    _print();
+  }
+
+  void tick() {
+    _done++;
+    _print();
+  }
+
+  void done() {
+    _done = _total;
+    // Clear the progress line
+    if (_lastOutputLength > 0) {
+      stdout.write('\r${' ' * _lastOutputLength}\r');
+    }
+    final reset = '\x1B[0m';
+    final gray = '\x1B[90m';
+    final cyan = '\x1B[36m';
+    final green = '\x1B[32m';
+    stdout.writeln(
+        '$green  ✔$reset $cyan$label$reset $gray(${_done}/$_total files)$reset');
+  }
+
+  void _print() {
+    final reset = '\x1B[0m';
+    final gray = '\x1B[90m';
+    final message = '  $label $gray(${_done}/$_total)$reset';
+    // Pad to clear previous line
+    final padded = message.padRight(_lastOutputLength);
+    stdout.write('\r$padded');
+    _lastOutputLength = padded.length;
   }
 }
