@@ -4,7 +4,6 @@ String materialDialogHelperTemplate(ProjectConfig config) => '''
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog_updated/flutter_animated_dialog.dart';
 import 'package:gap/gap.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class DialogHelper<T> {

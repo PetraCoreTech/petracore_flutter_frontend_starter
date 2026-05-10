@@ -1,7 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String materialToastHelperTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 enum ToastType { error, success, info }

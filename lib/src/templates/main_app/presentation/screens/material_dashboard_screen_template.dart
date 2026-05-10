@@ -2,7 +2,6 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String materialDashboardScreenTemplate(ProjectConfig config) => '''
 import 'package:${config.packageName}/core/core.dart';
-import 'package:${config.packageName}/app/app.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});

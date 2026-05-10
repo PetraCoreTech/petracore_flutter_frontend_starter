@@ -6,7 +6,6 @@ import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class PhoneField extends HookWidget {
@@ -123,7 +122,7 @@ class PhoneField extends HookWidget {
     );
   }
 
-  InputBorder _border(Color color, {double? radius, required ThemeData theme}) {
+  InputBorder _border(Color color, {required ThemeData theme, double? radius}) {
     final rad = radius ?? (theme.inputDecorationTheme.border as OutlineInputBorder?)?.borderRadius.topLeft.x ?? 8;
     if (border != null) {
       return border!.copyWith(

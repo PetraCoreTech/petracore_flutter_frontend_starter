@@ -3,7 +3,6 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 String bottomSheetSelectContentTemplate(ProjectConfig config) => '''
 // ignore_for_file: avoid_positional_boolean_parameters
 
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class BottomSheetSelectContent<T> extends HookWidget {
