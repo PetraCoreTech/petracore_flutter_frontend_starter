@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 content: state.error.message,
               );
             } else if (state is UserLoggedIn) {
-              AuthHelper(context).login(state.user, AppRoutes.dashboard.name);
+              AuthHelper(context).login(state.user, AppRoutes.dashboard);
             }
           },
         ),

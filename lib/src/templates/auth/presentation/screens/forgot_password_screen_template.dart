@@ -46,7 +46,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               );
             } else if (state is AuthConfirmed) {
               ToastHelper(context).showToast(content: state.response.message);
-              context.goNamed(AppRoutes.fpVerify.name);
+              context.goNamed(AppRoutes.forgotPasswordVerify.name);
             }
           },
         ),

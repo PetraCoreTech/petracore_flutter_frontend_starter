@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2026-05-10
+
+### Added
+- 🏠 **Main App Feature**: `main_app` feature with `DashboardScreen` is now auto-generated during `petracore init`
+  - `AppRoutes.dashboard` route constant pre-defined in `routes_template.dart`
+  - GoRouter entry for `DashboardScreen` pre-wired in `router_template.dart`
+  - `mainAppBlocProvider` pre-registered in shared `bloc_provider.dart`
+  - Feature barrel, presentation barrel, and controller index all auto-generated
+  - Dashboard directory structure created in `_createAdditionalDirectories()`
+- 🔗 **Login-to-Signup Navigation**: Login screen includes "Don't have an account? Sign up" link navigating via `context.goNamed(AppRoutes.signup.name)`
+- 🔗 **Signup-to-Login Navigation**: Signup screen includes "Already have an account? Log in" link navigating via `context.goNamed(AppRoutes.login.name)`
+- 📖 **Guide Document**: `agent-docs/MAIN_APP_FEATURE_SETUP.md` created documenting the main_app feature architecture
+
+### Changed
+- 🗺️ **Splash Screen Navigation**: Logged-out users now navigate to `AppRoutes.login` instead of the old get-started path
+- 🗺️ **Welcome Screen Navigation**: "Get Started" button now navigates to `AppRoutes.login` instead of `AppRoutes.getStarted`
+- 🏷️ **Route Model Renamed**: `Route` class renamed to `AppRoute` to avoid conflict with Flutter's built-in `Route` class — all references updated in `routes_template.dart`, `auth_flow_generator.dart`, and `feature_generator.dart`
+- ❌ **Get Started Screen Disabled**: `includeGetStartedScreen` defaults to `false`. Interactive prompt removed. All generator references (screens, controllers, routes, constants) cleaned up
+- ♻️ **`projectBlocProviderTemplate`**: Now accepts `ProjectConfig` parameter to support package name interpolation in imports
+
+### Fixed
+- 📧 **Email Controller Re-enabled**: `EmailController` is now generated when `includeForgotPassword` is true (was previously only generated for the removed get-started screen) — fixes missing `EmailController` in forgot password screens
+- 🐛 **Route Model Conflict**: Renamed `Route` → `AppRoute` to eliminate compilation errors in generated projects caused by naming collision with `package:flutter/widgets.dart`
+
 ## [1.0.0] - 2024-09-03
 
 ### Added

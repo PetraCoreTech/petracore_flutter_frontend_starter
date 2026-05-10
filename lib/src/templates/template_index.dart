@@ -43,6 +43,7 @@ export 'main_app/presentation/controllers/main_app_bloc_provider_template.dart';
 export 'main_app/presentation/controllers/main_app_controller_index_template.dart';
 export 'main_app/presentation/presentation_barrel_template.dart';
 export 'main_app/presentation/screens/dashboard_screen_template.dart';
+export 'main_app/presentation/screens/material_dashboard_screen_template.dart';
 export 'auth/data/auth_data_index_template.dart';
 export 'auth/data/domain/auth_use_cases_template.dart';
 export 'auth/data/models/auth_history_model_template.dart';

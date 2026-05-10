@@ -5,10 +5,13 @@ class MainAppTemplates {
   MainAppTemplates(this.config);
 
   final ProjectConfig config;
+  bool get _isMaterial => config.themeType == ThemeType.material;
 
   String get mainAppIndex => mainAppIndexTemplate();
   String get presentationBarrel => mainAppPresentationBarrelTemplate();
   String get controllerIndex => mainAppControllerIndexTemplate();
   String get blocProvider => mainAppBlocProviderTemplate();
-  String get dashboardScreen => dashboardScreenTemplate(config);
+  String get dashboardScreen => _isMaterial
+      ? materialDashboardScreenTemplate(config)
+      : dashboardScreenTemplate(config);
 }

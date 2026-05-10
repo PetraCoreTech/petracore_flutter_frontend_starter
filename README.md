@@ -1,6 +1,6 @@
 # PetraCore Flutter Frontend Starter
 
-[![Pub Version](https://img.shields.io/badge/version-1.0.5-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
+[![Pub Version](https://img.shields.io/badge/version-1.0.6-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful CLI tool and package for generating Flutter projects with **clean architecture**, **Firebase integration**, and **industry best practices**. Based on proven patterns from production applications.
@@ -20,14 +20,13 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 - 📦 **Rich Packages**: Carefully selected and battle-tested dependencies
 - ✨ **Enhanced CLI**: Beautiful, professional logging with levels (debug, info, warning, error, success) and colored output for improved user experience
 
-## 🆕 Recent Improvements (v1.0.5)
+## 🆕 Recent Improvements (v1.0.6)
 
-- **Interactive Theme Selection**: `petracore init` now prompts you to choose between Mix and Material themes interactively when `--theme` is not specified
-- **`--no-interactive` Flag**: Added for the `init` command to skip interactive prompts in CI/scripting scenarios
-- **Media Feature (`petracore feature media`)**: Full Cloudinary-backed media feature with image picking, upload/download/delete, media widgets (display, video player, picker), and Upload/Download BLoCs — auto-detected like the auth keyword
-- **Layered Navigation Architecture**: Routes now follow the documented 5-layer pattern — `Route` data class constants in `routes.dart`, per-feature route list files in `lib/navigation/routes/*_routes.dart`, and marker-based incremental insertion in `router.dart` (no more destructive regex replacement)
-- **Feature Route Registration**: Feature generator now registers routes (creates route list file, `Route` constant in `routes.dart`, and updates `router.dart`) — not just auth anymore
-- **Fixed NDK Version**: Set to `27.0.12077973` (the latest fully installed NDK). Regex updated to match both quoted strings and `flutter.ndkVersion` property reference format
+- **Main App Feature (`petracore init`)**: The `main_app` feature with `DashboardScreen` is now auto-generated during project initialization — no extra command needed. `AppRoutes.dashboard` route constant, GoRouter entry, and `mainAppBlocProvider` are all pre-wired in the initial templates
+- **Login & Signup Nav Links**: Login screen now includes a "Don't have an account? Sign up" link; Signup screen includes "Already have an account? Log in" link — both navigate using `go_router`
+- **Get Started Screen Removed**: `includeGetStartedScreen` defaults to `false`. Splash and Welcome screens now navigate directly to login instead of the old get-started flow
+- **Route Model Renamed**: `Route` data class renamed to `AppRoute` to avoid conflict with Flutter's built-in `Route` class
+- **Email Controller Re-enabled**: `EmailController` is now generated alongside the forgot-password controllers (was previously only generated for the now-removed get-started screen)
 
 ## 📋 What You Get
 
@@ -48,7 +47,7 @@ your_project/
 │   │   ├── data/              # Core data services and domain logic
 │   │   └── utils/             # Utility functions and extensions
 │   ├── features/              # Feature modules (clean architecture)
-│   │   ├── home/              # Sample home feature
+│   │   ├── main_app/           # Dashboard screen (auto-generated)
 │   │   └── shared/            # Shared feature components
 │   ├── navigation/            # App navigation and routing
 │   └── main.dart              # Entry point

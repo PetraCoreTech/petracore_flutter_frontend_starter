@@ -42,7 +42,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 content: state.error.message,
               );
         } else if (state is UserRegistered) {
-              AuthHelper(context).login(state.user, AppRoutes.dashboard.name);
+              AuthHelper(context).login(state.user, AppRoutes.dashboard);
         }
       },
       child: ScreenFrame.unbounded(
