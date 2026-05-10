@@ -127,19 +127,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Streamlined logging implementation
   - Better separation of concerns in generator classes
 
-## [Unreleased]
+## [1.0.5] - 2026-05-10
 
-### Planned
-- 📱 Additional UI components (date pickers, modals, etc.)
-- 🔧 Custom theme generator
-- 🧪 Enhanced testing templates
-- 🚀 CI/CD workflow templates
-- 📱 Platform-specific optimizations
-- 🎨 Design system generator
-- 🔌 Plugin integration templates
-- 📊 Analytics dashboard template
-- 🔐 Advanced authentication patterns
-- 🌐 Internationalization setup
+### Added
+- 🎨 **Interactive Theme Selection**: `petracore init` now prompts users to choose between Mix and Material themes when `--theme` is not explicitly passed
+  - `--no-interactive` flag added for CI/scripting use
+- 📷 **Media Feature (`petracore feature media`)**: Full Cloudinary-backed media feature auto-detected on the "media" keyword (like auth)
+  - 36 template files: enums, extensions, parsers, models, DTOs, Cloudinary service, 3 repositories, 5 use cases, 5 widgets, 2 BLoCs (Upload + Download), helpers
+  - Interactive prompt: basic or complete media setup
+  - Dependencies auto-added: `image_picker`, `cloudinary_sdk`, `cloudinary`, `file_saver`, `share_plus`, `webview_flutter`
+  - BLoC provider auto-registered in shared `bloc_provider.dart`
+- 🛣️ **Layered Navigation Architecture**: Routes now follow a 5-layer pattern
+  - Route constants use the `Route(path:, name:)` data class from `route_model.dart`
+  - Per-feature route list files in `lib/navigation/routes/*_routes.dart`
+  - Incremental marker-based insertion (no more destructive regex replacement)
+- 🚀 **Feature Route Registration**: `FeatureGenerator` now registers routes — creates route list file, adds `Route` constant to `routes.dart`, and updates `router.dart`
+
+### Fixed
+- 🐛 **NDK Version Replacement**: Regex updated from `ndkVersion\s*=\s*"[^"]*"` to `ndkVersion\s*=\s*\S+` to correctly match the modern Flutter-generated `ndkVersion = flutter.ndkVersion` format
+- 🗺️ **Auth Route Addition**: Replaced destructive regex replacement of entire `routes: [...]` block with incremental insertion before marker comment — preserves existing routes from other generators or manual edits
+- 🗺️ **Auth Route Constants**: Replaced destructive `AppRoutes` class body replacement with incremental `Route` constant addition
+
+### Changed
+- ♻️ **`routes_template.dart`**: Now uses `Route(path:, name:)` data class with `AppRoutes._()` private constructor and marker comment for additions
+- ♻️ **`router_template.dart`**: Now references `AppRoutes.splash.path` / `AppRoutes.splash.name` constants with marker comment for additions
+- 📖 **Updated Documentation**: README.md and CHANGELOG.md updated for all v1.0.5 improvements
 
 ## [1.0.4] - 2026-05-09
 

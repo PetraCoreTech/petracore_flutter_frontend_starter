@@ -6,6 +6,7 @@ import 'package:recase/recase.dart';
 
 import '../generators/auth_flow_generator.dart';
 import '../generators/feature_generator.dart';
+import '../generators/media_flow_generator.dart';
 import '../utils/logger.dart';
 import '../utils/project_config_reader.dart';
 import '../utils/validation.dart';
@@ -127,6 +128,12 @@ class FeatureCommand extends BaseCommand {
     // 🔐 AUTH KEYWORD ANALYSIS - Check if user wants full auth flow
     if (featureName.toLowerCase() == 'auth') {
       await _handleAuthKeyword();
+      return;
+    }
+
+    // 📷 MEDIA KEYWORD ANALYSIS - Check if user wants full media feature
+    if (featureName.toLowerCase() == 'media') {
+      await _handleMediaKeyword();
       return;
     }
 
@@ -270,6 +277,88 @@ class FeatureCommand extends BaseCommand {
     );
   }
 
+  /// Handle the 'media' keyword specially - offer full media feature
+  Future<void> _handleMediaKeyword() async {
+    Logger.header('Media Feature Detected!');
+
+    Logger.info('I detected you want to generate a "media" feature.');
+    Logger.info('Would you like to:');
+    Logger.spacer();
+
+    Logger.item(
+        '1. Generate a basic media feature (standard feature structure)');
+    Logger.item('2. Bootstrap complete media feature (recommended)');
+    Logger.item('   • Cloudinary-backed upload/download/delete', indent: 6);
+    Logger.item('   • Image picker integration', indent: 6);
+    Logger.item('   • Media display, video player, picker widgets', indent: 6);
+    Logger.item('   • Upload & Download BLoCs with progress', indent: 6);
+    Logger.item('   • File size & type extensions', indent: 6);
+    Logger.item('   • All required dependencies added', indent: 6);
+    Logger.spacer();
+
+    stdout.write('Choose option (1 or 2, default: 2): ');
+    final input = stdin.readLineSync()?.trim() ?? '';
+
+    if (input == '1') {
+      Logger.info('\nGenerating basic media feature...');
+      await _generateBasicFeature('media');
+    } else {
+      Logger.info('\nGreat choice! Let\'s set up a complete media feature.');
+      Logger.info('');
+      await _generateFullMediaFeature();
+    }
+  }
+
+  Future<void> _generateFullMediaFeature() async {
+    if (!File('pubspec.yaml').existsSync()) {
+      Logger.error('Not in a Flutter project directory');
+      Logger.info('Run this command from the root of your Flutter project');
+      exit(1);
+    }
+
+    final currentDir = Directory.current.path;
+    final projectName = path.basename(currentDir);
+
+    final config = MediaConfig(
+      projectName: projectName,
+      outputPath: currentDir,
+    );
+
+    Logger.header('Generating Complete Media Feature');
+    final generator = MediaFlowGenerator(config);
+
+    try {
+      await generator.generate();
+
+      Logger.success('Complete media feature created successfully!');
+      Logger.section('Generated files');
+      Logger.item('lib/features/media/');
+      Logger.item('  ├── data/enums/          (MediaType, MediaActions)');
+      Logger.item('  ├── data/extensions/     (type, bytes, size, list, xfile)');
+      Logger.item('  ├── data/parsers/        (MediaTypeParser)');
+      Logger.item('  ├── data/models/         (Attachment, AttachedMedia)');
+      Logger.item('  ├── data/domain/         (upload & download use cases)');
+      Logger.item('  ├── data/remote/         (repositories + Cloudinary)');
+      Logger.item('  └── presentation/');
+      Logger.item('      ├── entities/        (DownloadEntity)');
+      Logger.item('      ├── helpers/         (MediaHelper)');
+      Logger.item('      ├── widgets/         (5 media widgets)');
+      Logger.item('      └── controllers/     (Upload & Download BLoCs)');
+
+      Logger.section('Next steps');
+      Logger.item('1. Add Cloudinary env vars to your build:');
+      Logger.item('   --dart-define=CLOUD_NAME=your_cloud');
+      Logger.item('   --dart-define=CLOUDINARY_API_KEY=your_key');
+      Logger.item('   --dart-define=CLOUDINARY_SECRET_KEY=your_secret');
+      Logger.item('2. Run: flutter pub get');
+      Logger.item('3. Run: flutter packages pub run build_runner build');
+      Logger.item('4. Use MediaHelper to pick and display media');
+    } catch (e) {
+      Logger.error('Failed to generate media feature: $e');
+      exit(1);
+    }
+  }
+
   /// Handle the 'auth' keyword specially - offer full auth flow
   Future<void> _handleAuthKeyword() async {
     Logger.header('Auth Feature Detected!');
@@ -359,6 +448,60 @@ class FeatureCommand extends BaseCommand {
       Logger.info('login/signup screens, token management, and more!');
     } catch (e) {
       Logger.error('Failed to generate basic auth feature: $e');
+      exit(1);
+    }
+  }
+
+  /// Generate a basic feature for a given feature name
+  Future<void> _generateBasicFeature(String featureName) async {
+    if (!File('pubspec.yaml').existsSync()) {
+      Logger.error('Not in a Flutter project directory');
+      Logger.info('Run this command from the root of your Flutter project');
+      exit(1);
+    }
+
+    final outputDir = 'lib/features';
+    final featurePath = path.join(outputDir, featureName);
+
+    if (Directory(featurePath).existsSync()) {
+      Logger.error('Feature $featureName already exists in $featurePath');
+      exit(1);
+    }
+
+    Logger.header('Generating Basic $featureName Feature');
+
+    Logger.step('Reading project configuration...');
+    final projectConfig = await ProjectConfigReader.readOrDefault();
+
+    final config = FeatureConfig(
+      featureName: featureName,
+      outputPath: featurePath,
+      includeBloc: true,
+      includeRepository: true,
+      includeUseCases: true,
+      includeModels: true,
+      projectConfig: projectConfig,
+    );
+
+    final generator = FeatureGenerator(config);
+
+    try {
+      await generator.generate();
+
+      Logger.success('Basic $featureName feature created successfully!');
+
+      Logger.section('Generated files');
+      Logger.item('$featurePath/');
+      Logger.item('${featureName}_index.dart');
+      Logger.item('data/ (models, repositories, use cases)');
+      Logger.item('presentation/ (screens, controllers)');
+
+      Logger.section('Next steps');
+      Logger.item('1. Add the feature to your main bloc provider');
+      Logger.item('2. Update your navigation routes');
+      Logger.item('3. Run: flutter packages pub run build_runner build');
+    } catch (e) {
+      Logger.error('Failed to generate basic $featureName feature: $e');
       exit(1);
     }
   }

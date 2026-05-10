@@ -1,0 +1,31 @@
+import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
+
+String mediaIndexTemplate(ProjectConfig config) => '''
+export 'data/domain/download_use_cases.dart';
+export 'data/domain/upload_use_cases.dart';
+export 'data/enums/media_actions.dart';
+export 'data/enums/media_type.dart';
+export 'data/extensions/media_bytes_extension.dart';
+export 'data/extensions/media_list_extension.dart';
+export 'data/extensions/media_size_extension.dart';
+export 'data/extensions/media_type_extension.dart';
+export 'data/extensions/xfile_extension.dart';
+export 'data/models/attached_media_model.dart';
+export 'data/models/attachment_model.dart';
+export 'data/parsers/media_type_parser.dart';
+export 'data/remote/cloudinary/cloudinary_service.dart';
+export 'data/remote/cloudinary/dtos/delete_upload_dto.dart';
+export 'data/remote/cloudinary/dtos/file_upload_dto.dart';
+export 'data/remote/download/download_repository.dart';
+export 'data/remote/download/dtos/download_dto.dart';
+export 'data/remote/media_repository.dart';
+export 'data/remote/upload/params/upload_params.dart';
+export 'data/remote/upload/upload_repository.dart';
+export 'presentation/entities/download_entity.dart';
+export 'presentation/helpers/media_helper.dart';
+export 'presentation/widgets/media_display.dart';
+export 'presentation/widgets/media_picker_field.dart';
+export 'presentation/widgets/photo_display.dart';
+export 'presentation/widgets/selected_media_item.dart';
+export 'presentation/widgets/video_player.dart';
+''';

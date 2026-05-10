@@ -1,6 +1,6 @@
 # PetraCore Flutter Frontend Starter
 
-[![Pub Version](https://img.shields.io/badge/version-1.0.4-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
+[![Pub Version](https://img.shields.io/badge/version-1.0.5-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful CLI tool and package for generating Flutter projects with **clean architecture**, **Firebase integration**, and **industry best practices**. Based on proven patterns from production applications.
@@ -20,24 +20,14 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 - 📦 **Rich Packages**: Carefully selected and battle-tested dependencies
 - ✨ **Enhanced CLI**: Beautiful, professional logging with levels (debug, info, warning, error, success) and colored output for improved user experience
 
-## 🆕 Recent Improvements (v1.0.4)
+## 🆕 Recent Improvements (v1.0.5)
 
-- **Dual Theme System**: Added Material 3 theme generation option alongside existing Mix theme support
-- **Universal Color Values**: `color_values.dart` now generated for BOTH theme types as shared brand color palette
-- **Conditional Mix Injection**: `AppConstants` template now conditionally includes Mix `$token` code only for non-Material projects
-- **Pure Material 3 Implementation**: Completely rewrote Material theme template with explicit `ThemeData` configuration - no Mix dependencies
-- **Theme File Routing**: Updated `project_generator.dart` to correctly route theme files based on selected theme type
-- **Fixed Build Runner Issues**: Resolved duplicate build_runner executions and command format issues
-- **Enhanced Auth Flow**: Complete authentication system with login, signup, OTP, email verification
-- **Professional CLI Logging**: Clean, well-spaced output with visual hierarchy and progress indicators
-- **Improved Error Handling**: Better error messages and debugging information
-- **Template Bug Fixes**: Resolved syntax errors in generated code templates
-- **Enhanced Test Suite**: Comprehensive testing for all auth flow components
-- **Removed Redundant Models Barrel**: `models.dart` barrel export no longer generated in features, since `feature_index.dart` already exports models directly
-- **Automatic BLoC Provider Registration**: Feature and auth generators now auto-register their BLoC providers in the shared `bloc_provider.dart` - no manual step needed
-- **Automatic Router Updates**: Auth flow generator now auto-populates `router.dart` and `routes.dart` with all generated auth screen routes
-- **Material Theme Auth Support**: Auth screens now fully support Material 3 theme with `Theme.of(context)` styling instead of Mix-specific tokens
-- **Theme Type Detection**: `ProjectConfigReader` now detects the project's theme type automatically for correct template selection
+- **Interactive Theme Selection**: `petracore init` now prompts you to choose between Mix and Material themes interactively when `--theme` is not specified
+- **`--no-interactive` Flag**: Added for the `init` command to skip interactive prompts in CI/scripting scenarios
+- **Media Feature (`petracore feature media`)**: Full Cloudinary-backed media feature with image picking, upload/download/delete, media widgets (display, video player, picker), and Upload/Download BLoCs — auto-detected like the auth keyword
+- **Layered Navigation Architecture**: Routes now follow the documented 5-layer pattern — `Route` data class constants in `routes.dart`, per-feature route list files in `lib/navigation/routes/*_routes.dart`, and marker-based incremental insertion in `router.dart` (no more destructive regex replacement)
+- **Feature Route Registration**: Feature generator now registers routes (creates route list file, `Route` constant in `routes.dart`, and updates `router.dart`) — not just auth anymore
+- **Fixed NDK Version Replacement**: Regex now correctly matches `ndkVersion = flutter.ndkVersion` (the modern Flutter-generated format) instead of only quoted strings
 
 ## 📋 What You Get
 
@@ -96,23 +86,26 @@ dart pub add petracore_flutter_frontend_starter
 ### Create a New Project
 
 ```bash
-# Basic project (Mix theme)
+# Interactive theme selection (you'll be prompted to choose Mix or Material)
 petracore init my_awesome_app
 
-# With Material 3 theme
+# With Material 3 theme (skips interactive prompt)
 petracore init my_material_app --theme material
 
 # With custom organization
 petracore init my_app --org com.mycompany
 
-# Without Firebase
-petracore init simple_app --no-firebase
+# Without Firebase (coming soon)
+# petracore init simple_app --no-firebase
 
 # With custom description
 petracore init my_app --description "My amazing Flutter application"
 
 # Force overwrite existing directory
 petracore init existing_app --force
+
+# Skip all interactive prompts (uses defaults)
+petracore init my_app --no-interactive
 ```
 
 ### Generate Features
@@ -150,12 +143,22 @@ petracore auth --login --signup --email-verification --forgot-password --phone-v
 
 # Basic auth setup
 petracore auth --no-interactive --login --signup
+
+### Generate Complete Media Feature
+
+```bash
+# Interactive mode - choose full media or basic feature
+petracore feature media
+
+# Full media feature with Cloudinary, image picker, BLoCs, and widgets
+# Auto-detected "media" keyword prompts for complete setup
 ```
 
 ### Available Options
 
 #### Init Command Options
-- `--theme`: Theme type - `mix` (default) or `material`
+- `--theme`: Theme type - `mix` (default) or `material`. If omitted, you'll be prompted interactively
+- `--no-interactive`: Skip interactive prompts and use defaults
 - `--org`: Organization identifier (default: com.petracore)
 - `--description`: Project description
 - `--force`: Force creation even if directory exists
@@ -304,8 +307,7 @@ firebase_messaging: ^15.2.4    # Cloud Messaging
    flutter packages pub run build_runner build
    ```
 
-4. **Add navigation routes**:
-   Update `lib/navigation/router.dart` with new routes (for auth features, routes are auto-populated).
+4. **Navigation routes are auto-registered**: Both auth and feature generators automatically register routes in `lib/navigation/routes.dart` (using the `Route` data class), create a per-feature route list in `lib/navigation/routes/<feature>_routes.dart`, and update `router.dart` — no manual editing needed.
 
 ## 🎨 Dual Theme System
 

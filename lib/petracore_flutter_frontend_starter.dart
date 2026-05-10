@@ -6,6 +6,7 @@ library petracore_flutter_frontend_starter;
 
 export 'src/commands/commands.dart';
 export 'src/generators/feature_generator.dart';
+export 'src/generators/media_flow_generator.dart';
 export 'src/generators/project_generator.dart';
 export 'src/utils/file_utils.dart';
 export 'src/utils/logger.dart';
