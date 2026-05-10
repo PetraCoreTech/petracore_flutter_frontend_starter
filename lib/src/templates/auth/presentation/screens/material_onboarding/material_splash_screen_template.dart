@@ -70,17 +70,16 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _navigate() async {
     final authHistory = context.read<AuthHistoryCubit>().state;
     if (authHistory.isEmpty) {
-      // context.goNamed(AppRoutes.welcome.name);
+      context.goNamed(AppRoutes.welcome.name);
       return;
     }
     final lastStatus = authHistory.last.authStatus;
     if (lastStatus.isLoggedIn) {
       ToastHelper(context).showToast(content: '<ContentString.welcome>');
-      // context.goNamed(AppRoutes.dashboard.name);
+      context.goNamed(AppRoutes.dashboard.name);
     } else if (lastStatus.isLoggedOut) {
-      // final path =
-      //    AppRoutes.splash.path.add(AppRoutes.getStarted.name, separator: '/');
-      // context.go(path);
+      final path = AppRoutes.splash.path.add(AppRoutes.getStarted.name, separator: '/');
+      context.go(path);
     }
   }
 }

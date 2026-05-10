@@ -77,12 +77,12 @@ class ProjectGenerator {
     }
 
     var content = await buildGradleFile.readAsString();
-    final androidBlock = RegExp(r'android\s*\{');
-    final ndkRegex = RegExp(r'ndkVersion\s*=\s*"[^"]*"');
+    final ndkRegex = RegExp(r'ndkVersion\s*=\s*\S+');
 
     if (ndkRegex.hasMatch(content)) {
       content = content.replaceAll(ndkRegex, 'ndkVersion = "27.3.13750724"');
     } else {
+      final androidBlock = RegExp(r'android\s*\{');
       content = content.replaceFirst(
         androidBlock,
         'android {\n    ndkVersion = "27.3.13750724"',

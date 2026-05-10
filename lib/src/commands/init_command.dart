@@ -34,6 +34,12 @@ ArgParser initCommandParser() {
       'force',
       help: 'Force creation even if directory exists',
       negatable: false,
+    )
+    ..addFlag(
+      'no-interactive',
+      help: 'Skip interactive prompts and use defaults',
+      defaultsTo: false,
+      negatable: false,
     );
 }
 
@@ -55,12 +61,18 @@ class InitCommand extends BaseCommand {
 
     Logger.header('Creating PetraCore Flutter Project: $projectName');
 
+    final noInteractive = results['no-interactive'] as bool;
+    final themeExplicit = results.wasParsed('theme');
+    final themeValue = (noInteractive || themeExplicit)
+        ? results['theme'] as String
+        : _promptForTheme();
+
     final config = ProjectConfig(
       projectName: projectName,
       organization: results['org'] as String,
       description: results['description'] as String,
       projectPath: projectPath,
-      themeType: _parseThemeType(results['theme'] as String),
+      themeType: _parseThemeType(themeValue),
     );
 
     await _generateProject(config);
@@ -132,6 +144,25 @@ class InitCommand extends BaseCommand {
     }
   }
 
+  String _promptForTheme() {
+    Logger.section('Theme Selection');
+    Logger.info('Choose your theme system:');
+    Logger.spacer();
+    Logger.item('1. Mix (default) - Design token-based theming with Mix package');
+    Logger.item('2. Material - Standard Flutter Material 3 ThemeData');
+    Logger.spacer();
+
+    stdout.write('Select theme (1 or 2, default: 1): ');
+    final input = stdin.readLineSync()?.trim() ?? '';
+
+    if (input == '2') {
+      Logger.info('Selected: Material theme\n');
+      return 'material';
+    }
+    Logger.info('Selected: Mix theme\n');
+    return 'mix';
+  }
+
   void _printHelp() {
     print('''
 Initialize a new Flutter project with PetraCore architecture
@@ -139,16 +170,21 @@ Initialize a new Flutter project with PetraCore architecture
 Usage: petracore init <project_name> [options]
 
 
-  --org             Organization identifier (default: com.petracore)
-  --description     Project description
-  --theme           Theme system: mix (default) or material
-  --force           Force creation even if directory exists
-  --help, -h        Show this help
+  --org               Organization identifier (default: com.petracore)
+  --description       Project description
+  --theme             Theme system: mix (default) or material
+  --force             Force creation even if directory exists
+  --no-interactive    Skip interactive prompts (use defaults or flags)
+  --help, -h          Show this help
+
+When --theme is not specified, you will be prompted to choose interactively.
+Use --theme or --no-interactive to skip the prompt in scripts.
 
 Examples:
   petracore init my_awesome_app
   petracore init my_app --org com.mycompany --theme material
   petracore init test_app --force --description "A test application"
+  petracore init my_app --no-interactive               # Uses default (mix)
 ''');
   }
 }

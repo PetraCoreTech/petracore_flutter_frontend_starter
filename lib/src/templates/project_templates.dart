@@ -225,7 +225,7 @@ class ProjectTemplates {
       : loadingShimmerTemplate(config);
 
   /// Navigation
-  String get routes => routesTemplate();
+  String get routes => routesTemplate(config);
   String get router => routerTemplate(config);
   String get navigationIndex => navigationIndexTemplate();
   String get routeModel => routeModelTemplate();

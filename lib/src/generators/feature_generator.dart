@@ -86,6 +86,9 @@ class FeatureGenerator {
       await _updateSharedBlocProvider();
     }
 
+    Logger.step('Registering route...');
+    await _updateRouterWithFeatureRoutes();
+
     Logger.step('Generating presentation layer...');
     await _generatePresentationLayer();
 
@@ -271,5 +274,93 @@ class FeatureGenerator {
     await FileUtils.writeFile(sharedPath, content);
     Logger.verbose(
         'Updated shared bloc_provider.dart with ${config.featureName} provider');
+  }
+
+  Future<void> _updateRouterWithFeatureRoutes() async {
+    final routesDir = path.join(
+      config.projectConfig.projectPath,
+      'lib/navigation/routes',
+    );
+    await Directory(routesDir).create(recursive: true);
+
+    final featureRoutesContent = StringBuffer();
+    featureRoutesContent.writeln(
+        "import 'package:${config.projectConfig.projectName}/core/core.dart';");
+    featureRoutesContent.writeln(
+        "import 'package:${config.projectConfig.projectName}/features/${config.featureName}/${config.featureName}_index.dart';");
+    featureRoutesContent.writeln();
+    featureRoutesContent.writeln(
+        'final ${config.featureName}Routes = <GoRoute>[');
+    featureRoutesContent.writeln('  GoRoute(');
+    featureRoutesContent.writeln(
+        '    path: AppRoutes.${config.featureName}.path,');
+    featureRoutesContent.writeln(
+        '    name: AppRoutes.${config.featureName}.name,');
+    featureRoutesContent.writeln(
+        '    builder: (context, state) => const ${config.pascalCase}Screen(),');
+    featureRoutesContent.writeln('  ),');
+    featureRoutesContent.writeln('];');
+
+    final featureRoutesPath =
+        path.join(routesDir, '${config.featureName}_routes.dart');
+    await FileUtils.writeFile(
+        featureRoutesPath, featureRoutesContent.toString());
+    Logger.verbose(
+        'Created lib/navigation/routes/${config.featureName}_routes.dart');
+
+    final routesPath = path.join(
+      config.projectConfig.projectPath,
+      'lib/navigation/routes.dart',
+    );
+
+    final routesFile = File(routesPath);
+    if (await routesFile.exists()) {
+      var routesContent = await routesFile.readAsString();
+
+      final constant =
+          "  static const ${config.featureName} = Route(path: '/${config.featureName}', name: '${config.featureName}');";
+      if (!routesContent.contains("static const ${config.featureName} =")) {
+        routesContent = routesContent.replaceFirst(
+          '  // Add your route constants here',
+          '$constant\n  // Add your route constants here',
+        );
+      }
+
+      await FileUtils.writeFile(routesPath, routesContent);
+      Logger.verbose(
+          'Updated routes.dart with ${config.featureName} constant');
+    }
+
+    final routerPath = path.join(
+      config.projectConfig.projectPath,
+      'lib/navigation/router.dart',
+    );
+
+    final routerFile = File(routerPath);
+    if (await routerFile.exists()) {
+      var routerContent = await routerFile.readAsString();
+
+      final importLine =
+          "import 'package:${config.projectConfig.projectName}/navigation/routes/${config.featureName}_routes.dart';";
+      if (!routerContent.contains(importLine)) {
+        routerContent = routerContent.replaceFirst(
+          "import 'package:${config.projectConfig.projectName}/core/core.dart';",
+          "import 'package:${config.projectConfig.projectName}/core/core.dart';\n$importLine",
+        );
+      }
+
+      final spreadEntry = '    ...${config.featureName}Routes,';
+      if (!routerContent.contains(spreadEntry)) {
+        const marker = '    // Add your feature routes here';
+        routerContent = routerContent.replaceFirst(
+          marker,
+          '$spreadEntry\n$marker',
+        );
+      }
+
+      await FileUtils.writeFile(routerPath, routerContent);
+      Logger.verbose(
+          'Updated router.dart with ${config.featureName} routes');
+    }
   }
 }

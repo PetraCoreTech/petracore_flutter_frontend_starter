@@ -478,68 +478,75 @@ class AuthFlowGenerator {
   }
 
   Future<void> _updateRouterWithAuthRoutes() async {
+    final routesDir = path.join(config.outputPath, 'lib/navigation/routes');
+    await Directory(routesDir).create(recursive: true);
+
+    final authRoutesContent = StringBuffer();
+    authRoutesContent.writeln(
+        "import 'package:${projectConfig.packageName}/core/core.dart';");
+    authRoutesContent.writeln(
+        "import 'package:${projectConfig.packageName}/features/auth/auth_index.dart';");
+    authRoutesContent.writeln();
+    authRoutesContent.writeln('final authRoutes = <GoRoute>[');
+
+    void addRoute(String name) {
+      authRoutesContent.writeln('  GoRoute(');
+      authRoutesContent.writeln('    path: AppRoutes.$name.path,');
+      authRoutesContent.writeln('    name: AppRoutes.$name.name,');
+      authRoutesContent.writeln(
+          '    builder: (context, state) => const ${_routeToScreen(name)}(),');
+      authRoutesContent.writeln('  ),');
+    }
+
+    if (config.includeWelcomeScreen) addRoute('welcome');
+    if (config.includeGetStartedScreen) addRoute('getStarted');
+    if (config.includeLogin) addRoute('login');
+    if (config.includeSignup) addRoute('signup');
+    if (config.includeOtp) addRoute('verifyOtp');
+    if (config.includeForgotPassword) {
+      addRoute('forgotPassword');
+      addRoute('forgotPasswordVerify');
+      addRoute('resetPassword');
+    }
+
+    authRoutesContent.writeln('];');
+
+    final authRoutesPath = path.join(routesDir, 'auth_routes.dart');
+    await FileUtils.writeFile(authRoutesPath, authRoutesContent.toString());
+    Logger.verbose('Created lib/navigation/routes/auth_routes.dart');
+
     final routerPath = path.join(
       config.outputPath,
       'lib/navigation/router.dart',
     );
 
-    final file = File(routerPath);
-    if (!await file.exists()) {
+    final routerFile = File(routerPath);
+    if (!await routerFile.exists()) {
       Logger.verbose('router.dart not found, skipping update');
       return;
     }
 
-    var content = await file.readAsString();
+    var routerContent = await routerFile.readAsString();
 
-    final authImport =
-        "import 'package:${projectConfig.packageName}/features/auth/auth_index.dart';";
-    if (!content.contains(authImport)) {
-      content = content.replaceFirst(
+    final authRoutesImport =
+        "import 'package:${projectConfig.packageName}/navigation/routes/auth_routes.dart';";
+    if (!routerContent.contains(authRoutesImport)) {
+      routerContent = routerContent.replaceFirst(
         "import 'package:${projectConfig.packageName}/core/core.dart';",
-        "import 'package:${projectConfig.packageName}/core/core.dart';\n$authImport",
+        "import 'package:${projectConfig.packageName}/core/core.dart';\n$authRoutesImport",
       );
     }
 
-    final routeEntries = StringBuffer();
-    void addRoute(String path, String name, String widget) {
-      routeEntries.writeln('    GoRoute(');
-      routeEntries.writeln("      path: '$path',");
-      routeEntries.writeln("      name: '$name',");
-      routeEntries.writeln('      builder: (context, state) => const $widget(),');
-      routeEntries.writeln('    ),');
+    const marker = '    // Add your feature routes here';
+    final spreadEntry = '    ...authRoutes,';
+    if (!routerContent.contains(spreadEntry)) {
+      routerContent = routerContent.replaceFirst(
+        marker,
+        '$spreadEntry\n$marker',
+      );
     }
 
-    addRoute('/', 'splash', 'SplashScreen');
-    if (config.includeWelcomeScreen) {
-      addRoute('/welcome', 'welcome', 'WelcomeScreen');
-    }
-    if (config.includeGetStartedScreen) {
-      addRoute('/get-started', 'getStarted', 'GetStartedScreen');
-    }
-    if (config.includeLogin) {
-      addRoute('/login', 'login', 'LoginScreen');
-    }
-    if (config.includeSignup) {
-      addRoute('/signup', 'signup', 'SignupScreen');
-    }
-    if (config.includeOtp) {
-      addRoute('/verify-otp', 'verifyOtp', 'VerifyOtpScreen');
-    }
-    if (config.includeForgotPassword) {
-      addRoute('/forgot-password', 'forgotPassword', 'ForgotPasswordScreen');
-      addRoute('/forgot-password-verify', 'forgotPasswordVerify',
-          'ForgotPasswordVerifyScreen');
-      addRoute('/reset-password', 'resetPassword', 'ResetPasswordScreen');
-    }
-
-    final routeBlock = '  routes: [\n${routeEntries.toString()}  ],';
-
-    content = content.replaceFirstMapped(
-      RegExp(r'  routes: \[[\s\S]*?\],'),
-      (_) => routeBlock,
-    );
-
-    await FileUtils.writeFile(routerPath, content);
+    await FileUtils.writeFile(routerPath, routerContent);
     Logger.verbose('Updated router.dart with auth routes');
   }
 
@@ -557,30 +564,58 @@ class AuthFlowGenerator {
 
     var content = await file.readAsString();
 
-    final routeConstants = StringBuffer();
-    void addConstant(String name) {
-      routeConstants.writeln("  static const $name = '$name';");
+    void addRouteConstant(String name, String pathStr) {
+      final constant =
+          "  static const $name = Route(path: '$pathStr', name: '$name');";
+      if (content.contains("static const $name =")) {
+        return;
+      }
+      content = content.replaceFirst(
+        '  // Add your route constants here',
+        '$constant\n  // Add your route constants here',
+      );
     }
 
-    addConstant('splash');
-    if (config.includeWelcomeScreen) addConstant('welcome');
-    if (config.includeGetStartedScreen) addConstant('getStarted');
-    if (config.includeLogin) addConstant('login');
-    if (config.includeSignup) addConstant('signup');
-    if (config.includeOtp) addConstant('verifyOtp');
+    addRouteConstant('splash', '/');
+    if (config.includeWelcomeScreen) addRouteConstant('welcome', '/welcome');
+    if (config.includeGetStartedScreen) {
+      addRouteConstant('getStarted', '/get-started');
+    }
+    if (config.includeLogin) addRouteConstant('login', '/login');
+    if (config.includeSignup) addRouteConstant('signup', '/signup');
+    if (config.includeOtp) addRouteConstant('verifyOtp', '/verify-otp');
     if (config.includeForgotPassword) {
-      addConstant('forgotPassword');
-      addConstant('forgotPasswordVerify');
-      addConstant('resetPassword');
+      addRouteConstant('forgotPassword', '/forgot-password');
+      addRouteConstant(
+          'forgotPasswordVerify', '/forgot-password-verify');
+      addRouteConstant('resetPassword', '/reset-password');
     }
-
-    content = content.replaceFirstMapped(
-      RegExp(r'class AppRoutes \{[\s\S]*?\}'),
-      (_) => 'class AppRoutes {\n${routeConstants.toString()}}',
-    );
 
     await FileUtils.writeFile(routesPath, content);
     Logger.verbose('Updated routes.dart with auth route constants');
+  }
+
+  String _routeToScreen(String routeName) {
+    switch (routeName) {
+      case 'welcome':
+        return 'WelcomeScreen';
+      case 'getStarted':
+        return 'GetStartedScreen';
+      case 'login':
+        return 'LoginScreen';
+      case 'signup':
+        return 'SignupScreen';
+      case 'verifyOtp':
+        return 'VerifyOtpScreen';
+      case 'forgotPassword':
+        return 'ForgotPasswordScreen';
+      case 'forgotPasswordVerify':
+        return 'ForgotPasswordVerifyScreen';
+      case 'resetPassword':
+        return 'ResetPasswordScreen';
+      default:
+        return '${routeName[0].toUpperCase()}${routeName.substring(1)}Screen';
+    }
   }
 
   /// Interactive method to collect user preferences

@@ -6,14 +6,16 @@ import 'package:${config.packageName}/core/core.dart';
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final router = GoRouter(
-  initialLocation: '/',
+  initialLocation: AppRoutes.splash.path,
   navigatorKey: rootNavigatorKey,
   routes: [
     GoRoute(
-      path: '/',
-      name: 'splash',
+      path: AppRoutes.splash.path,
+      name: AppRoutes.splash.name,
       builder: (context, state) => const Placeholder(),
     ),
+    
+    // Add your feature routes here
   ],
 );
 ''';
