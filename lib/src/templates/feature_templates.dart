@@ -35,4 +35,12 @@ class FeatureTemplates {
   String get listScreen => listScreenTemplate(config);
   String get screensBarrel => screensBarrelTemplate(config);
   String get presentationBarrel => presentationBarrelTemplate(config);
+
+  /// Pagination Feature
+  String get paginationIndex => paginationIndexTemplate(projectConfig.projectName);
+  String get paginationBloc => paginationBlocTemplate(projectConfig.projectName);
+  String get paginationEvent => paginationEventTemplate(projectConfig.projectName);
+  String get paginationState => paginationStateTemplate(projectConfig.projectName);
+  String get paginatedListView => paginatedListViewTemplate(projectConfig.projectName);
+  String get paginatedListBuilder => paginatedListBuilderTemplate(projectConfig.projectName);
 }

@@ -7,6 +7,13 @@ import 'package:recase/recase.dart';
 import '../generators/auth_flow_generator.dart';
 import '../generators/feature_generator.dart';
 import '../generators/media_flow_generator.dart';
+import '../templates/feature/pagination/pagination_index_template.dart';
+import '../templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_event_template.dart';
+import '../templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_state_template.dart';
+import '../templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_bloc_template.dart';
+import '../templates/feature/pagination/presentation/widgets/paginated_list_view_template.dart';
+import '../templates/feature/pagination/presentation/widgets/paginated_list_builder_template.dart';
+import '../utils/file_utils.dart';
 import '../utils/logger.dart';
 import '../utils/project_config_reader.dart';
 import '../utils/validation.dart';
@@ -83,6 +90,81 @@ ArgParser generateCommandParser() {
   return parser;
 }
 
+class PaginationConfig {
+  final String projectName;
+  final String outputPath;
+
+  PaginationConfig({
+    required this.projectName,
+    required this.outputPath,
+  });
+}
+
+class PaginationFeatureGenerator {
+  final PaginationConfig config;
+
+  PaginationFeatureGenerator(this.config);
+
+  Future<void> generate() async {
+    await _createPaginationDirectories();
+    await _generatePaginationFiles();
+  }
+
+  Future<void> _createPaginationDirectories() async {
+    final dirs = [
+      path.join(config.outputPath, 'lib', 'features', 'pagination'),
+      path.join(config.outputPath, 'lib', 'features', 'pagination', 'presentation'),
+      path.join(config.outputPath, 'lib', 'features', 'pagination', 'presentation', 'controllers'),
+      path.join(config.outputPath, 'lib', 'features', 'pagination', 'presentation', 'controllers', 'pagination_bloc'),
+      path.join(config.outputPath, 'lib', 'features', 'pagination', 'presentation', 'widgets'),
+    ];
+
+    for (final String dir in dirs) {
+      await Directory(dir).create(recursive: true);
+    }
+  }
+
+  Future<void> _generatePaginationFiles() async {
+    final featurePath = path.join(config.outputPath, 'lib', 'features', 'pagination');
+
+    // Generate pagination_index.dart
+    await FileUtils.writeFile(
+      path.join(featurePath, 'pagination_index.dart'),
+      paginationIndexTemplate(config.projectName),
+    );
+
+    // Generate pagination_event.dart
+    await FileUtils.writeFile(
+      path.join(featurePath, 'presentation', 'controllers', 'pagination_bloc', 'pagination_event.dart'),
+      paginationEventTemplate(config.projectName),
+    );
+
+    // Generate pagination_state.dart
+    await FileUtils.writeFile(
+      path.join(featurePath, 'presentation', 'controllers', 'pagination_bloc', 'pagination_state.dart'),
+      paginationStateTemplate(config.projectName),
+    );
+
+    // Generate pagination_bloc.dart
+    await FileUtils.writeFile(
+      path.join(featurePath, 'presentation', 'controllers', 'pagination_bloc', 'pagination_bloc.dart'),
+      paginationBlocTemplate(config.projectName),
+    );
+
+    // Generate paginated_list_view.dart
+    await FileUtils.writeFile(
+      path.join(featurePath, 'presentation', 'widgets', 'paginated_list_view.dart'),
+      paginatedListViewTemplate(config.projectName),
+    );
+
+    // Generate paginated_list_builder.dart
+    await FileUtils.writeFile(
+      path.join(featurePath, 'presentation', 'widgets', 'paginated_list_builder.dart'),
+      paginatedListBuilderTemplate(config.projectName),
+    );
+  }
+}
+
 class FeatureCommand extends BaseCommand {
   @override
   String get name => 'feature';
@@ -134,6 +216,12 @@ class FeatureCommand extends BaseCommand {
     // 📷 MEDIA KEYWORD ANALYSIS - Check if user wants full media feature
     if (featureName.toLowerCase() == 'media') {
       await _handleMediaKeyword();
+      return;
+    }
+    
+    // 📄 PAGINATION KEYWORD ANALYSIS - Check if user wants pagination feature
+    if (featureName.toLowerCase() == 'pagination') {
+      await _handlePaginationKeyword();
       return;
     }
 
@@ -452,8 +540,54 @@ class FeatureCommand extends BaseCommand {
     }
   }
 
-  /// Generate a basic feature for a given feature name
-  Future<void> _generateBasicFeature(String featureName) async {
+    /// Handle the 'pagination' keyword specially - offer pagination feature
+    Future<void> _handlePaginationKeyword() async {
+      if (!File('pubspec.yaml').existsSync()) {
+        Logger.error('Not in a Flutter project directory');
+        Logger.info('Run this command from the root of your Flutter project');
+        exit(1);
+      }
+
+      final currentDir = Directory.current.path;
+      final projectName = path.basename(currentDir);
+
+      final config = PaginationConfig(
+        projectName: projectName,
+        outputPath: currentDir,
+      );
+
+      Logger.header('Generating Pagination Feature');
+      final generator = PaginationFeatureGenerator(config);
+
+      try {
+        await generator.generate();
+
+        Logger.success('Pagination feature created successfully!');
+        Logger.section('Generated files');
+        Logger.item('lib/features/pagination/');
+        Logger.item('  ├── pagination_index.dart');
+        Logger.item('  └── presentation/');
+        Logger.item('      ├── controllers/');
+        Logger.item('      │   └── pagination_bloc/');
+        Logger.item('      │       ├── pagination_bloc.dart');
+        Logger.item('      │       ├── pagination_event.dart');
+        Logger.item('      │       └── pagination_state.dart');
+        Logger.item('      └── widgets/');
+        Logger.item('          ├── paginated_list_builder.dart');
+        Logger.item('          └── paginated_list_view.dart');
+
+        Logger.section('Next steps');
+        Logger.item('1. Run: flutter pub get');
+        Logger.item('2. Run: flutter packages pub run build_runner build');
+        Logger.item('3. Use PaginatedListBuilder in your features that need pagination');
+      } catch (e) {
+        Logger.error('Failed to generate pagination feature: $e');
+        exit(1);
+      }
+    }
+
+    /// Generate a basic feature for a given feature name
+    Future<void> _generateBasicFeature(String featureName) async {
     if (!File('pubspec.yaml').existsSync()) {
       Logger.error('Not in a Flutter project directory');
       Logger.info('Run this command from the root of your Flutter project');
