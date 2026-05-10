@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2026-05-10
+
+### Added
+- 📄 **Pagination Feature Generation**: Pagination feature is now auto-generated during `petracore init`
+  - 6 files generated: `pagination_index.dart`, `pagination_bloc.dart`, `pagination_event.dart`, `pagination_state.dart`, `paginated_list_builder.dart`, `paginated_list_view.dart`
+  - Uses `UseCase` abstraction from core layer for data fetching
+  - `PaginationBloc` with `FetchPaginatedResult` event and `PaginationResultLoaded`/`PaginationError` states
+  - `PaginatedListBuilder` widget for easy integration with any feature
+  - `PaginatedListView` scroll-detecting widget with auto-load at bottom
+- 📖 **Guide Document**: `agent-docs/pagination_feature_generator_guide.md` created documenting the pagination feature architecture
+
+### Fixed
+- 📧 **Email Controller Re-enabled**: `EmailController` is now generated when `includeForgotPassword` is true (was previously only generated for the removed get-started screen) — fixes missing `EmailController` in forgot password screens
+- 🐛 **Route Model Conflict**: Renamed `Route` → `AppRoute` to eliminate compilation errors in generated projects caused by naming collision with `package:flutter/widgets.dart`
+
+---
+
 ## [1.0.6] - 2026-05-10
 
 ### Added

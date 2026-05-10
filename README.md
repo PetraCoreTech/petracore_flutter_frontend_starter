@@ -1,6 +1,6 @@
 # PetraCore Flutter Frontend Starter
 
-[![Pub Version](https://img.shields.io/badge/version-1.0.6-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
+[![Pub Version](https://img.shields.io/badge/version-1.0.7-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful CLI tool and package for generating Flutter projects with **clean architecture**, **Firebase integration**, and **industry best practices**. Based on proven patterns from production applications.
@@ -20,8 +20,9 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 - 📦 **Rich Packages**: Carefully selected and battle-tested dependencies
 - ✨ **Enhanced CLI**: Beautiful, professional logging with levels (debug, info, warning, error, success) and colored output for improved user experience
 
-## 🆕 Recent Improvements (v1.0.6)
+## 🆕 Recent Improvements (v1.0.7)
 
+- **Pagination Feature (`petracore init`)**: The pagination feature is now auto-generated during project initialization, providing a reusable `PaginationBloc`, `PaginatedListBuilder`, and `PaginatedListView` for scroll-based pagination
 - **Main App Feature (`petracore init`)**: The `main_app` feature with `DashboardScreen` is now auto-generated during project initialization — no extra command needed. `AppRoutes.dashboard` route constant, GoRouter entry, and `mainAppBlocProvider` are all pre-wired in the initial templates
 - **Login & Signup Nav Links**: Login screen now includes a "Don't have an account? Sign up" link; Signup screen includes "Already have an account? Log in" link — both navigate using `go_router`
 - **Get Started Screen Removed**: `includeGetStartedScreen` defaults to `false`. Splash and Welcome screens now navigate directly to login instead of the old get-started flow
