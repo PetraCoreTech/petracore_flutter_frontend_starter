@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
+import 'package:petracore_flutter_frontend_starter/src/templates/main_app/main_app_templates.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/project_templates.dart';
 import 'package:petracore_flutter_frontend_starter/src/utils/command_utils.dart';
 import 'package:petracore_flutter_frontend_starter/src/utils/file_utils.dart';
@@ -58,6 +59,9 @@ class ProjectGenerator {
 
     Logger.step('Setting up app structure...');
     await _generateAppFiles();
+
+    Logger.step('Generating main_app feature...');
+    await _generateMainApp();
 
     Logger.verbose('Project generation completed');
   }
@@ -177,6 +181,15 @@ class ProjectGenerator {
 
       /// Features
       path.join(config.projectPath, 'lib', 'features'),
+
+      /// Features/MainApp
+      path.join(config.projectPath, 'lib', 'features', 'main_app'),
+      path.join(config.projectPath, 'lib', 'features', 'main_app',
+          'presentation'),
+      path.join(config.projectPath, 'lib', 'features', 'main_app',
+          'presentation', 'controllers'),
+      path.join(config.projectPath, 'lib', 'features', 'main_app',
+          'presentation', 'screens'),
 
       /// Features/Shared
       path.join(config.projectPath, 'lib', 'features', 'shared'),
@@ -518,6 +531,30 @@ class ProjectGenerator {
       'lib/features/shared/data/type_def.dart': templates.typeDef,
       'lib/features/shared/shared_index.dart': templates.sharedIndex,
     });
+
+    for (final entry in files.entries) {
+      final filePath = path.join(config.projectPath, entry.key);
+      await Directory(path.dirname(filePath)).create(recursive: true);
+      await FileUtils.writeFile(filePath, entry.value);
+      Logger.verbose('Generated: ${entry.key}');
+    }
+  }
+
+  Future<void> _generateMainApp() async {
+    final mainAppTemplates = MainAppTemplates(config);
+
+    final files = {
+      'lib/features/main_app/main_app_index.dart':
+          mainAppTemplates.mainAppIndex,
+      'lib/features/main_app/presentation/presentation.dart':
+          mainAppTemplates.presentationBarrel,
+      'lib/features/main_app/presentation/controllers/main_app_controller_index.dart':
+          mainAppTemplates.controllerIndex,
+      'lib/features/main_app/presentation/controllers/main_app_bloc_provider.dart':
+          mainAppTemplates.blocProvider,
+      'lib/features/main_app/presentation/screens/dashboard_screen.dart':
+          mainAppTemplates.dashboardScreen,
+    };
 
     for (final entry in files.entries) {
       final filePath = path.join(config.projectPath, entry.key);

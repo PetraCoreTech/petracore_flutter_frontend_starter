@@ -7,6 +7,7 @@ class AppRoutes {
   AppRoutes._();
   
   static const splash = AppRoute(path: '/', name: 'splash');
+  static const dashboard = AppRoute(path: '/dashboard', name: 'dashboard');
   
   // Add your route constants here
 }

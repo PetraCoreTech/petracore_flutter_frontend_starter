@@ -234,7 +234,7 @@ class ProjectTemplates {
 
   /// Shared/Presentation/Controllers
   String get keyValue => keyValueTemplate();
-  String get blocProvider => projectBlocProviderTemplate();
+  String get blocProvider => projectBlocProviderTemplate(config);
   String get sharedIndex => sharedIndexTemplate();
   String get typeDef => typeDefTemplate();
 }
