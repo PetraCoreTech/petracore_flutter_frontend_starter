@@ -135,8 +135,11 @@ class FeatureGenerator {
   Future<void> _generateFeatureIndex() async {
     final filePath =
         path.join(config.outputPath, '${config.featureName}_index.dart');
+    final progress = Logger.fileProgress('Feature index');
+    progress.start(1);
     await FileUtils.writeFile(filePath, templates.featureIndex);
-    Logger.verbose('Generated: ${path.basename(filePath)}');
+    progress.tick();
+    progress.done();
   }
 
   Future<void> _generateDataModels() async {
@@ -144,11 +147,14 @@ class FeatureGenerator {
       'data/models/${config.entityName}_model.dart': templates.dataModel,
     };
 
+    final progress = Logger.fileProgress('Data models');
+    progress.start(files.length);
     for (final entry in files.entries) {
       final filePath = path.join(config.outputPath, entry.key);
       await FileUtils.writeFile(filePath, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateRepository() async {
@@ -162,11 +168,14 @@ class FeatureGenerator {
       'data/remote/dto/${config.entityName}_params.dart': templates.params,
     };
 
+    final progress = Logger.fileProgress('Repository');
+    progress.start(files.length);
     for (final entry in files.entries) {
       final filePath = path.join(config.outputPath, entry.key);
       await FileUtils.writeFile(filePath, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateUseCases() async {
@@ -174,11 +183,14 @@ class FeatureGenerator {
       'data/domain/${config.featureName}_use_cases.dart': templates.useCases,
     };
 
+    final progress = Logger.fileProgress('Use cases');
+    progress.start(files.length);
     for (final entry in files.entries) {
       final filePath = path.join(config.outputPath, entry.key);
       await FileUtils.writeFile(filePath, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateBloc() async {
@@ -203,11 +215,14 @@ class FeatureGenerator {
           templates.controllersBarrel,
     };
 
+    final progress = Logger.fileProgress('BLoC');
+    progress.start(files.length);
     for (final entry in files.entries) {
       final filePath = path.join(config.outputPath, entry.key);
       await FileUtils.writeFile(filePath, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generatePresentationLayer() async {
@@ -222,11 +237,14 @@ class FeatureGenerator {
       'presentation/presentation.dart': templates.presentationBarrel,
     };
 
+    final progress = Logger.fileProgress('Presentation');
+    progress.start(files.length);
     for (final entry in files.entries) {
       final filePath = path.join(config.outputPath, entry.key);
       await FileUtils.writeFile(filePath, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _updateSharedBlocProvider() async {

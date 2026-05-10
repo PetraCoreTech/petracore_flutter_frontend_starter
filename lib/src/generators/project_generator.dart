@@ -301,12 +301,15 @@ class ProjectGenerator {
       'env.json': templates.envJson,
     };
 
+    final progress = Logger.fileProgress('Project config');
+    progress.start(files.length);
     for (final entry in files.entries) {
       final filePath = path.join(config.projectPath, entry.key);
       await Directory(path.dirname(filePath)).create(recursive: true);
       await FileUtils.writeFile(filePath, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateCoreFiles() async {
@@ -456,12 +459,15 @@ class ProjectGenerator {
           templates.loadingShimmer,
     };
 
+    final progress = Logger.fileProgress('Core files');
+    progress.start(files.length);
     for (final entry in files.entries) {
       final filePath = path.join(config.projectPath, entry.key);
       await Directory(path.dirname(filePath)).create(recursive: true);
       await FileUtils.writeFile(filePath, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateNavigationFiles() async {
@@ -475,11 +481,14 @@ class ProjectGenerator {
       'lib/navigation/models/route_model.dart': templates.routeModel,
     };
 
+    final progress = Logger.fileProgress('Navigation');
+    progress.start(files.length);
     for (final entry in files.entries) {
       final filePath = path.join(config.projectPath, entry.key);
       await FileUtils.writeFile(filePath, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateAppFiles() async {
@@ -532,12 +541,15 @@ class ProjectGenerator {
       'lib/features/shared/shared_index.dart': templates.sharedIndex,
     });
 
+    final progress = Logger.fileProgress('App structure');
+    progress.start(files.length);
     for (final entry in files.entries) {
       final filePath = path.join(config.projectPath, entry.key);
       await Directory(path.dirname(filePath)).create(recursive: true);
       await FileUtils.writeFile(filePath, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateMainApp() async {
@@ -556,11 +568,14 @@ class ProjectGenerator {
           mainAppTemplates.dashboardScreen,
     };
 
+    final progress = Logger.fileProgress('Main app feature');
+    progress.start(files.length);
     for (final entry in files.entries) {
       final filePath = path.join(config.projectPath, entry.key);
       await Directory(path.dirname(filePath)).create(recursive: true);
       await FileUtils.writeFile(filePath, entry.value);
-      Logger.verbose('Generated: ${entry.key}');
+      progress.tick();
     }
+    progress.done();
   }
 }

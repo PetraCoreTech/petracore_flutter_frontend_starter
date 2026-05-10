@@ -12,81 +12,79 @@ void main() {
     setUp(() {
       stdoutLogs = [];
       stderrLogs = [];
-      // Reset log level before each test
       Logger.setLogLevel(LogLevel.info);
     });
 
-    // Helper function to run tests with mocked stdout/stderr
     Future<void> runWithMockIO(Future<void> Function() testFn) async {
       await IOOverrides.runZoned(
         () async {
           await testFn();
         },
         stdout: () => _MockStdout(stdoutLogs),
-        stderr: () => _MockStdout(stderrLogs), // Stderr is also a Stdout
+        stderr: () => _MockStdout(stderrLogs),
       );
     }
 
-    test('info logs to stdout with INFO prefix and white color', () async {
+    test('info logs to stdout with white color', () async {
       await runWithMockIO(() async {
-        Logger.info('This is an info message');
-        expect(stdoutLogs.first, contains('\x1B[37m[INFO] This is an info message\x1B[0m'));
+        Logger.info('info message');
+        expect(stdoutLogs.first, contains('\x1B[37m  info message\x1B[0m'));
         expect(stderrLogs, isEmpty);
       });
     });
 
-    test('success logs to stdout with checkmark and green color', () async {
+    test('success logs to stdout with green checkmark', () async {
       await runWithMockIO(() async {
-        Logger.success('Operation successful');
-        expect(stdoutLogs.first, contains('\x1B[32m✓ Operation successful\x1B[0m'));
+        Logger.success('done');
+        expect(stdoutLogs.first, contains('\x1B[32m✔ done\x1B[0m'));
         expect(stderrLogs, isEmpty);
       });
     });
 
-    test('warning logs to stdout with WARN prefix and yellow color', () async {
+    test('warning logs to stdout with yellow triangle', () async {
       await runWithMockIO(() async {
-        Logger.warning('Something might be wrong');
-        expect(stdoutLogs.first, contains('\x1B[33m[WARN] Something might be wrong\x1B[0m'));
+        Logger.warning('caution');
+        expect(stdoutLogs.first, contains('\x1B[33m▲ caution\x1B[0m'));
         expect(stderrLogs, isEmpty);
       });
     });
 
-    test('error logs to stderr with ERROR prefix and red color', () async {
+    test('error logs to stderr with red X mark', () async {
       await runWithMockIO(() async {
-        Logger.error('An error occurred');
-        expect(stderrLogs.first, contains('\x1B[31m[ERROR] An error occurred\x1B[0m'));
+        Logger.error('fail');
+        expect(stderrLogs.first, contains('\x1B[31m✗ fail\x1B[0m'));
         expect(stdoutLogs, isEmpty);
       });
     });
 
-    test('debug logs to stdout with DEBUG prefix and blue color when log level is debug', () async {
+    test('debug logs with blue dot when log level is debug', () async {
       await runWithMockIO(() async {
         Logger.setLogLevel(LogLevel.debug);
-        Logger.debug('Debug message');
-        expect(stdoutLogs.first, contains('\x1B[34m[DEBUG] Debug message\x1B[0m'));
+        Logger.debug('debug msg');
+        expect(stdoutLogs.first, contains('\x1B[34m· debug msg\x1B[0m'));
       });
     });
 
     test('debug does not log when log level is info', () async {
       await runWithMockIO(() async {
         Logger.setLogLevel(LogLevel.info);
-        Logger.debug('Debug message');
+        Logger.debug('debug msg');
         expect(stdoutLogs, isEmpty);
       });
     });
 
-    test('verbose logs to stdout with indentation and gray color when log level is verbose', () async {
+    test('verbose logs in gray when log level is verbose', () async {
       await runWithMockIO(() async {
         Logger.setLogLevel(LogLevel.verbose);
-        Logger.verbose('Verbose output');
-        expect(stdoutLogs.first, contains('\x1B[90m  Verbose output\x1B[0m'));
+        Logger.verbose('verbose output');
+        expect(stdoutLogs.first, contains('\x1B[90m   verbose output\x1B[0m'));
       });
     });
 
     test('verbose does not log when log level is info', () async {
       await runWithMockIO(() async {
         Logger.setLogLevel(LogLevel.info);
-        Logger.verbose('Verbose output');
+        Logger.verbose('verbose output');
         expect(stdoutLogs, isEmpty);
       });
     });
@@ -98,19 +96,19 @@ void main() {
       });
     });
 
-    test('header logs to stdout with magenta color and border', () async {
+    test('header logs title, spacer and underline', () async {
       await runWithMockIO(() async {
-        Logger.header('Test Header');
-        expect(stdoutLogs[1], contains('\x1B[35m  ═══════════════\x1B[0m')); // Top border
-        expect(stdoutLogs[2], contains('\x1B[35m  │ Test Header │\x1B[0m')); // Message
-        expect(stdoutLogs[3], contains('\x1B[35m  ═══════════════\x1B[0m')); // Bottom border
+        Logger.header('Test');
+        expect(stdoutLogs[0], isEmpty); // spacer
+        expect(stdoutLogs[1], contains('\x1B[35m  ◆  Test\x1B[0m'));
+        expect(stdoutLogs[2], contains('\x1B[2m   ──────\x1B[0m'));
       });
     });
 
-    test('section logs to stdout with cyan color and dashes', () async {
+    test('section logs with dot prefix and cyan', () async {
       await runWithMockIO(() async {
-        Logger.section('Test Section');
-        expect(stdoutLogs[1], contains('\x1B[36m── Test Section ──\x1B[0m'));
+        Logger.section('Section');
+        expect(stdoutLogs.first, contains('\x1B[36m  · Section\x1B[0m'));
       });
     });
 
@@ -121,21 +119,38 @@ void main() {
       });
     });
 
-    test('keyValue logs to stdout with white key and cyan value', () async {
+    test('keyValue logs with white key and cyan value', () async {
       await runWithMockIO(() async {
         Logger.keyValue('Key', 'Value');
-        expect(stdoutLogs.first, contains('\x1B[37mKey:\x1B[0m \x1B[36mValue\x1B[0m'));
+        expect(stdoutLogs.first, contains('\x1B[37m  Key:\x1B[0m \x1B[36mValue\x1B[0m'));
       });
     });
 
     test('setLogLevel changes the logging threshold', () async {
       await runWithMockIO(() async {
         Logger.setLogLevel(LogLevel.warning);
-        Logger.info('This should not be logged');
-        Logger.warning('This should be logged');
-        expect(stdoutLogs, isNot(contains(contains('This should not be logged'))));
-        expect(stdoutLogs.first, contains('\x1B[33m[WARN] This should be logged\x1B[0m'));
+        Logger.info('should not appear');
+        Logger.warning('should appear');
+        expect(stdoutLogs, isNot(contains(contains('should not appear'))));
+        expect(stdoutLogs.first, contains('\x1B[33m▲ should appear\x1B[0m'));
       });
+    });
+
+    test('FileProgress start prints progress line', () async {
+      await runWithMockIO(() async {
+        Logger.setLogLevel(LogLevel.verbose);
+        final p = Logger.fileProgress('Generating');
+        p.start(10);
+        expect(stdoutLogs.first, contains('Generating'));
+      });
+    });
+
+    test('FileProgress does not throw', () async {
+      final p = Logger.fileProgress('Files');
+      p.start(3);
+      p.tick();
+      p.tick();
+      p.done();
     });
   });
 }
@@ -198,13 +213,11 @@ class _MockStdout implements Stdout {
   Future<void> get done => Future.value();
 
   @override
-  IOSink get nonBlocking => this; // Return itself as a non-blocking sink
+  IOSink get nonBlocking => this;
 
   @override
   String get lineTerminator => '\n';
 
   @override
-  set lineTerminator(String lineTerminator) {
-    // Do nothing
-  }
+  set lineTerminator(String lineTerminator) {}
 }

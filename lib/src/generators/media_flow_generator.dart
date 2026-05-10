@@ -130,9 +130,13 @@ class MediaFlowGenerator {
       'lib/features/media/data/enums/media_actions.dart': templates.mediaActions,
     };
 
+    final progress = Logger.fileProgress('Media enums');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateExtensions() async {
@@ -149,16 +153,24 @@ class MediaFlowGenerator {
           templates.xfileExtension,
     };
 
+    final progress = Logger.fileProgress('Media extensions');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateParsers() async {
+    final progress = Logger.fileProgress('Media parsers');
+    progress.start(1);
     await FileUtils.writeFile(
       'lib/features/media/data/parsers/media_type_parser.dart',
       templates.mediaTypeParser,
     );
+    progress.tick();
+    progress.done();
   }
 
   Future<void> _generateModels() async {
@@ -169,9 +181,13 @@ class MediaFlowGenerator {
           templates.attachedMediaModel,
     };
 
+    final progress = Logger.fileProgress('Media models');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateDtos() async {
@@ -184,23 +200,35 @@ class MediaFlowGenerator {
           templates.downloadDto,
     };
 
+    final progress = Logger.fileProgress('Media DTOs');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateParams() async {
+    final progress = Logger.fileProgress('Media params');
+    progress.start(1);
     await FileUtils.writeFile(
       'lib/features/media/data/remote/upload/params/upload_params.dart',
       templates.uploadParams,
     );
+    progress.tick();
+    progress.done();
   }
 
   Future<void> _generateCloudinaryService() async {
+    final progress = Logger.fileProgress('Cloudinary service');
+    progress.start(1);
     await FileUtils.writeFile(
       'lib/features/media/data/remote/cloudinary/cloudinary_service.dart',
       templates.cloudinaryService,
     );
+    progress.tick();
+    progress.done();
   }
 
   Future<void> _generateRepositories() async {
@@ -213,9 +241,13 @@ class MediaFlowGenerator {
           templates.downloadRepository,
     };
 
+    final progress = Logger.fileProgress('Media repositories');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateUseCases() async {
@@ -226,16 +258,24 @@ class MediaFlowGenerator {
           templates.downloadUseCases,
     };
 
+    final progress = Logger.fileProgress('Media use cases');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateEntities() async {
+    final progress = Logger.fileProgress('Media entities');
+    progress.start(1);
     await FileUtils.writeFile(
       'lib/features/media/presentation/entities/download_entity.dart',
       templates.downloadEntity,
     );
+    progress.tick();
+    progress.done();
   }
 
   Future<void> _generateBlocs() async {
@@ -258,9 +298,13 @@ class MediaFlowGenerator {
           templates.mediaBlocProvider,
     };
 
+    final progress = Logger.fileProgress('Media BLoCs');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateWidgets() async {
@@ -277,23 +321,35 @@ class MediaFlowGenerator {
           templates.selectedMediaItem,
     };
 
+    final progress = Logger.fileProgress('Media widgets');
+    progress.start(files.length);
     for (final entry in files.entries) {
       await FileUtils.writeFile(entry.key, entry.value);
+      progress.tick();
     }
+    progress.done();
   }
 
   Future<void> _generateHelper() async {
+    final progress = Logger.fileProgress('Media helper');
+    progress.start(1);
     await FileUtils.writeFile(
       'lib/features/media/presentation/helpers/media_helper.dart',
       templates.mediaHelper,
     );
+    progress.tick();
+    progress.done();
   }
 
   Future<void> _generateIndexFiles() async {
+    final progress = Logger.fileProgress('Media index');
+    progress.start(1);
     await FileUtils.writeFile(
       'lib/features/media/media_index.dart',
       templates.mediaIndex,
     );
+    progress.tick();
+    progress.done();
   }
 
   Future<void> _updateSharedBlocProvider() async {
