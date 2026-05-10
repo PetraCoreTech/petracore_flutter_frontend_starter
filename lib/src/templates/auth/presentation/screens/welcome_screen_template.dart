@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:${config.projectName}/core/core.dart';
 import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/features/auth/auth_index.dart';
+import 'package:${config.projectName}/navigation/navigation_index.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -85,7 +86,7 @@ class WelcomeScreen extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 text: '<ContentString.getStarted>',
                 onTap: () {
-                  // context.goNamed(AppRoutes.getStarted.name);
+                  context.goNamed(AppRoutes.login.name);
                 },
               ),
               const Gap(16),

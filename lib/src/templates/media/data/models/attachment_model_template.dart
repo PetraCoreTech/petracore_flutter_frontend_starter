@@ -4,6 +4,7 @@ String attachmentModelTemplate(ProjectConfig config) => '''
 import 'package:${config.packageName}/core/core.dart';
 import 'package:${config.packageName}/features/media/data/enums/media_type.dart';
 import 'package:${config.packageName}/features/media/data/parsers/media_type_parser.dart';
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'attachment_model.g.dart';

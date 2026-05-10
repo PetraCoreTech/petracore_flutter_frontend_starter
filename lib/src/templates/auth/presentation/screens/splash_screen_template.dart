@@ -74,11 +74,10 @@ class _SplashScreenState extends State<SplashScreen> {
     }
     final lastStatus = authHistory.last.authStatus;
     if (lastStatus.isLoggedIn) {
-      ToastHelper(context).showToast(content: '<ContentString.welcome>');
+      ToastHelper(context).showToast(content: 'Welcome back!');
       context.goNamed(AppRoutes.dashboard.name);
     } else if (lastStatus.isLoggedOut) {
-      final path = AppRoutes.splash.path.add(AppRoutes.getStarted.name, separator: '/');
-      context.go(path);
+      context.goNamed(AppRoutes.login.name);
     }
   }
 }

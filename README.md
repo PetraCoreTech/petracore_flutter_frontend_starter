@@ -27,7 +27,7 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 - **Media Feature (`petracore feature media`)**: Full Cloudinary-backed media feature with image picking, upload/download/delete, media widgets (display, video player, picker), and Upload/Download BLoCs — auto-detected like the auth keyword
 - **Layered Navigation Architecture**: Routes now follow the documented 5-layer pattern — `Route` data class constants in `routes.dart`, per-feature route list files in `lib/navigation/routes/*_routes.dart`, and marker-based incremental insertion in `router.dart` (no more destructive regex replacement)
 - **Feature Route Registration**: Feature generator now registers routes (creates route list file, `Route` constant in `routes.dart`, and updates `router.dart`) — not just auth anymore
-- **Fixed NDK Version Replacement**: Regex now correctly matches `ndkVersion = flutter.ndkVersion` (the modern Flutter-generated format) instead of only quoted strings
+- **Fixed NDK Version**: Set to `27.0.12077973` (the latest fully installed NDK). Regex updated to match both quoted strings and `flutter.ndkVersion` property reference format
 
 ## 📋 What You Get
 

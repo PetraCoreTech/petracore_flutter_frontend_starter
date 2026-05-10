@@ -65,9 +65,9 @@ test_feature() {
     echo -e "${GREEN}🧪 Testing Feature Generation${NC}"
     echo -e "${GREEN}============================${NC}"
     
-    run_cli feature user_profile --verbose
+    run_cli feature media --verbose
     
-    if [ -d "lib/features/user_profile" ]; then
+    if [ -d "lib/features/media" ]; then
         echo -e "${GREEN}✅ Feature generation: PASSED${NC}"
     else
         echo -e "${RED}❌ Feature generation: FAILED${NC}"

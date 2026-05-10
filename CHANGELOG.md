@@ -144,7 +144,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 🚀 **Feature Route Registration**: `FeatureGenerator` now registers routes — creates route list file, adds `Route` constant to `routes.dart`, and updates `router.dart`
 
 ### Fixed
-- 🐛 **NDK Version Replacement**: Regex updated from `ndkVersion\s*=\s*"[^"]*"` to `ndkVersion\s*=\s*\S+` to correctly match the modern Flutter-generated `ndkVersion = flutter.ndkVersion` format
+- 🐛 **NDK Version**: Updated from `27.3.13750724` to `27.0.12077973` (latest fully installed). Regex also updated from `ndkVersion\s*=\s*"[^"]*"` to `ndkVersion\s*=\s*\S+` to correctly match `ndkVersion = flutter.ndkVersion` format
 - 🗺️ **Auth Route Addition**: Replaced destructive regex replacement of entire `routes: [...]` block with incremental insertion before marker comment — preserves existing routes from other generators or manual edits
 - 🗺️ **Auth Route Constants**: Replaced destructive `AppRoutes` class body replacement with incremental `Route` constant addition
 

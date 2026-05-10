@@ -1,6 +1,6 @@
 String routeModelTemplate() => '''
-class Route {
-  const Route({required this.path, this.name = ''});
+class AppRoute {
+  const AppRoute({required this.path, this.name = ''});
   final String name;
   final String path;
 }

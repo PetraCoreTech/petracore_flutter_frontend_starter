@@ -43,7 +43,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               );
             } else if (state is AuthConfirmed) {
               ToastHelper(context).showToast(content: state.response.message);
-              // context.goNamed(AppRoutes.fpVerify.name);
+              context.goNamed(AppRoutes.fpVerify.name);
             }
           },
         ),
@@ -60,7 +60,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
             const Gap(4),
             Text(
-              '<ContentString.resetUrPasswordSub>',
+              """Please provide the email address associated with the account you wish to recover. We'll send a recovery code to that email.""",
               style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
             const Gap(24),
@@ -80,8 +80,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
             const Gap(16),
             AppTextButton(
-              text: '<ContentString.backToLogin>',
-              onTap: () {},
+              text: 'Back to login',
+            onTap: () {
+              context.goNamed(AppRoutes.login.name);
+            },
             ),
             const Gap(32),
           ],

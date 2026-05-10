@@ -16,7 +16,7 @@ class DownloadRepository {
     try {
       await FileSaver.instance.saveFile(
         name: dto.title,
-        link: LinkType.example,
+        link: LinkType.url,
         url: dto.url,
       );
       return const Left(SuccessResponse(message: 'File downloaded'));
@@ -31,7 +31,7 @@ class DownloadRepository {
       for (final dto in dtos) {
         await FileSaver.instance.saveFile(
           name: dto.title,
-          link: LinkType.example,
+          link: LinkType.url,
           url: dto.url,
         );
       }

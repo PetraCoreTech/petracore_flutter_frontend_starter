@@ -52,7 +52,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 content: 'Your password has been reset!',
                 toastType: ToastType.success,
               );
-              // context.goNamed(AppRoutes.login.name);
+              context.goNamed(AppRoutes.login.name);
             }
           },
         ),
@@ -61,13 +61,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         isLoading: state is AuthLoading,
         children: [
           Text(
-            '<ContentString.enterNewPwd>',
+            'Reset Password',
             style: heading4.copyWith(color: onSurfaceDark),
-          ),
-          const Gap(4),
-          Text(
-            '<ContentString.createANewPwd>',
-            style: paragraph2.copyWith(color: onSurfaceLight),
           ),
           const Gap(24),
           Form(
@@ -97,14 +92,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           ),
           const Gap(48),
           AppButton(
-            text: '<ContentString.createNewPwd>',
+            text: 'Create new password',
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             onTap: controller.resetPassword,
           ),
           const Gap(16),
           AppTextButton(
-            text: '<ContentString.backToLogin>',
-            onTap: () {},
+            text: 'Back to login',
+            onTap: () {
+              context.goNamed(AppRoutes.login.name); 
+            },
           ),
           const Gap(32),
         ],

@@ -3,6 +3,7 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 String mediaTypeParserTemplate(ProjectConfig config) => '''
 import 'package:${config.packageName}/features/media/data/enums/media_type.dart';
 import 'package:${config.packageName}/features/media/data/extensions/media_type_extension.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 class MediaTypeParser implements JsonConverter<MediaType, String> {
   const MediaTypeParser();

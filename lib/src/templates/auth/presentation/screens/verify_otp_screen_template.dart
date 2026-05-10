@@ -53,7 +53,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                 content: 'Your email has been verified!',
                 toastType: ToastType.success,
               );
-              // context.goNamed(AppRoutes.signUp.name);
+              context.goNamed(AppRoutes.signup.name);
             } else if (state is AuthConfirmed) {
               ToastHelper(context).showToast(content: state.response.message);
             }
@@ -65,7 +65,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         appBar: const AppBarV1(),
         children: [
           Text(
-            '<ContentString.checkYourEmail>',
+            'Check your email',
             style: heading4.copyWith(color: onSurfaceDark),
           ),
           const Gap(4),

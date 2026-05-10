@@ -46,7 +46,7 @@ class _ForgotPasswordVerifyScreenState
                 content: state.error.message,
               );
             } else if (state is EmailVerified) {
-              // context.goNamed(AppRoutes.resetPassword.name);
+              context.goNamed(AppRoutes.resetPassword.name);
             } else if (state is AuthConfirmed) {
               ToastHelper(context).showToast(content: state.response.message);
             }
@@ -59,12 +59,12 @@ class _ForgotPasswordVerifyScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '<ContentString.checkYourEmail>',
+            'Check your email',
             style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.onSurface),
           ),
           const Gap(4),
           Text(
-            '<ContentString.codeSentSub>',
+            """Enter the code we sent to your email below to proceed with resetting your password.""",
             style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
           const Gap(24),
@@ -99,8 +99,10 @@ class _ForgotPasswordVerifyScreenState
           ),
           const Gap(16),
           AppTextButton(
-            text: '<ContentString.backToLogin>',
-            onTap: () {},
+            text: 'Back to login',
+            onTap: () {
+              context.goNamed(AppRoutes.login.name);
+            },
           ),
           const Gap(32),
         ],

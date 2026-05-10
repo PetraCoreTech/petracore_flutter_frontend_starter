@@ -14,11 +14,14 @@ class MediaHelper {
     String? author,
     ValueChanged<List<AttachedMedia>>? onImagePicked,
   }) async {
-    final authorVal = author ?? context.read<UserCubit>().state.email;
-    final result = await mediaRepository.pickImages(authorVal);
+    final result = await mediaRepository.pickImages(author ?? '');
     result.fold(
       (files) => onImagePicked?.call(files),
-      (error) => ToastHelper.showError(context, message: error.message),
+      (error) => InteractionHelper.showToast(
+        context,
+        message: error.message ?? 'Failed to pick images',
+        isError: true,
+      ),
     );
   }
 
@@ -26,21 +29,29 @@ class MediaHelper {
     String? author,
     ValueChanged<AttachedMedia>? onImagePicked,
   }) async {
-    final authorVal = author ?? context.read<UserCubit>().state.email;
-    final result = await mediaRepository.pickImage(authorVal);
+    final result = await mediaRepository.pickImage(author ?? '');
     result.fold(
       (file) => onImagePicked?.call(file),
-      (error) => ToastHelper.showError(context, message: error.message),
+      (error) => InteractionHelper.showToast(
+        context,
+        message: error.message ?? 'Failed to pick image',
+        isError: true,
+      ),
     );
   }
 
   void showFullDisplay({
     List<AttachedMedia>? attachedMedia,
     List<String>? media,
+    int index = 0,
   }) {
-    DialogHelper.showDialog(
-      context,
-      MediaDisplay(attachedMedia: attachedMedia, media: media),
+    showDialog(
+      context: context,
+      builder: (_) => MediaDisplay(
+        attachedMedia: attachedMedia,
+        media: media,
+        index: index,
+      ),
     );
   }
 }

@@ -7,5 +7,4 @@ export 'password_recovery/reset_password_screen.dart';
 export 'otp/verify_otp_screen.dart';
 export 'onboarding/splash_screen.dart';
 export 'onboarding/welcome_screen.dart';
-export 'onboarding/get_started_screen.dart';
 ''';

@@ -1,6 +1,8 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String photoDisplayTemplate(ProjectConfig config) => '''
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:${config.packageName}/core/core.dart';
 
 class PhotoDisplay extends StatelessWidget {
@@ -49,11 +51,12 @@ class PhotoDisplay extends StatelessWidget {
       return Image.file(File(path!), fit: fit ?? BoxFit.cover);
     }
     if (url != null && url!.isNotEmpty) {
-      return CachedNetworkImage(
-        imageUrl: url!,
+      return Image.network(
+        url!,
         fit: fit ?? BoxFit.cover,
-        placeholder: (_, __) => const Center(child: CircularProgressIndicator()),
-        errorWidget: (_, __, ___) => const Icon(Icons.broken_image),
+        loadingBuilder: (_, child, progress) =>
+            progress == null ? child : const Center(child: CircularProgressIndicator()),
+        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
       );
     }
     return const Center(child: Icon(Icons.image, size: 48));

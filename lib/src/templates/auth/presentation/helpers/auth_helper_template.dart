@@ -26,7 +26,7 @@ class AuthHelper {
     context.read<AuthBloc>().add(event);
   }
   
-    void login(User user, Route route, {bool push = false}) {
+    void login(User user, AppRoute route, {bool push = false}) {
     final history = AuthHistory(
       authStatus: AuthStatus.loggedIn,
       timeStamp: DateTime.now(),

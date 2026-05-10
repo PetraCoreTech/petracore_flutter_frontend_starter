@@ -8,7 +8,7 @@ import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 FutureOr<bool> goHome(BuildContext context) {
-  context.goNamed('<Home>');
+  context.goNamed(AppRoutes.dashboard.name);
   return false;
 }
 

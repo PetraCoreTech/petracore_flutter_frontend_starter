@@ -71,6 +71,12 @@ class MediaFlowGenerator {
     Logger.step('Adding media dependencies...');
     await _updatePubspec();
 
+    Logger.step('Running flutter pub get...');
+    await _runFlutterPubGet();
+
+    Logger.step('Running build_runner build...');
+    await _runBuildRunner();
+
     Logger.verbose('Media flow generation completed');
   }
 
@@ -374,6 +380,32 @@ class MediaFlowGenerator {
 
     await FileUtils.writeFile(pubspecPath, content);
     Logger.verbose('Added media dependencies to pubspec.yaml');
+  }
+
+  Future<void> _runFlutterPubGet() async {
+    final result = await Process.run(
+      'flutter',
+      ['pub', 'get'],
+      workingDirectory: config.outputPath,
+    );
+    if (result.exitCode != 0) {
+      Logger.error('flutter pub get failed:\n${result.stderr}');
+    } else {
+      Logger.verbose('flutter pub get completed successfully');
+    }
+  }
+
+  Future<void> _runBuildRunner() async {
+    final result = await Process.run(
+      'dart',
+      ['run', 'build_runner', 'build', '--delete-conflicting-outputs'],
+      workingDirectory: config.outputPath,
+    );
+    if (result.exitCode != 0) {
+      Logger.error('build_runner build failed:\n${result.stderr}');
+    } else {
+      Logger.verbose('build_runner build completed successfully');
+    }
   }
 }
 

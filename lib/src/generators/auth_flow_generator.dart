@@ -22,7 +22,6 @@ class AuthFlowConfig {
   // Onboarding screens
   final bool includeSplashScreen;
   final bool includeWelcomeScreen;
-  final bool includeGetStartedScreen;
 
   // Additional options
   final bool includeSocialAuth;
@@ -40,7 +39,6 @@ class AuthFlowConfig {
     this.includeOtp = true,
     this.includeSplashScreen = true,
     this.includeWelcomeScreen = true,
-    this.includeGetStartedScreen = true,
     this.includeDeviceToken = true,
     this.includeSocialAuth = false,
     this.runPostGenerationActions = true,
@@ -62,7 +60,6 @@ class AuthFlowConfig {
     bool? includeOtp,
     bool? includeSplashScreen,
     bool? includeWelcomeScreen,
-    bool? includeGetStartedScreen,
     bool? includeSocialAuth,
     bool? includeDeviceToken,
     bool? runPostGenerationActions,
@@ -81,8 +78,6 @@ class AuthFlowConfig {
       includeOtp: includeOtp ?? this.includeOtp,
       includeSplashScreen: includeSplashScreen ?? this.includeSplashScreen,
       includeWelcomeScreen: includeWelcomeScreen ?? this.includeWelcomeScreen,
-      includeGetStartedScreen:
-          includeGetStartedScreen ?? this.includeGetStartedScreen,
       includeSocialAuth: includeSocialAuth ?? this.includeSocialAuth,
       includeDeviceToken: includeDeviceToken ?? this.includeDeviceToken,
       runPostGenerationActions:
@@ -128,8 +123,7 @@ class AuthFlowGenerator {
     await _updateSharedBlocProvider();
 
     if (config.includeSplashScreen ||
-        config.includeWelcomeScreen ||
-        config.includeGetStartedScreen) {
+        config.includeWelcomeScreen) {
       Logger.step('Generating onboarding screens...');
       await _generateOnboardingScreens();
     }
@@ -362,17 +356,14 @@ class AuthFlowGenerator {
           templates.signupController;
     }
 
-    if (config.includeGetStartedScreen) {
-      files['lib/features/auth/presentation/helpers/email_controller.dart'] =
-          templates.emailController;
-    }
-
     if (config.includeOtp) {
       files['lib/features/auth/presentation/helpers/verify_otp_controller.dart'] =
           templates.verifyOtpController;
     }
 
     if (config.includeForgotPassword) {
+      files['lib/features/auth/presentation/helpers/email_controller.dart'] =
+          templates.emailController;
       files['lib/features/auth/presentation/helpers/forgot_password_controller.dart'] =
           templates.forgotPasswordController;
       files['lib/features/auth/presentation/helpers/reset_password_controller.dart'] =
@@ -401,11 +392,6 @@ class AuthFlowGenerator {
     if (config.includeWelcomeScreen) {
       files['lib/features/auth/presentation/screens/onboarding/welcome_screen.dart'] =
           templates.welcomeScreen;
-    }
-
-    if (config.includeGetStartedScreen) {
-      files['lib/features/auth/presentation/screens/onboarding/get_started_screen.dart'] =
-          templates.getStartedScreen;
     }
 
     for (final entry in files.entries) {
@@ -499,7 +485,6 @@ class AuthFlowGenerator {
     }
 
     if (config.includeWelcomeScreen) addRoute('welcome');
-    if (config.includeGetStartedScreen) addRoute('getStarted');
     if (config.includeLogin) addRoute('login');
     if (config.includeSignup) addRoute('signup');
     if (config.includeOtp) addRoute('verifyOtp');
@@ -566,7 +551,7 @@ class AuthFlowGenerator {
 
     void addRouteConstant(String name, String pathStr) {
       final constant =
-          "  static const $name = Route(path: '$pathStr', name: '$name');";
+          "  static const $name = AppRoute(path: '$pathStr', name: '$name');";
       if (content.contains("static const $name =")) {
         return;
       }
@@ -578,9 +563,6 @@ class AuthFlowGenerator {
 
     addRouteConstant('splash', '/');
     if (config.includeWelcomeScreen) addRouteConstant('welcome', '/welcome');
-    if (config.includeGetStartedScreen) {
-      addRouteConstant('getStarted', '/get-started');
-    }
     if (config.includeLogin) addRouteConstant('login', '/login');
     if (config.includeSignup) addRouteConstant('signup', '/signup');
     if (config.includeOtp) addRouteConstant('verifyOtp', '/verify-otp');
@@ -599,8 +581,6 @@ class AuthFlowGenerator {
     switch (routeName) {
       case 'welcome':
         return 'WelcomeScreen';
-      case 'getStarted':
-        return 'GetStartedScreen';
       case 'login':
         return 'LoginScreen';
       case 'signup':
@@ -637,9 +617,6 @@ class AuthFlowGenerator {
         _askYesNo('Include Splash Screen?', defaultValue: true);
     final includeWelcomeScreen =
         _askYesNo('Include Welcome Screen?', defaultValue: true);
-    final includeGetStartedScreen = _askYesNo(
-        'Include Get Started Screen (email entry)?',
-        defaultValue: true);
 
     // Ask about core auth features
     Logger.info('\nCore Authentication:');
@@ -674,7 +651,6 @@ class AuthFlowGenerator {
       includeOtp: includeOtp,
       includeSplashScreen: includeSplashScreen,
       includeWelcomeScreen: includeWelcomeScreen,
-      includeGetStartedScreen: includeGetStartedScreen,
       includeSocialAuth: includeSocialAuth,
       includeDeviceToken: includeDeviceToken,
     );

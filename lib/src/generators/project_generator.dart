@@ -80,17 +80,17 @@ class ProjectGenerator {
     final ndkRegex = RegExp(r'ndkVersion\s*=\s*\S+');
 
     if (ndkRegex.hasMatch(content)) {
-      content = content.replaceAll(ndkRegex, 'ndkVersion = "27.3.13750724"');
+      content = content.replaceAll(ndkRegex, 'ndkVersion = "27.0.12077973"');
     } else {
       final androidBlock = RegExp(r'android\s*\{');
       content = content.replaceFirst(
         androidBlock,
-        'android {\n    ndkVersion = "27.3.13750724"',
+        'android {\n    ndkVersion = "27.0.12077973"',
       );
     }
 
     await buildGradleFile.writeAsString(content);
-    Logger.verbose('Android NDK version set to 27.3.13750724');
+    Logger.verbose('Android NDK version set to 27.0.12077973');
   }
 
   Future<void> _createAdditionalDirectories() async {

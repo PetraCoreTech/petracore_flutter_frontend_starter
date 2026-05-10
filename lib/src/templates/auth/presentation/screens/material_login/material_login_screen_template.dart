@@ -1,9 +1,11 @@
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
 
 String materialLoginScreenTemplate(ProjectConfig config) => '''
+import 'package:flutter/gestures.dart';
 import 'package:${config.projectName}/core/core.dart';
 import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/features/auth/auth_index.dart';
+import 'package:${config.projectName}/navigation/navigation_index.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -42,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 content: state.error.message,
               );
             } else if (state is UserLoggedIn) {
-              // AuthHelper(context).login(state.user);
+              AuthHelper(context).login(state.user, AppRoutes.dashboard.name);
             }
           },
         ),
@@ -55,12 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ContentStrings.login,
             style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.onSurface),
           ),
-        //  const Gap(4),
-         // Text(
-          //  ContentString.enterPwdIns,
-          //  style: paragraph2.copyWith(color: onSurfaceLight),
-         // ),
-         // const Gap(24),
+         const Gap(24),
            Form(
             key: controller.formKey,
             child: Column(
@@ -94,6 +91,26 @@ class _LoginScreenState extends State<LoginScreen> {
             text: ContentStrings.login,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             onTap: controller.login,
+          ),
+          const Gap(24),
+          RichText(
+            text: TextSpan(
+              text: "Don't have an account? ",
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              children: [
+                TextSpan(
+                  text: 'Sign up',
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () => context.goNamed(AppRoutes.signup.name),
+                ),
+              ],
+            ),
           ),
           const Gap(32),
         ],

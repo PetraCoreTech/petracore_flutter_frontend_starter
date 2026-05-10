@@ -318,7 +318,7 @@ class FeatureGenerator {
       var routesContent = await routesFile.readAsString();
 
       final constant =
-          "  static const ${config.featureName} = Route(path: '/${config.featureName}', name: '${config.featureName}');";
+          "  static const ${config.featureName} = AppRoute(path: '/${config.featureName}', name: '${config.featureName}');";
       if (!routesContent.contains("static const ${config.featureName} =")) {
         routesContent = routesContent.replaceFirst(
           '  // Add your route constants here',

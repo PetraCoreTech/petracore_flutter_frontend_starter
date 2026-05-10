@@ -2,6 +2,8 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String mediaRepositoryTemplate(ProjectConfig config) => '''
 import 'package:${config.packageName}/core/core.dart';
+import 'package:${config.packageName}/features/media/data/enums/media_type.dart';
+import 'package:${config.packageName}/features/media/data/extensions/media_type_extension.dart';
 import 'package:${config.packageName}/features/media/data/models/attached_media_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:image_picker/image_picker.dart';
@@ -54,23 +56,6 @@ class MediaRepository {
       return Left(media);
     } catch (e) {
       return Right(ErrorResponse(message: e.toString()));
-    }
-  }
-}
-
-extension on String {
-  MediaType get mediaType {
-    final ext = split('.').last.toLowerCase();
-    switch (ext) {
-      case 'jpg':
-      case 'jpeg':
-        return MediaType.jpg;
-      case 'png':
-        return MediaType.png;
-      case 'mp4':
-        return MediaType.mp4;
-      default:
-        return MediaType.text;
     }
   }
 }
