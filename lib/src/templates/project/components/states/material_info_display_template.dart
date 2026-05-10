@@ -1,7 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String materialInfoDisplayTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:${config.projectName}/core/core.dart';
 

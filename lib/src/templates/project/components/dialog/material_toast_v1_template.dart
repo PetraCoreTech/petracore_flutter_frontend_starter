@@ -1,7 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String materialToastV1Template(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class ToastV1 extends StatelessWidget {

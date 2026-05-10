@@ -1,7 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String materialInitialsDisplayTemplate(ProjectConfig config) => '''
-import 'package:flutter/material.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class InitialsDisplay extends StatelessWidget {
