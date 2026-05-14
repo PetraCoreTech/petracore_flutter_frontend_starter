@@ -34,8 +34,10 @@ This project follows Clean Architecture principles with:
 
 3. Run the app:
    ```bash
-   flutter run
+   flutter run --dart-define-from-file=env.json
    ```
+
+   > **Note**: The `--dart-define-from-file=env.json` flag loads environment variables (API base URL, etc.) from `env.json`. This is required for API integration to work correctly.
 
 ### Project Structure
 

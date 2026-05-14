@@ -1,6 +1,6 @@
 # PetraCore Flutter Frontend Starter
 
-[![Pub Version](https://img.shields.io/badge/version-1.0.7-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
+[![Pub Version](https://img.shields.io/badge/version-1.0.8-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful CLI tool and package for generating Flutter projects with **clean architecture**, **Firebase integration**, and **industry best practices**. Based on proven patterns from production applications.
@@ -20,14 +20,14 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 - 📦 **Rich Packages**: Carefully selected and battle-tested dependencies
 - ✨ **Enhanced CLI**: Beautiful, professional logging with levels (debug, info, warning, error, success) and colored output for improved user experience
 
-## 🆕 Recent Improvements (v1.0.7)
+## 🆕 Recent Improvements (v1.0.8)
 
-- **Pagination Feature (`petracore init`)**: The pagination feature is now auto-generated during project initialization, providing a reusable `PaginationBloc`, `PaginatedListBuilder`, and `PaginatedListView` for scroll-based pagination
-- **Main App Feature (`petracore init`)**: The `main_app` feature with `DashboardScreen` is now auto-generated during project initialization — no extra command needed. `AppRoutes.dashboard` route constant, GoRouter entry, and `mainAppBlocProvider` are all pre-wired in the initial templates
-- **Login & Signup Nav Links**: Login screen now includes a "Don't have an account? Sign up" link; Signup screen includes "Already have an account? Log in" link — both navigate using `go_router`
-- **Get Started Screen Removed**: `includeGetStartedScreen` defaults to `false`. Splash and Welcome screens now navigate directly to login instead of the old get-started flow
-- **Route Model Renamed**: `Route` data class renamed to `AppRoute` to avoid conflict with Flutter's built-in `Route` class
-- **Email Controller Re-enabled**: `EmailController` is now generated alongside the forgot-password controllers (was previously only generated for the now-removed get-started screen)
+- **Nested Auth Routes**: Auth routes are now generated as a nested hierarchy rather than a flat list. `WelcomeScreen` is the parent route, with `LoginScreen` (containing forgot-password children), `SignupScreen`, and `VerifyOtpScreen` as child routes — matching GoRouter best practices for shared UI and proper URL scoping
+- **Login Screen "Forgot Password?" Navigation**: The "Forgot Password?" link on the login screen now correctly navigates to `AppRoutes.forgotPassword` via `context.goNamed()` — no longer a no-op
+- **Fixed Route Name**: Material forgot-password-verify screen now uses `AppRoutes.forgotPasswordVerify` (was incorrectly using `AppRoutes.fpVerify`)
+- **Fixed Email Validation**: Email validator in `InputFieldValidator` now correctly returns "Email is invalid" when `input.isEmail()` is `false` (previously had a negated condition that passed invalid emails)
+- **ToastHelper Offset Fixed**: Toast position offset changed from `-8` to `8` to display properly on screen
+- **Env JSON Keys Standardized**: Template keys changed from `snake_case` to `UPPER_CASE` convention (`API_BASE_URL`, `APP_NAME`, etc.)
 
 ## 📋 What You Get
 

@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8] - 2026-05-14
+
+### Added
+- 🗺️ **Nested Auth Routes**: Auth routes now follow a nested hierarchy in `auth_routes.dart`:
+  - `WelcomeScreen` is the parent route
+  - `LoginScreen` (with `ForgotPasswordScreen`, `ForgotPasswordVerifyScreen`, `ResetPasswordScreen` as children)
+  - `SignupScreen` and `VerifyOtpScreen` as sibling children of `WelcomeScreen`
+  - Switched from flat `addRoute()` helper to explicit nested generation — respects GoRouter's path scoping and shared UI patterns
+- 🔗 **Login Screen "Forgot Password?" Navigation**: "Forgot Password?" hyperlink on the login screen now navigates to `AppRoutes.forgotPassword` via `context.goNamed()` — was previously a no-op
+
+### Fixed
+- 🐛 **Route Name Typo**: Material forgot-password-verify screen now references `AppRoutes.forgotPasswordVerify` (was incorrectly using `AppRoutes.fpVerify`)
+- ✅ **Email Validation Logic**: `InputFieldValidator` email check no longer uses incorrect negation (`!input.isEmail()` → `input.isEmail()`) — invalid emails are now properly rejected
+- 📍 **ToastHelper Offset**: Changed toast position offset from `-8` to `8` for correct on-screen display
+
+### Changed
+- 🔑 **Env JSON Key Convention**: Template keys standardized from `snake_case` to `UPPER_CASE` (`API_BASE_URL`, `APP_NAME`, `API_TIMEOUT`, `ENABLE_LOGGING`)
+
+---
+
 ## [1.0.7] - 2026-05-10
 
 ### Added
