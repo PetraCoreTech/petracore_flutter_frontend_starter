@@ -502,23 +502,87 @@ class AuthFlowGenerator {
     authRoutesContent.writeln();
     authRoutesContent.writeln('final authRoutes = <GoRoute>[');
 
-    void addRoute(String name) {
+    // Welcome parent route
+    if (config.includeWelcomeScreen) {
       authRoutesContent.writeln('  GoRoute(');
-      authRoutesContent.writeln('    path: AppRoutes.$name.path,');
-      authRoutesContent.writeln('    name: AppRoutes.$name.name,');
+      authRoutesContent.writeln('    path: AppRoutes.welcome.path,');
+      authRoutesContent.writeln('    name: AppRoutes.welcome.name,');
       authRoutesContent.writeln(
-          '    builder: (context, state) => const ${_routeToScreen(name)}(),');
-      authRoutesContent.writeln('  ),');
-    }
+          '    builder: (context, state) => const WelcomeScreen(),');
 
-    if (config.includeWelcomeScreen) addRoute('welcome');
-    if (config.includeLogin) addRoute('login');
-    if (config.includeSignup) addRoute('signup');
-    if (config.includeOtp) addRoute('verifyOtp');
-    if (config.includeForgotPassword) {
-      addRoute('forgotPassword');
-      addRoute('forgotPasswordVerify');
-      addRoute('resetPassword');
+      final hasLoginChildren = config.includeForgotPassword;
+      final hasChildRoutes =
+          config.includeLogin || config.includeSignup || config.includeOtp;
+
+      if (hasChildRoutes) {
+        authRoutesContent.writeln('    routes: [');
+
+        // Login (with children)
+        if (config.includeLogin) {
+          authRoutesContent.writeln('      GoRoute(');
+          authRoutesContent.writeln('        path: AppRoutes.login.path,');
+          authRoutesContent.writeln('        name: AppRoutes.login.name,');
+          authRoutesContent.writeln(
+              '        builder: (context, state) => const LoginScreen(),');
+
+          if (hasLoginChildren) {
+            authRoutesContent.writeln('        routes: [');
+            if (config.includeForgotPassword) {
+              authRoutesContent.writeln('          GoRoute(');
+              authRoutesContent.writeln(
+                  '            path: AppRoutes.forgotPassword.path,');
+              authRoutesContent.writeln(
+                  '            name: AppRoutes.forgotPassword.name,');
+              authRoutesContent.writeln(
+                  '            builder: (context, state) => const ForgotPasswordScreen(),');
+              authRoutesContent.writeln('          ),');
+              authRoutesContent.writeln('          GoRoute(');
+              authRoutesContent.writeln(
+                  '            path: AppRoutes.forgotPasswordVerify.path,');
+              authRoutesContent.writeln(
+                  '            name: AppRoutes.forgotPasswordVerify.name,');
+              authRoutesContent.writeln(
+                  '            builder: (context, state) => const ForgotPasswordVerifyScreen(),');
+              authRoutesContent.writeln('          ),');
+              authRoutesContent.writeln('          GoRoute(');
+              authRoutesContent.writeln(
+                  '            path: AppRoutes.resetPassword.path,');
+              authRoutesContent.writeln(
+                  '            name: AppRoutes.resetPassword.name,');
+              authRoutesContent.writeln(
+                  '            builder: (context, state) => const ResetPasswordScreen(),');
+              authRoutesContent.writeln('          ),');
+            }
+            authRoutesContent.writeln('        ],');
+          }
+
+          authRoutesContent.writeln('      ),');
+        }
+
+        // Signup
+        if (config.includeSignup) {
+          authRoutesContent.writeln('      GoRoute(');
+          authRoutesContent.writeln('        path: AppRoutes.signup.path,');
+          authRoutesContent.writeln('        name: AppRoutes.signup.name,');
+          authRoutesContent.writeln(
+              '        builder: (context, state) => const SignupScreen(),');
+          authRoutesContent.writeln('      ),');
+        }
+
+        // Verify OTP
+        if (config.includeOtp) {
+          authRoutesContent.writeln('      GoRoute(');
+          authRoutesContent.writeln('        path: AppRoutes.verifyOtp.path,');
+          authRoutesContent.writeln('        name: AppRoutes.verifyOtp.name,');
+          authRoutesContent.writeln(
+              '        builder: (context, state) => const VerifyOtpScreen(),');
+          authRoutesContent.writeln('      ),');
+        }
+
+        authRoutesContent.writeln('    ],');
+      }
+
+      authRoutesContent.writeln('  ),');
     }
 
     authRoutesContent.writeln('];');
