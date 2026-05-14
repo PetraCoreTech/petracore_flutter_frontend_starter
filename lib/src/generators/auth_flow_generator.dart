@@ -122,8 +122,7 @@ class AuthFlowGenerator {
     await _generateAuthBloc();
     await _updateSharedBlocProvider();
 
-    if (config.includeSplashScreen ||
-        config.includeWelcomeScreen) {
+    if (config.includeSplashScreen || config.includeWelcomeScreen) {
       Logger.step('Generating onboarding screens...');
       await _generateOnboardingScreens();
     }
@@ -461,8 +460,7 @@ class AuthFlowGenerator {
         "import 'package:${config.projectName}/features/auth/presentation/controllers/auth_bloc_provider.dart';";
 
     if (content.contains(importLine)) {
-      Logger.verbose(
-          'Shared bloc_provider.dart already has import for auth');
+      Logger.verbose('Shared bloc_provider.dart already has import for auth');
       return;
     }
 
@@ -474,8 +472,7 @@ class AuthFlowGenerator {
     const spreadEntry = '  ...authBlocProvider,';
 
     if (content.contains(spreadEntry)) {
-      Logger.verbose(
-          'Shared bloc_provider.dart already has entry for auth');
+      Logger.verbose('Shared bloc_provider.dart already has entry for auth');
       await FileUtils.writeFile(sharedPath, content);
       return;
     }
@@ -486,8 +483,7 @@ class AuthFlowGenerator {
     );
 
     await FileUtils.writeFile(sharedPath, content);
-    Logger.verbose(
-        'Updated shared bloc_provider.dart with auth provider');
+    Logger.verbose('Updated shared bloc_provider.dart with auth provider');
   }
 
   Future<void> _updateRouterWithAuthRoutes() async {
@@ -507,8 +503,8 @@ class AuthFlowGenerator {
       authRoutesContent.writeln('  GoRoute(');
       authRoutesContent.writeln('    path: AppRoutes.welcome.path,');
       authRoutesContent.writeln('    name: AppRoutes.welcome.name,');
-      authRoutesContent.writeln(
-          '    builder: (context, state) => const WelcomeScreen(),');
+      authRoutesContent
+          .writeln('    builder: (context, state) => const WelcomeScreen(),');
 
       final hasLoginChildren = config.includeForgotPassword;
       final hasChildRoutes =
@@ -529,10 +525,10 @@ class AuthFlowGenerator {
             authRoutesContent.writeln('        routes: [');
             if (config.includeForgotPassword) {
               authRoutesContent.writeln('          GoRoute(');
-              authRoutesContent.writeln(
-                  '            path: AppRoutes.forgotPassword.path,');
-              authRoutesContent.writeln(
-                  '            name: AppRoutes.forgotPassword.name,');
+              authRoutesContent
+                  .writeln('            path: AppRoutes.forgotPassword.path,');
+              authRoutesContent
+                  .writeln('            name: AppRoutes.forgotPassword.name,');
               authRoutesContent.writeln(
                   '            builder: (context, state) => const ForgotPasswordScreen(),');
               authRoutesContent.writeln('          ),');
@@ -545,10 +541,10 @@ class AuthFlowGenerator {
                   '            builder: (context, state) => const ForgotPasswordVerifyScreen(),');
               authRoutesContent.writeln('          ),');
               authRoutesContent.writeln('          GoRoute(');
-              authRoutesContent.writeln(
-                  '            path: AppRoutes.resetPassword.path,');
-              authRoutesContent.writeln(
-                  '            name: AppRoutes.resetPassword.name,');
+              authRoutesContent
+                  .writeln('            path: AppRoutes.resetPassword.path,');
+              authRoutesContent
+                  .writeln('            name: AppRoutes.resetPassword.name,');
               authRoutesContent.writeln(
                   '            builder: (context, state) => const ResetPasswordScreen(),');
               authRoutesContent.writeln('          ),');
@@ -659,34 +655,12 @@ class AuthFlowGenerator {
     if (config.includeOtp) addRouteConstant('verifyOtp', '/verify-otp');
     if (config.includeForgotPassword) {
       addRouteConstant('forgotPassword', '/forgot-password');
-      addRouteConstant(
-          'forgotPasswordVerify', '/forgot-password-verify');
+      addRouteConstant('forgotPasswordVerify', '/forgot-password-verify');
       addRouteConstant('resetPassword', '/reset-password');
     }
 
     await FileUtils.writeFile(routesPath, content);
     Logger.verbose('Updated routes.dart with auth route constants');
-  }
-
-  String _routeToScreen(String routeName) {
-    switch (routeName) {
-      case 'welcome':
-        return 'WelcomeScreen';
-      case 'login':
-        return 'LoginScreen';
-      case 'signup':
-        return 'SignupScreen';
-      case 'verifyOtp':
-        return 'VerifyOtpScreen';
-      case 'forgotPassword':
-        return 'ForgotPasswordScreen';
-      case 'forgotPasswordVerify':
-        return 'ForgotPasswordVerifyScreen';
-      case 'resetPassword':
-        return 'ResetPasswordScreen';
-      default:
-        return '${routeName[0].toUpperCase()}${routeName.substring(1)}Screen';
-    }
   }
 
   /// Interactive method to collect user preferences
