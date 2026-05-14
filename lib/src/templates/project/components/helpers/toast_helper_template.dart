@@ -38,7 +38,7 @@ class ToastHelper {
       position: position ??
           const StyledToastPosition(
             align: Alignment.bottomCenter,
-            offset: -8,
+            offset: 8,
           ),
     );
   }

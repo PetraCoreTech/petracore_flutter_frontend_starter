@@ -87,7 +87,9 @@ class _LoginScreenState extends State<LoginScreen> {
             alignment: Alignment.centerLeft,
             child: HyperLinkText(
               text: 'Forgot Password?',
-              onTap: () {},
+              onTap: () {
+                context.goNamed(AppRoutes.forgotPassword.name);
+              },
             ),
           ),
           const Gap(48),

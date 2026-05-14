@@ -44,7 +44,7 @@ class InputFieldValidator {
     final input = value ?? '';
     if (input.isEmpty) {
       return 'Required';
-    } else if (!input.isEmail()) {
+    } else if (input.isEmail()) {
       return 'Email is invalid';
     } else if (input.length > maxCharacterLength) {
       return maxCharacterError;
@@ -202,7 +202,7 @@ class InputFieldValidator {
     
     if (input.isEmpty) {
       return 'Required';
-    } else if (!input.isEmail()) {
+    } else if (input.isEmail()) {
       return 'Email is invalid';
     } else if (input.length > max) {
       return "Email can't be more than \$max characters";

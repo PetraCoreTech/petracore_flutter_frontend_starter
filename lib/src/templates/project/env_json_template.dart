@@ -2,10 +2,9 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String envJsonTemplate(ProjectConfig config) => '''
 {
-  "app_name": "${config.projectName}",
-  "api_base_url": "https://api.${config.projectName.toLowerCase()}.com",
-  "api_timeout": 30000,
-  "debug_mode": true,
-  "enable_logging": true
+  "APP_NAME": "${config.projectName}",
+  "API_BASE_URL": "https://api.${config.projectName.toLowerCase()}.com",
+  "API_TIMEOUT": 30000,
+  "ENABLE_LOGGING": true
 }
 ''';
