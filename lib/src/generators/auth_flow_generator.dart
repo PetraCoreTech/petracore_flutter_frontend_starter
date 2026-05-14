@@ -650,13 +650,13 @@ class AuthFlowGenerator {
 
     addRouteConstant('splash', '/');
     if (config.includeWelcomeScreen) addRouteConstant('welcome', '/welcome');
-    if (config.includeLogin) addRouteConstant('login', '/login');
-    if (config.includeSignup) addRouteConstant('signup', '/signup');
-    if (config.includeOtp) addRouteConstant('verifyOtp', '/verify-otp');
+    if (config.includeLogin) addRouteConstant('login', 'login');
+    if (config.includeSignup) addRouteConstant('signup', 'signup');
+    if (config.includeOtp) addRouteConstant('verifyOtp', 'verify-otp');
     if (config.includeForgotPassword) {
-      addRouteConstant('forgotPassword', '/forgot-password');
-      addRouteConstant('forgotPasswordVerify', '/forgot-password-verify');
-      addRouteConstant('resetPassword', '/reset-password');
+      addRouteConstant('forgotPassword', 'forgot-password');
+      addRouteConstant('forgotPasswordVerify', 'forgot-password-verify');
+      addRouteConstant('resetPassword', 'reset-password');
     }
 
     await FileUtils.writeFile(routesPath, content);
