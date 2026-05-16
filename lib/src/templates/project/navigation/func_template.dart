@@ -4,7 +4,6 @@ String funcTemplate(ProjectConfig config) => """
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 FutureOr<bool> goHome(BuildContext context) {

@@ -6,7 +6,7 @@ import 'package:${config.packageName}/features/main_app/presentation/controllers
 
 final List<BlocProvider> blocProviders = [
   ...mainAppBlocProvider,
-  // Add your feature BLoC providers here
-  // Example: ...authBlocProvider
+  // petracore:start:bloc_providers
+  // petracore:end:bloc_providers
 ];
 ''';

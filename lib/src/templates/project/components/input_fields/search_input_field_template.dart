@@ -2,7 +2,6 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String searchInputFieldTemplate(ProjectConfig config) => '''
 import 'package:${config.projectName}/core/core.dart';
-import 'package:${config.projectName}/app/app.dart';
 
 class SearchInputField<T> extends HookWidget {
   const SearchInputField({

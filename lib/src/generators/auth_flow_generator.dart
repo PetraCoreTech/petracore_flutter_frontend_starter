@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
-import 'package:petracore_flutter_frontend_starter/src/utils/command_utils.dart';
 
 import '../templates/auth/auth_templates.dart';
-import '../utils/project_config_reader.dart';
+import '../utils/auth_validation.dart';
+import '../utils/generated_region_writer.dart';
 
 class AuthFlowConfig {
   final String projectName;
@@ -94,17 +94,15 @@ class AuthFlowGenerator {
   AuthFlowGenerator(this.config);
 
   Future<void> generate() async {
+    AuthValidation.validateConfig(config);
     projectConfig = await ProjectConfigReader.readOrDefault(
       projectName: config.projectName,
       projectPath: config.outputPath,
     );
     templates = AuthTemplates(projectConfig);
 
-    Logger.step('Generating basic auth feature structure...');
-    await _generateBasicAuthFeature();
-
-    Logger.step('Creating additional auth-specific directories...');
-    await _createAuthSpecificDirectories();
+    Logger.step('Creating auth feature structure...');
+    await _createDirectories();
 
     Logger.step('Generating custom auth models...');
     await _generateAuthModels();
@@ -142,63 +140,44 @@ class AuthFlowGenerator {
     await _updateRouterWithAuthRoutes();
     await _updateAppRoutes();
 
-    Logger.verbose('AuthFlowGenerator: Running build_runner (final step)');
-    await CommandUtils.runCommand(
-      'dart',
-      ['run', 'build_runner', 'build', '--delete-conflicting-outputs'],
-      workingDirectory: projectConfig.projectPath,
-    );
-
-    if (config.runPostGenerationActions) {
-      Logger.verbose('AuthFlowGenerator: Running dart fix --apply');
-      await CommandUtils.runCommand(
-        'dart',
-        ['fix', '--apply'],
-        workingDirectory: projectConfig.projectPath,
-      );
-    }
-
-    Logger.verbose('Auth flow generation completed');
+    Logger.verbose('Auth flow generation completed.');
+    Logger.info('Run `dart run build_runner build` to generate code.');
   }
 
-  /// Generate basic auth feature using the standard FeatureGenerator
-  Future<void> _generateBasicAuthFeature() async {
-    final authFeaturePath = path.join('lib', 'features', 'auth');
-
-    final featureConfig = FeatureConfig(
-      featureName: 'auth',
-      outputPath: authFeaturePath,
-      includeBloc: false,
-      includeRepository: false,
-      includeUseCases: false,
-      includeModels: false,
-      projectConfig: projectConfig,
-    );
-
-    final featureGenerator = FeatureGenerator(featureConfig);
-    await featureGenerator.generate();
-
-    Logger.verbose('Basic auth feature structure created');
-  }
-
-  /// Create auth-specific directories not covered by FeatureGenerator
-  Future<void> _createAuthSpecificDirectories() async {
+  Future<void> _createDirectories() async {
     final dirs = [
+      path.join('lib', 'features', 'auth'),
+      path.join('lib', 'features', 'auth', 'data'),
+      path.join('lib', 'features', 'auth', 'data', 'models'),
+      path.join('lib', 'features', 'auth', 'data', 'remote'),
+      path.join('lib', 'features', 'auth', 'data', 'remote', 'dto'),
+      path.join('lib', 'features', 'auth', 'data', 'domain'),
       path.join('lib', 'features', 'auth', 'data', 'enums'),
-      path.join(
-          'lib', 'features', 'auth', 'presentation', 'controllers', 'blocs'),
+      path.join('lib', 'features', 'auth', 'presentation'),
+      path.join('lib', 'features', 'auth', 'presentation', 'controllers'),
+      path.join('lib', 'features', 'auth', 'presentation', 'controllers',
+          'blocs'),
       path.join('lib', 'features', 'auth', 'presentation', 'controllers',
           'blocs', 'auth_bloc'),
+      path.join('lib', 'features', 'auth', 'presentation', 'controllers', 'cubits'),
+      path.join('lib', 'features', 'auth', 'presentation', 'controllers', 'cubits', 'email_cubit'),
+      path.join('lib', 'features', 'auth', 'presentation', 'controllers', 'cubits', 'user_cubit'),
+      path.join('lib', 'features', 'auth', 'presentation', 'controllers', 'cubits', 'auth_history_cubit'),
+      path.join('lib', 'features', 'auth', 'presentation', 'screens'),
       path.join('lib', 'features', 'auth', 'presentation', 'screens', 'login'),
       path.join('lib', 'features', 'auth', 'presentation', 'screens', 'signup'),
-      path.join(
-          'lib', 'features', 'auth', 'presentation', 'screens', 'onboarding'),
+      path.join('lib', 'features', 'auth', 'presentation', 'screens',
+          'onboarding'),
+      path.join('lib', 'features', 'auth', 'presentation', 'screens', 'otp'),
+      path.join('lib', 'features', 'auth', 'presentation', 'screens',
+          'password_recovery'),
       path.join('lib', 'features', 'auth', 'presentation', 'helpers'),
+      path.join('lib', 'features', 'auth', 'presentation', 'widgets'),
     ];
 
     for (final dir in dirs) {
       await Directory(dir).create(recursive: true);
-      Logger.verbose('Created auth-specific directory: $dir');
+      Logger.verbose('Created directory: $dir');
     }
   }
 
@@ -454,40 +433,52 @@ class AuthFlowGenerator {
       return;
     }
 
-    var content = await file.readAsString();
-
     final importLine =
-        "import 'package:${config.projectName}/features/auth/presentation/controllers/auth_bloc_provider.dart';";
+        "import 'package:${projectConfig.packageName}/features/auth/presentation/controllers/auth_bloc_provider.dart';";
 
-    if (content.contains(importLine)) {
-      Logger.verbose('Shared bloc_provider.dart already has import for auth');
-      return;
+    var content = await file.readAsString();
+    if (!content.contains(importLine)) {
+      content = content.replaceFirst(
+        "import 'package:flutter_bloc/flutter_bloc.dart';",
+        "import 'package:flutter_bloc/flutter_bloc.dart';\n$importLine",
+      );
+      await FileUtils.writeFile(sharedPath, content);
     }
-
-    content = content.replaceFirst(
-      "import 'package:flutter_bloc/flutter_bloc.dart';",
-      "import 'package:flutter_bloc/flutter_bloc.dart';\n$importLine",
-    );
 
     const spreadEntry = '  ...authBlocProvider,';
 
     if (content.contains(spreadEntry)) {
       Logger.verbose('Shared bloc_provider.dart already has entry for auth');
-      await FileUtils.writeFile(sharedPath, content);
       return;
     }
 
-    content = content.replaceFirst(
-      '  // Add your feature BLoC providers here',
-      '$spreadEntry\n  // Add your feature BLoC providers here',
-    );
+    if (await GeneratedRegionWriter.regionExists(
+          filePath: sharedPath,
+          regionName: 'bloc_providers',
+        )) {
+      final existing = await _readRegionContent(
+        sharedPath, 'bloc_providers',
+      );
+      await GeneratedRegionWriter.replaceRegion(
+        filePath: sharedPath,
+        regionName: 'bloc_providers',
+        newContent: '$existing\n$spreadEntry',
+      );
+    } else {
+      content = await file.readAsString();
+      content = content.replaceFirst(
+        '  // petracore:start:bloc_providers',
+        '  // petracore:start:bloc_providers\n$spreadEntry',
+      );
+      await FileUtils.writeFile(sharedPath, content);
+    }
 
-    await FileUtils.writeFile(sharedPath, content);
     Logger.verbose('Updated shared bloc_provider.dart with auth provider');
   }
 
   Future<void> _updateRouterWithAuthRoutes() async {
-    final routesDir = path.join(config.outputPath, 'lib/navigation/routes');
+    final projectRoot = config.outputPath;
+    final routesDir = path.join(projectRoot, 'lib/navigation/routes');
     await Directory(routesDir).create(recursive: true);
 
     final authRoutesContent = StringBuffer();
@@ -498,87 +489,11 @@ class AuthFlowGenerator {
     authRoutesContent.writeln();
     authRoutesContent.writeln('final authRoutes = <GoRoute>[');
 
-    // Welcome parent route
     if (config.includeWelcomeScreen) {
-      authRoutesContent.writeln('  GoRoute(');
-      authRoutesContent.writeln('    path: AppRoutes.welcome.path,');
-      authRoutesContent.writeln('    name: AppRoutes.welcome.name,');
-      authRoutesContent
-          .writeln('    builder: (context, state) => const WelcomeScreen(),');
-
-      final hasLoginChildren = config.includeForgotPassword;
-      final hasChildRoutes =
-          config.includeLogin || config.includeSignup || config.includeOtp;
-
-      if (hasChildRoutes) {
-        authRoutesContent.writeln('    routes: [');
-
-        // Login (with children)
-        if (config.includeLogin) {
-          authRoutesContent.writeln('      GoRoute(');
-          authRoutesContent.writeln('        path: AppRoutes.login.path,');
-          authRoutesContent.writeln('        name: AppRoutes.login.name,');
-          authRoutesContent.writeln(
-              '        builder: (context, state) => const LoginScreen(),');
-
-          if (hasLoginChildren) {
-            authRoutesContent.writeln('        routes: [');
-            if (config.includeForgotPassword) {
-              authRoutesContent.writeln('          GoRoute(');
-              authRoutesContent
-                  .writeln('            path: AppRoutes.forgotPassword.path,');
-              authRoutesContent
-                  .writeln('            name: AppRoutes.forgotPassword.name,');
-              authRoutesContent.writeln(
-                  '            builder: (context, state) => const ForgotPasswordScreen(),');
-              authRoutesContent.writeln('          ),');
-              authRoutesContent.writeln('          GoRoute(');
-              authRoutesContent.writeln(
-                  '            path: AppRoutes.forgotPasswordVerify.path,');
-              authRoutesContent.writeln(
-                  '            name: AppRoutes.forgotPasswordVerify.name,');
-              authRoutesContent.writeln(
-                  '            builder: (context, state) => const ForgotPasswordVerifyScreen(),');
-              authRoutesContent.writeln('          ),');
-              authRoutesContent.writeln('          GoRoute(');
-              authRoutesContent
-                  .writeln('            path: AppRoutes.resetPassword.path,');
-              authRoutesContent
-                  .writeln('            name: AppRoutes.resetPassword.name,');
-              authRoutesContent.writeln(
-                  '            builder: (context, state) => const ResetPasswordScreen(),');
-              authRoutesContent.writeln('          ),');
-            }
-            authRoutesContent.writeln('        ],');
-          }
-
-          authRoutesContent.writeln('      ),');
-        }
-
-        // Signup
-        if (config.includeSignup) {
-          authRoutesContent.writeln('      GoRoute(');
-          authRoutesContent.writeln('        path: AppRoutes.signup.path,');
-          authRoutesContent.writeln('        name: AppRoutes.signup.name,');
-          authRoutesContent.writeln(
-              '        builder: (context, state) => const SignupScreen(),');
-          authRoutesContent.writeln('      ),');
-        }
-
-        // Verify OTP
-        if (config.includeOtp) {
-          authRoutesContent.writeln('      GoRoute(');
-          authRoutesContent.writeln('        path: AppRoutes.verifyOtp.path,');
-          authRoutesContent.writeln('        name: AppRoutes.verifyOtp.name,');
-          authRoutesContent.writeln(
-              '        builder: (context, state) => const VerifyOtpScreen(),');
-          authRoutesContent.writeln('      ),');
-        }
-
-        authRoutesContent.writeln('    ],');
-      }
-
-      authRoutesContent.writeln('  ),');
+      _buildWelcomeRoute(authRoutesContent);
+      _buildStandaloneAuthRoutes(authRoutesContent, indent: 0);
+    } else {
+      _buildStandaloneAuthRoutes(authRoutesContent, indent: 0);
     }
 
     authRoutesContent.writeln('];');
@@ -587,11 +502,7 @@ class AuthFlowGenerator {
     await FileUtils.writeFile(authRoutesPath, authRoutesContent.toString());
     Logger.verbose('Created lib/navigation/routes/auth_routes.dart');
 
-    final routerPath = path.join(
-      config.outputPath,
-      'lib/navigation/router.dart',
-    );
-
+    final routerPath = path.join(projectRoot, 'lib/navigation/router.dart');
     final routerFile = File(routerPath);
     if (!await routerFile.exists()) {
       Logger.verbose('router.dart not found, skipping update');
@@ -607,19 +518,118 @@ class AuthFlowGenerator {
         "import 'package:${projectConfig.packageName}/core/core.dart';",
         "import 'package:${projectConfig.packageName}/core/core.dart';\n$authRoutesImport",
       );
+      await FileUtils.writeFile(routerPath, routerContent);
     }
 
-    const marker = '    // Add your feature routes here';
     final spreadEntry = '    ...authRoutes,';
     if (!routerContent.contains(spreadEntry)) {
-      routerContent = routerContent.replaceFirst(
-        marker,
-        '$spreadEntry\n$marker',
-      );
+      if (await GeneratedRegionWriter.regionExists(
+            filePath: routerPath,
+            regionName: 'feature_routes',
+          )) {
+        final existing = await _readRegionContent(
+          routerPath, 'feature_routes',
+        );
+        await GeneratedRegionWriter.replaceRegion(
+          filePath: routerPath,
+          regionName: 'feature_routes',
+          newContent: '$existing\n$spreadEntry',
+        );
+      } else {
+        routerContent = await File(routerPath).readAsString();
+        routerContent = routerContent.replaceFirst(
+          '    // petracore:start:feature_routes',
+          '    // petracore:start:feature_routes\n$spreadEntry',
+        );
+        await FileUtils.writeFile(routerPath, routerContent);
+      }
+    }
+    Logger.verbose('Updated router.dart with auth routes');
+  }
+
+  void _buildWelcomeRoute(StringBuffer buffer) {
+    buffer.writeln('  GoRoute(');
+    buffer.writeln('    path: AppRoutes.welcome.path,');
+    buffer.writeln('    name: AppRoutes.welcome.name,');
+    buffer.writeln(
+        '    builder: (context, state) => const WelcomeScreen(),');
+
+    final hasChildren = config.includeLogin ||
+        config.includeSignup ||
+        config.includeOtp;
+
+    if (hasChildren) {
+      buffer.writeln('    routes: [');
+      _buildLoginRoute(buffer, indent: 6);
+      _buildSignupRoute(buffer, indent: 6);
+      _buildOtpRoute(buffer, indent: 6);
+      buffer.writeln('    ],');
     }
 
-    await FileUtils.writeFile(routerPath, routerContent);
-    Logger.verbose('Updated router.dart with auth routes');
+    buffer.writeln('  ),');
+  }
+
+  void _buildStandaloneAuthRoutes(StringBuffer buffer, {int indent = 4}) {
+    _buildLoginRoute(buffer, indent: indent);
+    _buildSignupRoute(buffer, indent: indent);
+    _buildOtpRoute(buffer, indent: indent);
+  }
+
+  void _buildLoginRoute(StringBuffer buffer, {int indent = 4}) {
+    if (!config.includeLogin) return;
+    final i = ' ' * indent;
+    buffer.writeln('${i}GoRoute(');
+    buffer.writeln('${i}  path: AppRoutes.login.path,');
+    buffer.writeln('${i}  name: AppRoutes.login.name,');
+    buffer.writeln('${i}  builder: (context, state) => const LoginScreen(),');
+
+    if (config.includeForgotPassword) {
+      buffer.writeln('${i}  routes: [');
+      buffer.writeln('${i}    GoRoute(');
+      buffer.writeln(
+          '${i}      path: AppRoutes.forgotPassword.path,');
+      buffer.writeln(
+          '${i}      name: AppRoutes.forgotPassword.name,');
+      buffer.writeln('${i}      builder: (context, state) => const ForgotPasswordScreen(),');
+      buffer.writeln('${i}    ),');
+      buffer.writeln('${i}    GoRoute(');
+      buffer.writeln(
+          '${i}      path: AppRoutes.forgotPasswordVerify.path,');
+      buffer.writeln(
+          '${i}      name: AppRoutes.forgotPasswordVerify.name,');
+      buffer.writeln('${i}      builder: (context, state) => const ForgotPasswordVerifyScreen(),');
+      buffer.writeln('${i}    ),');
+      buffer.writeln('${i}    GoRoute(');
+      buffer.writeln(
+          '${i}      path: AppRoutes.resetPassword.path,');
+      buffer.writeln(
+          '${i}      name: AppRoutes.resetPassword.name,');
+      buffer.writeln('${i}      builder: (context, state) => const ResetPasswordScreen(),');
+      buffer.writeln('${i}    ),');
+      buffer.writeln('${i}  ],');
+    }
+
+    buffer.writeln('${i}),');
+  }
+
+  void _buildSignupRoute(StringBuffer buffer, {int indent = 4}) {
+    if (!config.includeSignup) return;
+    final i = ' ' * indent;
+    buffer.writeln('${i}GoRoute(');
+    buffer.writeln('${i}  path: AppRoutes.signup.path,');
+    buffer.writeln('${i}  name: AppRoutes.signup.name,');
+    buffer.writeln('${i}  builder: (context, state) => const SignupScreen(),');
+    buffer.writeln('${i}),');
+  }
+
+  void _buildOtpRoute(StringBuffer buffer, {int indent = 4}) {
+    if (!config.includeOtp) return;
+    final i = ' ' * indent;
+    buffer.writeln('${i}GoRoute(');
+    buffer.writeln('${i}  path: AppRoutes.verifyOtp.path,');
+    buffer.writeln('${i}  name: AppRoutes.verifyOtp.name,');
+    buffer.writeln('${i}  builder: (context, state) => const VerifyOtpScreen(),');
+    buffer.writeln('${i}),');
   }
 
   Future<void> _updateAppRoutes() async {
@@ -634,33 +644,60 @@ class AuthFlowGenerator {
       return;
     }
 
-    var content = await file.readAsString();
+    final buffer = StringBuffer();
 
-    void addRouteConstant(String name, String pathStr) {
-      final constant =
-          "  static const $name = AppRoute(path: '$pathStr', name: '$name');";
-      if (content.contains("static const $name =")) {
-        return;
-      }
-      content = content.replaceFirst(
-        '  // Add your route constants here',
-        '$constant\n  // Add your route constants here',
-      );
+    void addConstant(String name, String pathStr) {
+      if (buffer.isNotEmpty) buffer.writeln();
+      buffer.write(
+          "  static const $name = AppRoute(path: '$pathStr', name: '$name');");
     }
 
-    addRouteConstant('splash', '/');
-    if (config.includeWelcomeScreen) addRouteConstant('welcome', '/welcome');
-    if (config.includeLogin) addRouteConstant('login', 'login');
-    if (config.includeSignup) addRouteConstant('signup', 'signup');
-    if (config.includeOtp) addRouteConstant('verifyOtp', 'verify-otp');
+    if (config.includeSplashScreen) addConstant('splash', '/');
+    if (config.includeWelcomeScreen) addConstant('welcome', '/welcome');
+    if (config.includeLogin) addConstant('login', 'login');
+    if (config.includeSignup) addConstant('signup', 'signup');
+    if (config.includeOtp) addConstant('verifyOtp', 'verify-otp');
     if (config.includeForgotPassword) {
-      addRouteConstant('forgotPassword', 'forgot-password');
-      addRouteConstant('forgotPasswordVerify', 'forgot-password-verify');
-      addRouteConstant('resetPassword', 'reset-password');
+      addConstant('forgotPassword', 'forgot-password');
+      addConstant('forgotPasswordVerify', 'forgot-password-verify');
+      addConstant('resetPassword', 'reset-password');
     }
 
-    await FileUtils.writeFile(routesPath, content);
+    final newConstants = buffer.toString();
+
+    if (await GeneratedRegionWriter.regionExists(
+          filePath: routesPath,
+          regionName: 'route_constants',
+        )) {
+      final existing = await _readRegionContent(
+        routesPath, 'route_constants',
+      );
+      final merged = '$existing\n$newConstants'.trim();
+      await GeneratedRegionWriter.replaceRegion(
+        filePath: routesPath,
+        regionName: 'route_constants',
+        newContent: merged,
+      );
+    } else {
+      var content = await file.readAsString();
+      content = content.replaceFirst(
+        '  // petracore:start:route_constants',
+        '  // petracore:start:route_constants\n$newConstants',
+      );
+      await FileUtils.writeFile(routesPath, content);
+    }
+
     Logger.verbose('Updated routes.dart with auth route constants');
+  }
+
+  Future<String> _readRegionContent(String filePath, String regionName) async {
+    final file = File(filePath);
+    final content = await file.readAsString();
+    final startMarker = '// petracore:start:$regionName';
+    final endMarker = '// petracore:end:$regionName';
+    final startIndex = content.indexOf(startMarker) + startMarker.length;
+    final endIndex = content.indexOf(endMarker);
+    return content.substring(startIndex, endIndex).trim();
   }
 
   /// Interactive method to collect user preferences
@@ -670,7 +707,8 @@ class AuthFlowGenerator {
     Logger.info('Let\'s set up authentication for your Flutter project!\n');
 
     // Try to read project config to get the actual project name
-    final projectConfig = await ProjectConfigReader.readFromCurrentDirectory();
+    final projectConfig =
+        await ProjectConfigReader.readFromDirectory(projectPath);
     final projectName =
         projectConfig?.projectName ?? path.basename(projectPath);
     Logger.info('Project: $projectName');

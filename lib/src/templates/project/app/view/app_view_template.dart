@@ -1,7 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String appViewTemplate(ProjectConfig config) => '''
-import 'package:${config.packageName}/app/app.dart';
 import 'package:${config.packageName}/core/core.dart';
 import 'package:${config.packageName}/features/shared/presentation/controllers/bloc_provider.dart';
 

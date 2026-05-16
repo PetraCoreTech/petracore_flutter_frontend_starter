@@ -14,6 +14,12 @@ ArgParser initCommandParser() {
       help: 'Show help for init command',
       negatable: false,
     )
+    ..addFlag(
+      'verbose',
+      abbr: 'v',
+      help: 'Enable verbose output',
+      negatable: false,
+    )
     ..addOption(
       'org',
       help: 'Organization identifier (e.g., com.example)',

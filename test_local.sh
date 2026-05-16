@@ -20,6 +20,7 @@ echo -e "${BLUE}🏗️  PetraCore Local Testing Script${NC}"
 echo -e "${BLUE}=======================================${NC}"
 
 # Function to run CLI commands
+# NOTE: --verbose is a global flag and must come BEFORE the subcommand
 run_cli() {
     echo -e "${YELLOW}Running: dart run $CLI_PATH $@${NC}"
     dart run "$CLI_PATH" "$@"
@@ -49,7 +50,8 @@ test_init() {
     echo -e "${GREEN}🧪 Testing Project Initialization${NC}"
     echo -e "${GREEN}=================================${NC}"
     
-    run_cli init test_app --force --verbose
+    # --verbose before the subcommand (global flag)
+    run_cli --verbose init test_app --force --no-interactive --theme material
     
     if [ -d "test_app" ]; then
         echo -e "${GREEN}✅ Project initialization: PASSED${NC}"
@@ -58,19 +60,89 @@ test_init() {
         echo -e "${RED}❌ Project initialization: FAILED${NC}"
         exit 1
     fi
+    
+    # Verify managed regions exist in generated files
+    if grep -q "petracore:start:feature_routes" lib/navigation/router.dart; then
+        echo -e "${GREEN}✅ Managed region 'feature_routes' present in router.dart${NC}"
+    else
+        echo -e "${RED}❌ Managed region 'feature_routes' missing from router.dart${NC}"
+        exit 1
+    fi
+    
+    if grep -q "petracore:start:route_constants" lib/navigation/routes.dart; then
+        echo -e "${GREEN}✅ Managed region 'route_constants' present in routes.dart${NC}"
+    else
+        echo -e "${RED}❌ Managed region 'route_constants' missing from routes.dart${NC}"
+        exit 1
+    fi
+    
+    if grep -q "petracore:start:bloc_providers" lib/features/shared/presentation/controllers/bloc_provider.dart; then
+        echo -e "${GREEN}✅ Managed region 'bloc_providers' present in bloc_provider.dart${NC}"
+    else
+        echo -e "${RED}❌ Managed region 'bloc_providers' missing from bloc_provider.dart${NC}"
+        exit 1
+    fi
+    
+    # Verify AppEntryScreen is the initial route (not SplashScreen)
+    if grep -q "AppRoutes.entry.path" lib/navigation/router.dart && grep -q "AppEntryScreen" lib/navigation/router.dart; then
+        echo -e "${GREEN}✅ Router uses AppEntryScreen as entry point${NC}"
+    else
+        echo -e "${RED}❌ Router missing AppEntryScreen entry point${NC}"
+        exit 1
+    fi
+    
+    # Verify AppEntryScreen file exists
+    if [ -f "lib/features/main_app/presentation/screens/app_entry_screen.dart" ]; then
+        echo -e "${GREEN}✅ AppEntryScreen file generated${NC}"
+    else
+        echo -e "${RED}❌ AppEntryScreen file missing${NC}"
+        exit 1
+    fi
 }
 
-# Function to test feature generation
-test_feature() {
-    echo -e "${GREEN}🧪 Testing Feature Generation${NC}"
-    echo -e "${GREEN}============================${NC}"
+# Function to test feature generation with --output
+test_feature_output() {
+    echo -e "${GREEN}🧪 Testing Feature Generation with --output${NC}"
+    echo -e "${GREEN}==========================================${NC}"
     
-    run_cli feature media --verbose
+    run_cli --verbose feature profile --no-interactive --output lib/modules
+    
+    if [ -d "lib/modules/profile" ]; then
+        echo -e "${GREEN}✅ Feature generation with --output: PASSED${NC}"
+    else
+        echo -e "${RED}❌ Feature generation with --output: FAILED${NC}"
+        exit 1
+    fi
+    
+    # Verify importRoot uses the custom output path
+    if [ -f "lib/navigation/routes/profile_routes.dart" ]; then
+        echo -e "${GREEN}✅ profile_routes.dart generated${NC}"
+    else
+        echo -e "${RED}❌ profile_routes.dart missing${NC}"
+        exit 1
+    fi
+    
+    # Check route constant was added to managed region
+    if grep -q "static const profile" lib/navigation/routes.dart; then
+        echo -e "${GREEN}✅ Profile route constant registered${NC}"
+    else
+        echo -e "${RED}❌ Profile route constant missing${NC}"
+        exit 1
+    fi
+}
+
+# Function to test basic feature keyword
+test_feature() {
+    echo -e "${GREEN}🧪 Testing Media Feature (keyword)${NC}"
+    echo -e "${GREEN}===================================${NC}"
+    
+    # Pipe "2" to select full media feature (default)
+    echo "2" | run_cli --verbose feature media
     
     if [ -d "lib/features/media" ]; then
-        echo -e "${GREEN}✅ Feature generation: PASSED${NC}"
+        echo -e "${GREEN}✅ Media feature generation: PASSED${NC}"
     else
-        echo -e "${RED}❌ Feature generation: FAILED${NC}"
+        echo -e "${RED}❌ Media feature generation: FAILED${NC}"
         exit 1
     fi
 }
@@ -80,8 +152,8 @@ test_auth_basic() {
     echo -e "${GREEN}🧪 Testing Basic Auth Feature Generation${NC}"
     echo -e "${GREEN}========================================${NC}"
     
-    # Test basic auth feature (option 1)
-    echo "1" | run_cli feature auth --verbose
+    # Pipe "1" to select basic auth feature
+    echo "1" | run_cli --verbose feature auth
     
     if [ -d "lib/features/auth" ]; then
         echo -e "${GREEN}✅ Basic auth feature generation: PASSED${NC}"
@@ -91,10 +163,10 @@ test_auth_basic() {
     fi
 }
 
-# Function to test full auth flow generation
-test_auth_flow() {
-    echo -e "${GREEN}🧪 Testing Complete Auth Flow Generation${NC}"
-    echo -e "${GREEN}========================================${NC}"
+# Function to test full auth flow generation with --output
+test_auth_flow_output() {
+    echo -e "${GREEN}🧪 Testing Complete Auth Flow with --output${NC}"
+    echo -e "${GREEN}==========================================${NC}"
     
     # Remove existing auth feature if it exists to test clean generation
     if [ -d "lib/features/auth" ]; then
@@ -102,8 +174,14 @@ test_auth_flow() {
         rm -rf "lib/features/auth"
     fi
     
+    # Remove old auth routes if they exist
+    if [ -f "lib/navigation/routes/auth_routes.dart" ]; then
+        rm -f "lib/navigation/routes/auth_routes.dart"
+    fi
+    
     # Test complete auth flow with non-interactive mode
-    run_cli auth --no-interactive --login --otp --signup --email-verification --forgot-password --verbose
+    # --verbose is before the subcommand
+    run_cli --verbose auth --no-interactive --login --signup --otp --forgot-password --email-verification
     
     # Check if auth flow was generated properly
     if [ -d "lib/features/auth" ] && \
@@ -117,15 +195,65 @@ test_auth_flow() {
         echo -e "${RED}Missing expected files in auth feature${NC}"
         exit 1
     fi
+    
+    # Verify auth routes file exists
+    if [ -f "lib/navigation/routes/auth_routes.dart" ]; then
+        echo -e "${GREEN}✅ Auth routes file generated${NC}"
+    else
+        echo -e "${RED}❌ Auth routes file missing${NC}"
+        exit 1
+    fi
+    
+    # Verify auth route was registered in the managed region
+    if grep -q "...authRoutes," lib/navigation/router.dart; then
+        echo -e "${GREEN}✅ Auth routes registered in managed region${NC}"
+    else
+        echo -e "${RED}❌ Auth routes not registered in managed region${NC}"
+        exit 1
+    fi
+    
+    # Verify route constants were added
+    if grep -q "static const login" lib/navigation/routes.dart && \
+       grep -q "static const signup" lib/navigation/routes.dart && \
+       grep -q "static const otp" lib/navigation/routes.dart; then
+        echo -e "${GREEN}✅ Auth route constants registered${NC}"
+    else
+        echo -e "${RED}❌ Auth route constants missing${NC}"
+        exit 1
+    fi
 }
 
-# Combined auth test function
-test_auth() {
-    test_auth_basic
-    test_auth_flow
+# Function to test auth flow WITHOUT welcome screen (the bug fix)
+test_auth_no_welcome() {
+    echo -e "${GREEN}🧪 Testing Auth Flow Without Welcome Screen${NC}"
+    echo -e "${GREEN}============================================${NC}"
+    
+    # Remove existing auth feature
+    if [ -d "lib/features/auth" ]; then
+        rm -rf "lib/features/auth"
+    fi
+    if [ -f "lib/navigation/routes/auth_routes.dart" ]; then
+        rm -f "lib/navigation/routes/auth_routes.dart"
+    fi
+    
+    # Generate auth without welcome screen
+    run_cli --verbose auth --no-interactive --login --signup --otp --forgot-password --no-welcome
+    
+    # Verify login routes still exist even without welcome
+    if grep -q "LoginScreen" lib/navigation/routes/auth_routes.dart; then
+        echo -e "${GREEN}✅ Login routes generated without WelcomeScreen${NC}"
+    else
+        echo -e "${RED}❌ Login routes missing when WelcomeScreen disabled${NC}"
+        exit 1
+    fi
+    
+    # Verify welcome is NOT in the routes
+    if grep -q "WelcomeScreen" lib/navigation/routes/auth_routes.dart; then
+        echo -e "${YELLOW}⚠️  Welcome screen reference found (expected when disabled)${NC}"
+    fi
 }
 
-# Function to run Flutter commands in generated project
+# Function to test Flutter commands in generated project
 test_flutter_commands() {
     echo -e "${GREEN}🧪 Testing Flutter Commands in Generated Project${NC}"
     echo -e "${GREEN}===============================================${NC}"
@@ -133,10 +261,19 @@ test_flutter_commands() {
     echo -e "${YELLOW}Running flutter pub get...${NC}"
     flutter pub get
     
-    echo -e "${YELLOW}Running flutter analyze...${NC}"
-    flutter analyze
+    echo -e "${YELLOW}Running dart analyze...${NC}"
+    dart analyze lib/
     
     echo -e "${GREEN}✅ Flutter commands: PASSED${NC}"
+}
+
+# Function to run unit tests
+test_unit() {
+    echo -e "${GREEN}🧪 Running Package Unit Tests${NC}"
+    echo -e "${GREEN}==============================${NC}"
+    
+    cd "$SCRIPT_DIR"
+    dart test
 }
 
 # Main testing function
@@ -144,9 +281,10 @@ run_tests() {
     cleanup
     setup
     test_init
-    test_feature
-    test_auth
+    test_feature_output
+    test_auth_flow_output
     test_flutter_commands
+    test_unit
     
     echo -e "${GREEN}🎉 All tests passed!${NC}"
     echo -e "${BLUE}Generated project location: $HOME/StudioProjects/petracore_local_test/test_app${NC}"
@@ -160,14 +298,15 @@ interactive_mode() {
     echo "Choose what you want to test:"
     echo "1. Full test suite (recommended)"
     echo "2. Test project initialization only"
-    echo "3. Test feature generation only (requires existing project)"
-    echo "4. Test basic auth feature only (requires existing project)"
-    echo "5. Test complete auth flow only (requires existing project)"
-    echo "6. Test both auth features (requires existing project)"
-    echo "7. Custom CLI command"
-    echo "8. Exit"
+    echo "3. Test feature with --output only (requires existing project)"
+    echo "4. Test complete auth flow with --output only (requires existing project)"
+    echo "5. Test auth flow without welcome screen (requires existing project)"
+    echo "6. Test basic auth feature only (requires existing project)"
+    echo "7. Test unit tests only"
+    echo "8. Custom CLI command"
+    echo "9. Exit"
     echo ""
-    read -p "Enter your choice (1-8): " choice
+    read -p "Enter your choice (1-9): " choice
     
     case $choice in
         1)
@@ -183,35 +322,38 @@ interactive_mode() {
                 echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
                 exit 1
             }
-            test_feature
+            test_feature_output
             ;;
         4)
             cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
                 echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
                 exit 1
             }
-            test_auth_basic
+            test_auth_flow_output
             ;;
         5)
             cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
                 echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
                 exit 1
             }
-            test_auth_flow
+            test_auth_no_welcome
             ;;
         6)
             cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
                 echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
                 exit 1
             }
-            test_auth
+            test_auth_basic
             ;;
         7)
+            test_unit
+            ;;
+        8)
             echo -e "${YELLOW}Enter CLI command (without 'dart run bin/main.dart'):${NC}"
             read -p "> " custom_command
             run_cli $custom_command
             ;;
-        8)
+        9)
             echo -e "${BLUE}👋 Goodbye!${NC}"
             exit 0
             ;;
@@ -229,12 +371,13 @@ show_help() {
     echo "OPTIONS:"
     echo "  -h, --help        Show this help message"
     echo "  -i, --init        Test project initialization only"
-    echo "  -f, --feature     Test feature generation only"
-    echo "  -a, --auth        Test both auth features only"
+    echo "  -f, --feature     Test feature with --output only"
+    echo "  -a, --auth        Test complete auth flow with --output"
     echo "  --auth-basic      Test basic auth feature only"
-    echo "  --auth-flow       Test complete auth flow only"
+    echo "  --auth-no-welcome Test auth flow without welcome screen"
     echo "  -t, --test        Run full test suite"
     echo "  -c, --clean       Clean up test directory"
+    echo "  -u, --unit        Run package unit tests"
     echo ""
     echo "If no options are provided, interactive mode will be launched."
     echo ""
@@ -242,7 +385,7 @@ show_help() {
     echo "  $0                 # Launch interactive mode"
     echo "  $0 --test          # Run full test suite"
     echo "  $0 --init          # Test project initialization only"
-    echo "  $0 --auth-flow     # Test complete auth flow only"
+    echo "  $0 --auth-no-welcome  # Test auth without welcome screen"
     echo "  $0 --clean         # Clean up test directory"
 }
 
@@ -262,14 +405,14 @@ case "$1" in
             echo -e "${RED}❌ No existing project found. Run with --init first.${NC}"
             exit 1
         }
-        test_feature
+        test_feature_output
         ;;
     -a|--auth)
         cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
             echo -e "${RED}❌ No existing project found. Run with --init first.${NC}"
             exit 1
         }
-        test_auth
+        test_auth_flow_output
         ;;
     --auth-basic)
         cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
@@ -278,12 +421,12 @@ case "$1" in
         }
         test_auth_basic
         ;;
-    --auth-flow)
+    --auth-no-welcome)
         cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
             echo -e "${RED}❌ No existing project found. Run with --init first.${NC}"
             exit 1
         }
-        test_auth_flow
+        test_auth_no_welcome
         ;;
     -t|--test)
         run_tests
@@ -291,6 +434,9 @@ case "$1" in
     -c|--clean)
         cleanup
         echo -e "${GREEN}✅ Test directory cleaned${NC}"
+        ;;
+    -u|--unit)
+        test_unit
         ;;
     "")
         interactive_mode

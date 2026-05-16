@@ -86,6 +86,8 @@ export 'main_app/main_app_templates.dart';
 export 'main_app/presentation/controllers/main_app_bloc_provider_template.dart';
 export 'main_app/presentation/controllers/main_app_controller_index_template.dart';
 export 'main_app/presentation/presentation_barrel_template.dart';
+export 'main_app/presentation/screens/app_entry_screen_template.dart';
+export 'main_app/presentation/screens/material_app_entry_screen_template.dart';
 export 'main_app/presentation/screens/dashboard_screen_template.dart';
 export 'main_app/presentation/screens/material_dashboard_screen_template.dart';
 export 'media/data/domain/download_use_cases_template.dart';

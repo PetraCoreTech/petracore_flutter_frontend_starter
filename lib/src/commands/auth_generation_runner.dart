@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 
 import '../generators/auth_flow_generator.dart';
+import '../utils/auth_validation.dart';
 import '../utils/logger.dart';
 
 class AuthGenerationOptions {
@@ -101,34 +102,19 @@ class AuthGenerationRunner {
     if (options.interactive) {
       return;
     }
-
-    final hasCoreAuthFeature = options.includeLogin ||
-        options.includeSignup ||
-        options.includeForgotPassword ||
-        options.includeOtp ||
-        options.includeEmailVerification ||
-        options.includePhoneVerification;
-    if (!hasCoreAuthFeature) {
-      throw ArgumentError(
-        'At least one core auth capability must be enabled (login, signup, forgot-password, otp, email-verification, phone-verification).',
-      );
-    }
-
-    if (options.includeEmailVerification &&
-        !options.includeLogin &&
-        !options.includeSignup) {
-      throw ArgumentError(
-        'Email verification requires login or signup to be enabled.',
-      );
-    }
-
-    if (options.includePhoneVerification &&
-        !options.includeLogin &&
-        !options.includeSignup) {
-      throw ArgumentError(
-        'Phone verification requires login or signup to be enabled.',
-      );
-    }
+    AuthValidation.validateConfig(AuthFlowConfig(
+      projectName: '',
+      outputPath: options.outputDir,
+      includeLogin: options.includeLogin,
+      includeSignup: options.includeSignup,
+      includeEmailVerification: options.includeEmailVerification,
+      includePhoneVerification: options.includePhoneVerification,
+      includeForgotPassword: options.includeForgotPassword,
+      includeOtp: options.includeOtp,
+      includeSocialAuth: options.includeSocialAuth,
+      includeDeviceToken: options.includeDeviceToken,
+      runPostGenerationActions: options.runPostGenerationActions,
+    ));
   }
 
   static void _logSelectedFeatures(AuthFlowConfig config) {

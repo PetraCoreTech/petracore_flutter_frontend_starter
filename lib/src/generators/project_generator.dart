@@ -634,6 +634,8 @@ class ProjectGenerator {
           mainAppTemplates.blocProvider,
       'lib/features/main_app/presentation/screens/dashboard_screen.dart':
           mainAppTemplates.dashboardScreen,
+      'lib/features/main_app/presentation/screens/app_entry_screen.dart':
+          mainAppTemplates.appEntryScreen,
     };
 
     final progress = Logger.fileProgress('Main app feature');

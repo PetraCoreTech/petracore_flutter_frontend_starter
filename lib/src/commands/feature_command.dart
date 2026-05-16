@@ -28,6 +28,12 @@ ArgParser featureCommandParser() {
       negatable: false,
     )
     ..addFlag(
+      'verbose',
+      abbr: 'v',
+      help: 'Enable verbose output',
+      negatable: false,
+    )
+    ..addFlag(
       'bloc',
       help: 'Include BLoC/Cubit for state management',
       defaultsTo: true,
@@ -78,13 +84,19 @@ ArgParser featureCommandParser() {
 }
 
 ArgParser generateCommandParser() {
-  final parser = ArgParser()
-    ..addFlag(
-      'help',
-      abbr: 'h',
-      help: 'Show help for generate command',
-      negatable: false,
-    );
+    final parser = ArgParser()
+      ..addFlag(
+        'help',
+        abbr: 'h',
+        help: 'Show help for generate command',
+        negatable: false,
+      )
+      ..addFlag(
+        'verbose',
+        abbr: 'v',
+        help: 'Enable verbose output',
+        negatable: false,
+      );
 
   parser.addCommand('feature', featureCommandParser());
   return parser;
@@ -233,7 +245,8 @@ class FeatureCommand extends BaseCommand {
     }
 
     final outputDir = featureResults['output'] as String? ?? 'lib/features';
-    final featurePath = path.join(outputDir, featureName);
+    final projectRoot = path.normalize(path.absolute(Directory.current.path));
+    final featurePath = path.join(projectRoot, outputDir, featureName);
 
     if (Directory(featurePath).existsSync()) {
       Logger.error('Feature $featureName already exists in $featurePath');
@@ -243,7 +256,9 @@ class FeatureCommand extends BaseCommand {
     Logger.header('Generating Feature: $featureName');
 
     Logger.step('Reading project configuration...');
-    final projectConfig = await ProjectConfigReader.readOrDefault();
+    final projectConfig = await ProjectConfigReader.readOrDefault(
+      projectPath: projectRoot,
+    );
 
     // Determine data layer config
     final noInteractive = featureResults['no-interactive'] as bool;
@@ -259,7 +274,8 @@ class FeatureCommand extends BaseCommand {
 
     final config = FeatureConfig(
       featureName: featureName,
-      outputPath: featurePath,
+      projectRoot: projectRoot,
+      featureRoot: featurePath,
       includeBloc: featureResults['bloc'] as bool,
       includeRepository: featureResults['repository'] as bool,
       includeUseCases: featureResults['use-cases'] as bool,
@@ -404,7 +420,7 @@ class FeatureCommand extends BaseCommand {
       exit(1);
     }
 
-    final currentDir = Directory.current.path;
+    final currentDir = path.normalize(path.absolute(Directory.current.path));
     final projectName = path.basename(currentDir);
 
     final config = MediaConfig(
@@ -503,9 +519,11 @@ class FeatureCommand extends BaseCommand {
     Logger.step('Reading project configuration...');
     final projectConfig = await ProjectConfigReader.readOrDefault();
 
+    final projectRoot = path.normalize(path.absolute(Directory.current.path));
     final config = FeatureConfig(
       featureName: 'auth',
-      outputPath: featurePath,
+      projectRoot: projectRoot,
+      featureRoot: path.join(projectRoot, featurePath),
       includeBloc: true,
       includeRepository: true,
       includeUseCases: true,
@@ -548,7 +566,7 @@ class FeatureCommand extends BaseCommand {
         exit(1);
       }
 
-      final currentDir = Directory.current.path;
+      final currentDir = path.normalize(path.absolute(Directory.current.path));
       final projectName = path.basename(currentDir);
 
       final config = PaginationConfig(
@@ -607,9 +625,11 @@ class FeatureCommand extends BaseCommand {
     Logger.step('Reading project configuration...');
     final projectConfig = await ProjectConfigReader.readOrDefault();
 
+    final projectRoot = path.normalize(path.absolute(Directory.current.path));
     final config = FeatureConfig(
       featureName: featureName,
-      outputPath: featurePath,
+      projectRoot: projectRoot,
+      featureRoot: path.join(projectRoot, featurePath),
       includeBloc: true,
       includeRepository: true,
       includeUseCases: true,
@@ -649,7 +669,7 @@ class FeatureCommand extends BaseCommand {
       exit(1);
     }
 
-    final currentDir = Directory.current.path;
+    final currentDir = path.normalize(path.absolute(Directory.current.path));
 
     // Check if auth feature already exists
     final authPath = path.join(currentDir, 'lib', 'features', 'auth');

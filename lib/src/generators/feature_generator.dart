@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/feature_templates.dart';
-import 'package:petracore_flutter_frontend_starter/src/utils/command_utils.dart';
+import 'package:petracore_flutter_frontend_starter/src/utils/generated_region_writer.dart';
 import 'package:recase/recase.dart';
 
 class DataLayerConfig {
@@ -25,7 +25,8 @@ class DataLayerConfig {
 
 class FeatureConfig {
   final String featureName;
-  final String outputPath;
+  final String projectRoot;
+  final String featureRoot;
   final bool includeBloc;
   final bool includeRepository;
   final bool includeUseCases;
@@ -36,7 +37,8 @@ class FeatureConfig {
 
   FeatureConfig({
     required this.featureName,
-    required this.outputPath,
+    required this.projectRoot,
+    required this.featureRoot,
     required this.projectConfig,
     this.includeBloc = true,
     this.includeRepository = true,
@@ -44,11 +46,20 @@ class FeatureConfig {
     this.includeModels = true,
     this.includeList = false,
     this.dataLayerConfig,
-  });
+  }) : assert(
+          featureRoot.startsWith(projectRoot),
+          'featureRoot must be inside projectRoot',
+        );
 
   String get className => ReCase(featureName).pascalCase;
   String get camelCase => ReCase(featureName).camelCase;
   String get pascalCase => ReCase(featureName).pascalCase;
+
+  /// The import path relative to project root, e.g. "features/profile" or "modules/profile"
+  String get importRoot {
+    final relativePath = path.relative(featureRoot, from: path.join(projectRoot, 'lib'));
+    return relativePath;
+  }
 
   String get entityName => dataLayerConfig?.entityName ?? featureName;
   String get pascalEntity => dataLayerConfig?.pascalEntity ?? pascalCase;
@@ -95,35 +106,24 @@ class FeatureGenerator {
     if (config.includeModels) {
       Logger.step('Generating data models...');
       await _generateDataModels();
-      Logger.verbose('FeatureGenerator: Running build_runner (models enabled)');
-      await CommandUtils.runCommand(
-        'dart',
-        ['run', 'build_runner', 'build', '--delete-conflicting-outputs'],
-        workingDirectory: config.projectConfig.projectPath,
-      );
     }
 
-    await CommandUtils.runCommand(
-      'dart',
-      ['fix', '--apply'],
-      workingDirectory: config.projectConfig.projectPath,
-    );
-
-    Logger.verbose('Feature generation completed');
+    Logger.verbose(
+        'Feature generation completed. Run `dart run build_runner build` to generate code.');
   }
 
   Future<void> _createFeatureDirectories() async {
     final dirs = [
-      config.outputPath,
-      path.join(config.outputPath, 'data'),
-      path.join(config.outputPath, 'data', 'models'),
-      path.join(config.outputPath, 'data', 'remote'),
-      path.join(config.outputPath, 'data', 'remote', 'dto'),
-      path.join(config.outputPath, 'data', 'domain'),
-      path.join(config.outputPath, 'presentation'),
-      path.join(config.outputPath, 'presentation', 'controllers'),
-      path.join(config.outputPath, 'presentation', 'screens'),
-      path.join(config.outputPath, 'presentation', 'widgets'),
+      config.featureRoot,
+      path.join(config.featureRoot, 'data'),
+      path.join(config.featureRoot, 'data', 'models'),
+      path.join(config.featureRoot, 'data', 'remote'),
+      path.join(config.featureRoot, 'data', 'remote', 'dto'),
+      path.join(config.featureRoot, 'data', 'domain'),
+      path.join(config.featureRoot, 'presentation'),
+      path.join(config.featureRoot, 'presentation', 'controllers'),
+      path.join(config.featureRoot, 'presentation', 'screens'),
+      path.join(config.featureRoot, 'presentation', 'widgets'),
     ];
 
     for (final dir in dirs) {
@@ -134,7 +134,7 @@ class FeatureGenerator {
 
   Future<void> _generateFeatureIndex() async {
     final filePath =
-        path.join(config.outputPath, '${config.featureName}_index.dart');
+        path.join(config.featureRoot, '${config.featureName}_index.dart');
     final progress = Logger.fileProgress('Feature index');
     progress.start(1);
     await FileUtils.writeFile(filePath, templates.featureIndex);
@@ -150,7 +150,7 @@ class FeatureGenerator {
     final progress = Logger.fileProgress('Data models');
     progress.start(files.length);
     for (final entry in files.entries) {
-      final filePath = path.join(config.outputPath, entry.key);
+      final filePath = path.join(config.featureRoot, entry.key);
       await FileUtils.writeFile(filePath, entry.value);
       progress.tick();
     }
@@ -171,7 +171,7 @@ class FeatureGenerator {
     final progress = Logger.fileProgress('Repository');
     progress.start(files.length);
     for (final entry in files.entries) {
-      final filePath = path.join(config.outputPath, entry.key);
+      final filePath = path.join(config.featureRoot, entry.key);
       await FileUtils.writeFile(filePath, entry.value);
       progress.tick();
     }
@@ -186,7 +186,7 @@ class FeatureGenerator {
     final progress = Logger.fileProgress('Use cases');
     progress.start(files.length);
     for (final entry in files.entries) {
-      final filePath = path.join(config.outputPath, entry.key);
+      final filePath = path.join(config.featureRoot, entry.key);
       await FileUtils.writeFile(filePath, entry.value);
       progress.tick();
     }
@@ -218,7 +218,7 @@ class FeatureGenerator {
     final progress = Logger.fileProgress('BLoC');
     progress.start(files.length);
     for (final entry in files.entries) {
-      final filePath = path.join(config.outputPath, entry.key);
+      final filePath = path.join(config.featureRoot, entry.key);
       await FileUtils.writeFile(filePath, entry.value);
       progress.tick();
     }
@@ -240,7 +240,7 @@ class FeatureGenerator {
     final progress = Logger.fileProgress('Presentation');
     progress.start(files.length);
     for (final entry in files.entries) {
-      final filePath = path.join(config.outputPath, entry.key);
+      final filePath = path.join(config.featureRoot, entry.key);
       await FileUtils.writeFile(filePath, entry.value);
       progress.tick();
     }
@@ -259,53 +259,78 @@ class FeatureGenerator {
       return;
     }
 
-    var content = await file.readAsString();
-
     final importLine =
-        "import 'package:${config.projectConfig.projectName}/features/${config.featureName}/presentation/controllers/${config.featureName}_bloc_provider.dart';";
+        "import 'package:${config.projectConfig.packageName}/${config.importRoot}/presentation/controllers/${config.featureName}_bloc_provider.dart';";
+
+    var content = await file.readAsString();
 
     if (content.contains(importLine)) {
       Logger.verbose(
           'Shared bloc_provider.dart already has import for ${config.featureName}');
-      return;
+    } else {
+      content = content.replaceFirst(
+        "import 'package:flutter_bloc/flutter_bloc.dart';",
+        "import 'package:flutter_bloc/flutter_bloc.dart';\n$importLine",
+      );
+      await FileUtils.writeFile(sharedPath, content);
     }
-
-    content = content.replaceFirst(
-      "import 'package:flutter_bloc/flutter_bloc.dart';",
-      "import 'package:flutter_bloc/flutter_bloc.dart';\n$importLine",
-    );
 
     final spreadEntry = '  ...${config.camelEntity}BlocProvider,';
 
     if (content.contains(spreadEntry)) {
       Logger.verbose(
           'Shared bloc_provider.dart already has entry for ${config.featureName}');
-      await FileUtils.writeFile(sharedPath, content);
       return;
     }
 
-    content = content.replaceFirst(
-      '  // Add your feature BLoC providers here',
-      '$spreadEntry\n  // Add your feature BLoC providers here',
+    final existingRegion =
+        await GeneratedRegionWriter.regionExists(
+      filePath: sharedPath,
+      regionName: 'bloc_providers',
     );
 
-    await FileUtils.writeFile(sharedPath, content);
+    if (existingRegion) {
+      final regionContent = await _readRegionContent(
+        sharedPath, 'bloc_providers',
+      );
+      final updated = '$regionContent\n$spreadEntry';
+      await GeneratedRegionWriter.replaceRegion(
+        filePath: sharedPath,
+        regionName: 'bloc_providers',
+        newContent: updated.trim(),
+      );
+    } else {
+      content = content.replaceFirst(
+        '  // petracore:start:bloc_providers',
+        '  // petracore:start:bloc_providers\n$spreadEntry',
+      );
+      await FileUtils.writeFile(sharedPath, content);
+    }
+
     Logger.verbose(
         'Updated shared bloc_provider.dart with ${config.featureName} provider');
   }
 
+  Future<String> _readRegionContent(String filePath, String regionName) async {
+    final file = File(filePath);
+    final content = await file.readAsString();
+    final startMarker = '// petracore:start:$regionName';
+    final endMarker = '// petracore:end:$regionName';
+    final startIndex = content.indexOf(startMarker) + startMarker.length;
+    final endIndex = content.indexOf(endMarker);
+    return content.substring(startIndex, endIndex).trim();
+  }
+
   Future<void> _updateRouterWithFeatureRoutes() async {
-    final routesDir = path.join(
-      config.projectConfig.projectPath,
-      'lib/navigation/routes',
-    );
+    final projectRoot = config.projectConfig.projectPath;
+    final routesDir = path.join(projectRoot, 'lib/navigation/routes');
     await Directory(routesDir).create(recursive: true);
 
     final featureRoutesContent = StringBuffer();
     featureRoutesContent.writeln(
-        "import 'package:${config.projectConfig.projectName}/core/core.dart';");
+        "import 'package:${config.projectConfig.packageName}/core/core.dart';");
     featureRoutesContent.writeln(
-        "import 'package:${config.projectConfig.projectName}/features/${config.featureName}/${config.featureName}_index.dart';");
+        "import 'package:${config.projectConfig.packageName}/${config.importRoot}/${config.featureName}_index.dart';");
     featureRoutesContent.writeln();
     featureRoutesContent.writeln(
         'final ${config.featureName}Routes = <GoRoute>[');
@@ -326,59 +351,75 @@ class FeatureGenerator {
     Logger.verbose(
         'Created lib/navigation/routes/${config.featureName}_routes.dart');
 
-    final routesPath = path.join(
-      config.projectConfig.projectPath,
-      'lib/navigation/routes.dart',
-    );
-
+    final routesPath = path.join(projectRoot, 'lib/navigation/routes.dart');
     final routesFile = File(routesPath);
     if (await routesFile.exists()) {
-      var routesContent = await routesFile.readAsString();
-
       final constant =
           "  static const ${config.featureName} = AppRoute(path: '/${config.featureName}', name: '${config.featureName}');";
+      final routesContent = await routesFile.readAsString();
       if (!routesContent.contains("static const ${config.featureName} =")) {
-        routesContent = routesContent.replaceFirst(
-          '  // Add your route constants here',
-          '$constant\n  // Add your route constants here',
-        );
+        if (await GeneratedRegionWriter.regionExists(
+              filePath: routesPath,
+              regionName: 'route_constants',
+            )) {
+          final regionContent = await _readRegionContent(
+            routesPath, 'route_constants',
+          );
+          await GeneratedRegionWriter.replaceRegion(
+            filePath: routesPath,
+            regionName: 'route_constants',
+            newContent: '$regionContent\n$constant',
+          );
+        } else {
+          var updated = routesContent.replaceFirst(
+            '  // petracore:start:route_constants',
+            '  // petracore:start:route_constants\n$constant',
+          );
+          await FileUtils.writeFile(routesPath, updated);
+        }
       }
-
-      await FileUtils.writeFile(routesPath, routesContent);
-      Logger.verbose(
-          'Updated routes.dart with ${config.featureName} constant');
+      Logger.verbose('Updated routes.dart with ${config.featureName} constant');
     }
 
-    final routerPath = path.join(
-      config.projectConfig.projectPath,
-      'lib/navigation/router.dart',
-    );
-
+    final routerPath = path.join(projectRoot, 'lib/navigation/router.dart');
     final routerFile = File(routerPath);
     if (await routerFile.exists()) {
       var routerContent = await routerFile.readAsString();
 
       final importLine =
-          "import 'package:${config.projectConfig.projectName}/navigation/routes/${config.featureName}_routes.dart';";
+          "import 'package:${config.projectConfig.packageName}/navigation/routes/${config.featureName}_routes.dart';";
       if (!routerContent.contains(importLine)) {
         routerContent = routerContent.replaceFirst(
-          "import 'package:${config.projectConfig.projectName}/core/core.dart';",
-          "import 'package:${config.projectConfig.projectName}/core/core.dart';\n$importLine",
+          "import 'package:${config.projectConfig.packageName}/core/core.dart';",
+          "import 'package:${config.projectConfig.packageName}/core/core.dart';\n$importLine",
         );
+        await FileUtils.writeFile(routerPath, routerContent);
       }
 
       final spreadEntry = '    ...${config.featureName}Routes,';
       if (!routerContent.contains(spreadEntry)) {
-        const marker = '    // Add your feature routes here';
-        routerContent = routerContent.replaceFirst(
-          marker,
-          '$spreadEntry\n$marker',
-        );
+        if (await GeneratedRegionWriter.regionExists(
+              filePath: routerPath,
+              regionName: 'feature_routes',
+            )) {
+          final regionContent = await _readRegionContent(
+            routerPath, 'feature_routes',
+          );
+          await GeneratedRegionWriter.replaceRegion(
+            filePath: routerPath,
+            regionName: 'feature_routes',
+            newContent: '$regionContent\n$spreadEntry',
+          );
+        } else {
+          routerContent = await File(routerPath).readAsString();
+          routerContent = routerContent.replaceFirst(
+            '    // petracore:start:feature_routes',
+            '    // petracore:start:feature_routes\n$spreadEntry',
+          );
+          await FileUtils.writeFile(routerPath, routerContent);
+        }
       }
-
-      await FileUtils.writeFile(routerPath, routerContent);
-      Logger.verbose(
-          'Updated router.dart with ${config.featureName} routes');
+      Logger.verbose('Updated router.dart with ${config.featureName} routes');
     }
   }
 }

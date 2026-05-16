@@ -7,13 +7,12 @@ import '../generators/project_generator.dart';
 import 'logger.dart';
 
 class ProjectConfigReader {
-  /// Reads project configuration from the current directory
-  /// Returns a ProjectConfig if successful, null otherwise
-  static Future<ProjectConfig?> readFromCurrentDirectory() async {
+  static Future<ProjectConfig?> readFromDirectory(String rootPath) async {
     try {
-      final pubspecFile = File('pubspec.yaml');
+      final normalized = path.normalize(path.absolute(rootPath));
+      final pubspecFile = File(path.join(normalized, 'pubspec.yaml'));
       if (!await pubspecFile.exists()) {
-        Logger.verbose('pubspec.yaml not found in current directory');
+        Logger.verbose('pubspec.yaml not found in $normalized');
         return null;
       }
 
@@ -26,41 +25,18 @@ class ProjectConfigReader {
         return null;
       }
 
-      /// Try to detect organization from package name or use default
-      String organization = 'com.petracore';
+      final organization = await _detectOrganization(normalized);
 
-      /// Look for organization in android/app/build.gradle
-      final androidBuildGradle =
-          File(path.join('android', 'app', 'build.gradle'));
-      if (await androidBuildGradle.exists()) {
-        final buildGradleContent = await androidBuildGradle.readAsString();
-        final applicationIdMatch = RegExp('applicationId\s*["\']([^"\']+)["\']')
-            .firstMatch(buildGradleContent);
-        if (applicationIdMatch != null) {
-          final applicationId = applicationIdMatch.group(1)!;
-
-          /// Extract organization from application ID (e.g., "com.example.app" -> "com.example")
-          final parts = applicationId.split('.');
-          if (parts.length >= 2) {
-            organization = parts.take(parts.length - 1).join('.');
-          }
-        }
-      }
-
-      // /Try to get description from pubspec.yaml
       final description = pubspecYaml['description'] as String? ??
           'A Flutter project built with PetraCore architecture.';
 
-      final projectPath = Directory.current.path;
-
-      /// Detect theme type from project structure
-      final themeType = await _detectThemeType(projectPath);
+      final themeType = await _detectThemeType(normalized);
 
       final config = ProjectConfig(
         projectName: projectName,
         organization: organization,
         description: description,
-        projectPath: projectPath,
+        projectPath: normalized,
         themeType: themeType,
       );
 
@@ -76,12 +52,29 @@ class ProjectConfigReader {
     }
   }
 
-  /// Creates a default project config when detection fails
+  static Future<String> _detectOrganization(String rootPath) async {
+    final androidBuildGradle = File(
+      path.join(rootPath, 'android', 'app', 'build.gradle'),
+    );
+    if (await androidBuildGradle.exists()) {
+      final content = await androidBuildGradle.readAsString();
+      final match = RegExp("""applicationId\\s*["']([^"']+)["']""")
+          .firstMatch(content);
+      if (match != null) {
+        final parts = match.group(1)!.split('.');
+        if (parts.length >= 2) {
+          return parts.take(parts.length - 1).join('.');
+        }
+      }
+    }
+    return 'com.petracore';
+  }
+
   static ProjectConfig createDefaultConfig({
     String? projectName,
     String? projectPath,
   }) {
-    final defaultName = projectName ?? path.basename(Directory.current.path);
+    final defaultName = projectName ?? 'petracore_app';
     final defaultPath = projectPath ?? Directory.current.path;
 
     return ProjectConfig(
@@ -92,10 +85,9 @@ class ProjectConfigReader {
     );
   }
 
-  /// Detect theme type by checking if material_theme.dart exists
-  static Future<ThemeType> _detectThemeType(String projectPath) async {
+  static Future<ThemeType> _detectThemeType(String rootPath) async {
     final materialThemeFile = File(
-      path.join(projectPath, 'lib', 'app', 'theme', 'material_theme.dart'),
+      path.join(rootPath, 'lib', 'app', 'theme', 'material_theme.dart'),
     );
     if (await materialThemeFile.exists()) {
       return ThemeType.material;
@@ -103,16 +95,16 @@ class ProjectConfigReader {
     return ThemeType.mix;
   }
 
-  /// Reads project config with fallback to default
   static Future<ProjectConfig> readOrDefault({
     String? projectName,
     String? projectPath,
   }) async {
-    final config = await readFromCurrentDirectory();
+    final targetPath = projectPath ?? Directory.current.path;
+    final config = await readFromDirectory(targetPath);
     return config ??
         createDefaultConfig(
           projectName: projectName,
-          projectPath: projectPath,
+          projectPath: targetPath,
         );
   }
 }

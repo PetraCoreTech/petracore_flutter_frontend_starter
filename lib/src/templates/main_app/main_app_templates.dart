@@ -14,4 +14,7 @@ class MainAppTemplates {
   String get dashboardScreen => _isMaterial
       ? materialDashboardScreenTemplate(config)
       : dashboardScreenTemplate(config);
+  String get appEntryScreen => _isMaterial
+      ? materialAppEntryScreenTemplate(config)
+      : appEntryScreenTemplate(config);
 }

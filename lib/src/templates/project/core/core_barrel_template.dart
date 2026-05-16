@@ -14,6 +14,7 @@ export 'package:flutter_svg/flutter_svg.dart';
 export 'package:gap/gap.dart';
 export 'package:go_router/go_router.dart';
 ${isMaterial ? '' : "export 'package:mix/mix.dart' hide \$token, MixDurationInt;"}
+export 'package:${config.packageName}/app/app.dart';
 export 'package:${config.packageName}/navigation/navigation_index.dart';
 
 export 'components/components_index.dart';

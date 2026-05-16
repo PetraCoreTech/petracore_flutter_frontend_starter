@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/media/media_templates.dart';
-import 'package:petracore_flutter_frontend_starter/src/utils/project_config_reader.dart';
+import 'package:petracore_flutter_frontend_starter/src/utils/generated_region_writer.dart';
 
 class MediaFlowGenerator {
   MediaFlowGenerator(this.config);
@@ -19,11 +19,8 @@ class MediaFlowGenerator {
     );
     templates = MediaTemplates(projectConfig);
 
-    Logger.step('Generating basic media feature structure...');
-    await _generateBasicMediaFeature();
-
-    Logger.step('Creating additional media-specific directories...');
-    await _createMediaSpecificDirectories();
+    Logger.step('Creating media directories...');
+    await _createDirectories();
 
     Logger.step('Generating media enums...');
     await _generateEnums();
@@ -71,45 +68,28 @@ class MediaFlowGenerator {
     Logger.step('Adding media dependencies...');
     await _updatePubspec();
 
-    Logger.step('Running flutter pub get...');
-    await _runFlutterPubGet();
-
-    Logger.step('Running build_runner build...');
-    await _runBuildRunner();
-
-    Logger.verbose('Media flow generation completed');
+    Logger.verbose('Media flow generation completed.');
+    Logger.info('Run `flutter pub get` then `dart run build_runner build` to finish setup.');
   }
 
-  Future<void> _generateBasicMediaFeature() async {
-    final mediaFeaturePath = path.join('lib', 'features', 'media');
-
-    final featureConfig = FeatureConfig(
-      featureName: 'media',
-      outputPath: mediaFeaturePath,
-      includeBloc: false,
-      includeRepository: false,
-      includeUseCases: false,
-      includeModels: false,
-      projectConfig: projectConfig,
-    );
-
-    final featureGenerator = FeatureGenerator(featureConfig);
-    await featureGenerator.generate();
-
-    Logger.verbose('Basic media feature structure created');
-  }
-
-  Future<void> _createMediaSpecificDirectories() async {
+  Future<void> _createDirectories() async {
     final dirs = [
+      path.join('lib', 'features', 'media'),
+      path.join('lib', 'features', 'media', 'data'),
       path.join('lib', 'features', 'media', 'data', 'enums'),
       path.join('lib', 'features', 'media', 'data', 'extensions'),
       path.join('lib', 'features', 'media', 'data', 'parsers'),
+      path.join('lib', 'features', 'media', 'data', 'models'),
+      path.join('lib', 'features', 'media', 'data', 'domain'),
+      path.join('lib', 'features', 'media', 'data', 'remote'),
       path.join('lib', 'features', 'media', 'data', 'remote', 'cloudinary',
           'dtos'),
       path.join('lib', 'features', 'media', 'data', 'remote', 'upload',
           'params'),
       path.join('lib', 'features', 'media', 'data', 'remote', 'download',
           'dtos'),
+      path.join('lib', 'features', 'media', 'presentation'),
+      path.join('lib', 'features', 'media', 'presentation', 'controllers'),
       path.join('lib', 'features', 'media', 'presentation', 'entities'),
       path.join('lib', 'features', 'media', 'presentation', 'helpers'),
       path.join('lib', 'features', 'media', 'presentation', 'widgets'),
@@ -364,39 +344,59 @@ class MediaFlowGenerator {
       return;
     }
 
-    var content = await file.readAsString();
-
     final importLine =
-        "import 'package:${config.projectName}/features/media/presentation/controllers/media_bloc_provider.dart';";
+        "import 'package:${projectConfig.packageName}/features/media/presentation/controllers/media_bloc_provider.dart';";
 
-    if (content.contains(importLine)) {
-      Logger.verbose(
-          'Shared bloc_provider.dart already has import for media');
-      return;
+    var content = await file.readAsString();
+    if (!content.contains(importLine)) {
+      content = content.replaceFirst(
+        "import 'package:flutter_bloc/flutter_bloc.dart';",
+        "import 'package:flutter_bloc/flutter_bloc.dart';\n$importLine",
+      );
+      await FileUtils.writeFile(sharedPath, content);
     }
-
-    content = content.replaceFirst(
-      "import 'package:flutter_bloc/flutter_bloc.dart';",
-      "import 'package:flutter_bloc/flutter_bloc.dart';\n$importLine",
-    );
 
     const spreadEntry = '  ...mediaBlocProvider,';
 
     if (content.contains(spreadEntry)) {
       Logger.verbose(
           'Shared bloc_provider.dart already has entry for media');
-      await FileUtils.writeFile(sharedPath, content);
       return;
     }
 
-    content = content.replaceFirst(
-      '  // Add your feature BLoC providers here',
-      '$spreadEntry\n  // Add your feature BLoC providers here',
-    );
+    if (await GeneratedRegionWriter.regionExists(
+          filePath: sharedPath,
+          regionName: 'bloc_providers',
+        )) {
+      final existing = await _readRegionContent(
+        sharedPath, 'bloc_providers',
+      );
+      await GeneratedRegionWriter.replaceRegion(
+        filePath: sharedPath,
+        regionName: 'bloc_providers',
+        newContent: '$existing\n$spreadEntry',
+      );
+    } else {
+      content = await file.readAsString();
+      content = content.replaceFirst(
+        '  // petracore:start:bloc_providers',
+        '  // petracore:start:bloc_providers\n$spreadEntry',
+      );
+      await FileUtils.writeFile(sharedPath, content);
+    }
 
-    await FileUtils.writeFile(sharedPath, content);
     Logger.verbose(
         'Updated shared bloc_provider.dart with media provider');
+  }
+
+  Future<String> _readRegionContent(String filePath, String regionName) async {
+    final file = File(filePath);
+    final content = await file.readAsString();
+    final startMarker = '// petracore:start:$regionName';
+    final endMarker = '// petracore:end:$regionName';
+    final startIndex = content.indexOf(startMarker) + startMarker.length;
+    final endIndex = content.indexOf(endMarker);
+    return content.substring(startIndex, endIndex).trim();
   }
 
   Future<void> _updatePubspec() async {
@@ -438,31 +438,6 @@ class MediaFlowGenerator {
     Logger.verbose('Added media dependencies to pubspec.yaml');
   }
 
-  Future<void> _runFlutterPubGet() async {
-    final result = await Process.run(
-      'flutter',
-      ['pub', 'get'],
-      workingDirectory: config.outputPath,
-    );
-    if (result.exitCode != 0) {
-      Logger.error('flutter pub get failed:\n${result.stderr}');
-    } else {
-      Logger.verbose('flutter pub get completed successfully');
-    }
-  }
-
-  Future<void> _runBuildRunner() async {
-    final result = await Process.run(
-      'dart',
-      ['run', 'build_runner', 'build', '--delete-conflicting-outputs'],
-      workingDirectory: config.outputPath,
-    );
-    if (result.exitCode != 0) {
-      Logger.error('build_runner build failed:\n${result.stderr}');
-    } else {
-      Logger.verbose('build_runner build completed successfully');
-    }
-  }
 }
 
 class MediaConfig {

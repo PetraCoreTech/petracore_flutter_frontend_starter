@@ -6,9 +6,10 @@ import 'package:${config.packageName}/navigation/models/route_model.dart';
 class AppRoutes {
   AppRoutes._();
   
-  static const splash = AppRoute(path: '/', name: 'splash');
+  static const entry = AppRoute(path: '/', name: 'entry');
   static const dashboard = AppRoute(path: '/dashboard', name: 'dashboard');
   
-  // Add your route constants here
+  // petracore:start:route_constants
+  // petracore:end:route_constants
 }
 ''';

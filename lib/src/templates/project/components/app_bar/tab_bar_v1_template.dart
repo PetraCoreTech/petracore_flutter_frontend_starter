@@ -1,7 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String tabBarV1Template(ProjectConfig config) => '''
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class TabBarV1 extends StatelessWidget implements PreferredSizeWidget {

@@ -4,6 +4,7 @@ import 'package:args/args.dart';
 import 'package:path/path.dart' as path;
 
 import '../generators/auth_flow_generator.dart';
+import '../utils/auth_validation.dart';
 import '../utils/logger.dart';
 import 'base_command.dart';
 
@@ -13,6 +14,12 @@ ArgParser authCommandParser() {
       'help',
       abbr: 'h',
       help: 'Show help for auth command',
+      negatable: false,
+    )
+    ..addFlag(
+      'verbose',
+      abbr: 'v',
+      help: 'Enable verbose output',
       negatable: false,
     )
     ..addFlag(
@@ -56,6 +63,16 @@ ArgParser authCommandParser() {
       defaultsTo: false,
     )
     ..addFlag(
+      'welcome',
+      help: 'Include welcome screen',
+      defaultsTo: true,
+    )
+    ..addFlag(
+      'splash',
+      help: 'Include splash screen',
+      defaultsTo: true,
+    )
+    ..addFlag(
       'interactive',
       abbr: 'i',
       help: 'Use interactive mode to select features',
@@ -84,10 +101,11 @@ class AuthCommand extends BaseCommand {
     }
 
     // Check if we're in a Flutter project (if generating in current directory)
-    final outputDir = results['output'] as String? ?? Directory.current.path;
+    final outputDir = path.normalize(
+      path.absolute(results['output'] as String? ?? Directory.current.path),
+    );
 
-    if (results['output'] == null &&
-        !File(path.join(outputDir, 'pubspec.yaml')).existsSync()) {
+    if (!File(path.join(outputDir, 'pubspec.yaml')).existsSync()) {
       Logger.error('Not in a Flutter project directory');
       Logger.info(
           'Run this command from the root of your Flutter project or specify --output directory');
@@ -125,7 +143,10 @@ class AuthCommand extends BaseCommand {
         includeOtp: results['otp'] as bool,
         includeSocialAuth: results['social-auth'] as bool,
         includeDeviceToken: results['device-token'] as bool,
+        includeWelcomeScreen: results['welcome'] as bool,
+        includeSplashScreen: results['splash'] as bool,
       );
+      AuthValidation.validateConfig(config);
     }
 
     Logger.header('Generating Auth Flow');
