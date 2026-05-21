@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
+import '../design_presets/design_preset.dart';
 import '../generators/project_generator.dart';
 import 'logger.dart';
 
@@ -31,6 +33,7 @@ class ProjectConfigReader {
           'A Flutter project built with PetraCore architecture.';
 
       final themeType = await _detectThemeType(normalized);
+      final designPreset = await _detectDesignPreset(normalized);
 
       final config = ProjectConfig(
         projectName: projectName,
@@ -38,6 +41,7 @@ class ProjectConfigReader {
         description: description,
         projectPath: normalized,
         themeType: themeType,
+        designPreset: designPreset,
       );
 
       Logger.verbose('Detected project config:');
@@ -93,6 +97,28 @@ class ProjectConfigReader {
       return ThemeType.material;
     }
     return ThemeType.mix;
+  }
+
+  static Future<DesignPresetId> _detectDesignPreset(String rootPath) async {
+    final petracoreConfig = File(
+      path.join(rootPath, 'petracore.config.json'),
+    );
+    if (await petracoreConfig.exists()) {
+      try {
+        final content = await petracoreConfig.readAsString();
+        final json = jsonDecode(content) as Map<String, dynamic>;
+        final presetStr = json['designPreset'] as String?;
+        if (presetStr != null) {
+          return DesignPresetId.values.firstWhere(
+            (e) => e.name == presetStr,
+            orElse: () => DesignPresetId.defaultPreset,
+          );
+        }
+      } catch (_) {
+        // ignore parse errors
+      }
+    }
+    return DesignPresetId.defaultPreset;
   }
 
   static Future<ProjectConfig> readOrDefault({

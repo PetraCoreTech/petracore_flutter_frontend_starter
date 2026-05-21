@@ -1,11 +1,17 @@
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
 
-String baseThemeTemplate(ProjectConfig config) => '''
+String baseThemeTemplate(
+  ProjectConfig config,
+  DesignPresetTypography typography,
+  DesignPresetRadius radius,
+) {
+  final fontFamily = typography.fontFamily;
+  return '''
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart' hide \$token;
 import 'package:${config.projectName}/app/theme/design_tokens/theme_token.dart';
 
-const defaultFont = TextStyle(fontFamily: 'Times New Roman');
+const defaultFont = TextStyle(fontFamily: '$fontFamily');
 
 /// Base theme: this houses all the text theme and Misc. styles
 final baseTheme = MixThemeData(
@@ -82,9 +88,10 @@ final baseTheme = MixThemeData(
     ),
   },
   radii: {
-    \$token.radius.small: const Radius.circular(4),
-    \$token.radius.medium: const Radius.circular(8),
-    \$token.radius.large: const Radius.circular(100),
+    \$token.radius.small: const Radius.circular(${radius.small}),
+    \$token.radius.medium: const Radius.circular(${radius.medium}),
+    \$token.radius.large: const Radius.circular(${radius.large}),
   },
 );
 ''';
+}

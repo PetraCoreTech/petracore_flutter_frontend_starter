@@ -51,7 +51,7 @@ test_init() {
     echo -e "${GREEN}=================================${NC}"
     
     # --verbose before the subcommand (global flag)
-    run_cli --verbose init test_app --force --no-interactive --theme material
+    run_cli --verbose init test_app --force --no-interactive --theme material --design-preset apple
     
     if [ -d "test_app" ]; then
         echo -e "${GREEN}✅ Project initialization: PASSED${NC}"
@@ -96,6 +96,20 @@ test_init() {
         echo -e "${GREEN}✅ AppEntryScreen file generated${NC}"
     else
         echo -e "${RED}❌ AppEntryScreen file missing${NC}"
+        exit 1
+    fi
+    
+    # Verify petracore.config.json exists with correct preset
+    if [ -f "petracore.config.json" ]; then
+        echo -e "${GREEN}✅ petracore.config.json generated${NC}"
+        if grep -q '"designPreset": "default"' petracore.config.json && grep -q '"themeType": "mix"' petracore.config.json; then
+            echo -e "${GREEN}✅ petracore.config.json has correct preset and theme${NC}"
+        else
+            echo -e "${RED}❌ petracore.config.json missing expected values${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${RED}❌ petracore.config.json missing${NC}"
         exit 1
     fi
 }

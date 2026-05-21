@@ -256,6 +256,7 @@ export 'project/devtools_options_template.dart';
 export 'project/env_json_template.dart';
 export 'project/gitignore_template.dart';
 export 'project/main_dart_template.dart';
+export 'project/petracore_config_template.dart';
 export 'project/navigation/func_template.dart';
 export 'project/navigation/navigation_extension_template.dart';
 export 'project/navigation/navigation_index_template.dart';

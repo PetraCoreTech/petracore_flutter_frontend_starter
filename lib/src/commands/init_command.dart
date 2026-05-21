@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:path/path.dart' as path;
+import '../design_presets/design_preset.dart';
+import '../design_presets/design_preset_registry.dart';
 import '../generators/project_generator.dart';
 import '../utils/logger.dart';
 import '../utils/validation.dart';
@@ -35,6 +37,12 @@ ArgParser initCommandParser() {
       help: 'Theme system to use: mix (default) or material',
       defaultsTo: 'mix',
       allowed: ['mix', 'material'],
+    )
+    ..addOption(
+      'design-preset',
+      help: 'Design preset: default (default), vercel, airbnb, or apple',
+      defaultsTo: 'default',
+      allowed: ['default', 'vercel', 'airbnb', 'apple'],
     )
     ..addFlag(
       'force',
@@ -73,12 +81,18 @@ class InitCommand extends BaseCommand {
         ? results['theme'] as String
         : _promptForTheme();
 
+    final presetExplicit = results.wasParsed('design-preset');
+    final presetValue = (noInteractive || presetExplicit)
+        ? results['design-preset'] as String
+        : _promptForDesignPreset();
+
     final config = ProjectConfig(
       projectName: projectName,
       organization: results['org'] as String,
       description: results['description'] as String,
       projectPath: projectPath,
       themeType: _parseThemeType(themeValue),
+      designPreset: _parseDesignPreset(presetValue),
     );
 
     await _generateProject(config);
@@ -150,6 +164,44 @@ class InitCommand extends BaseCommand {
     }
   }
 
+  DesignPresetId _parseDesignPreset(String value) {
+    switch (value) {
+      case 'vercel':
+        return DesignPresetId.vercel;
+      case 'airbnb':
+        return DesignPresetId.airbnb;
+      case 'apple':
+        return DesignPresetId.apple;
+      default:
+        return DesignPresetId.defaultPreset;
+    }
+  }
+
+  String _promptForDesignPreset() {
+    Logger.section('Design Preset');
+    Logger.info('Choose a design preset:');
+    Logger.spacer();
+    final presets = DesignPresetRegistry.all;
+    for (var i = 0; i < presets.length; i++) {
+      final label = i == 0
+          ? '${i + 1}. ${presets[i].displayName} (default)'
+          : '${i + 1}. ${presets[i].displayName}';
+      Logger.item(label);
+    }
+    Logger.spacer();
+
+    stdout.write('Select preset (1-${presets.length}, default: 1): ');
+    final input = stdin.readLineSync()?.trim() ?? '';
+    final index = int.tryParse(input);
+    if (index != null && index >= 1 && index <= presets.length) {
+      final selected = presets[index - 1];
+      Logger.info('Selected: ${selected.displayName}\n');
+      return selected.id.name;
+    }
+    Logger.info('Selected: ${presets[0].displayName}\n');
+    return presets[0].id.name;
+  }
+
   String _promptForTheme() {
     Logger.section('Theme Selection');
     Logger.info('Choose your theme system:');
@@ -179,18 +231,20 @@ Usage: petracore init <project_name> [options]
   --org               Organization identifier (default: com.petracore)
   --description       Project description
   --theme             Theme system: mix (default) or material
+  --design-preset     Design preset: default (default), vercel, airbnb, apple
   --force             Force creation even if directory exists
   --no-interactive    Skip interactive prompts (use defaults or flags)
   --help, -h          Show this help
 
-When --theme is not specified, you will be prompted to choose interactively.
-Use --theme or --no-interactive to skip the prompt in scripts.
+When --theme or --design-preset are not specified, you will be prompted
+interactively. Use flags or --no-interactive to skip prompts in scripts.
 
 Examples:
   petracore init my_awesome_app
   petracore init my_app --org com.mycompany --theme material
+  petracore init app_with_vercel --theme mix --design-preset vercel
   petracore init test_app --force --description "A test application"
-  petracore init my_app --no-interactive               # Uses default (mix)
+  petracore init my_app --no-interactive               # Uses default (mix, default preset)
 ''');
   }
 }

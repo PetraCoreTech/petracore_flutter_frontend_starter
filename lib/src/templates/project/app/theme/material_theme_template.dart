@@ -1,6 +1,9 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
-String materialThemeTemplate(ProjectConfig config) => '''
+String materialThemeTemplate(ProjectConfig config) {
+  final radius = config.resolvedDesignPreset.radius;
+
+  return '''
 import 'package:flutter/material.dart';
 import 'package:${config.projectName}/app/constants/app_constants.dart';
 import 'package:${config.projectName}/app/theme/color_values.dart';
@@ -252,7 +255,7 @@ class AppTheme {
       disabledForegroundColor: _lightColorScheme.onSurface.withValues(alpha: 0.38),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(${radius.medium}),
       ),
       elevation: 1,
       textStyle: _textTheme.labelMedium?.copyWith(
@@ -272,7 +275,7 @@ class AppTheme {
       disabledForegroundColor: _lightColorScheme.onSurface.withValues(alpha: 0.38),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(${radius.medium}),
       ),
       textStyle: _textTheme.labelMedium?.copyWith(
         fontWeight: FontWeight.w500,
@@ -287,7 +290,7 @@ class AppTheme {
       disabledForegroundColor: _lightColorScheme.onSurface.withValues(alpha: 0.38),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(${radius.small}),
       ),
       textStyle: _textTheme.labelSmall?.copyWith(
         fontWeight: FontWeight.w500,
@@ -301,7 +304,7 @@ class AppTheme {
     foregroundColor: _lightColorScheme.onPrimaryContainer,
     elevation: 3,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(${radius.large}),
     ),
   );
 
@@ -310,33 +313,33 @@ class AppTheme {
   static final _inputDecorationTheme = InputDecorationTheme(
     filled: false,
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(${radius.medium}),
       borderSide: BorderSide(color: _lightColorScheme.outline),
     ),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(${radius.medium}),
       borderSide: BorderSide(color: _lightColorScheme.outline),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(${radius.medium}),
       borderSide: BorderSide(
         color: _lightColorScheme.primary,
         width: 2,
       ),
     ),
     errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(${radius.medium}),
       borderSide: BorderSide(color: _lightColorScheme.error),
     ),
     focusedErrorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(${radius.medium}),
       borderSide: BorderSide(
         color: _lightColorScheme.error,
         width: 2,
       ),
     ),
     disabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(${radius.medium}),
       borderSide: BorderSide(color: _lightColorScheme.onSurface.withValues(alpha: 0.12)),
     ),
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -356,7 +359,7 @@ class AppTheme {
   static const _cardTheme = CardTheme(
     elevation: 0,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(12)),
+      borderRadius: BorderRadius.all(Radius.circular(${radius.large})),
     ),
     clipBehavior: Clip.antiAlias,
   );
@@ -368,7 +371,7 @@ class AppTheme {
     surfaceTintColor: AppColors.white,
     elevation: 3,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(28)),
+      borderRadius: BorderRadius.all(Radius.circular(${radius.large})),
     ),
   );
 
@@ -377,7 +380,7 @@ class AppTheme {
     surfaceTintColor: Colors.transparent,
     elevation: 3,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(28)),
+      borderRadius: BorderRadius.all(Radius.circular(${radius.large})),
     ),
   );
 
@@ -388,7 +391,7 @@ class AppTheme {
     surfaceTintColor: AppColors.white,
     elevation: 3,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(${radius.large})),
     ),
   );
 
@@ -397,7 +400,7 @@ class AppTheme {
     surfaceTintColor: Colors.transparent,
     elevation: 3,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(${radius.large})),
     ),
   );
 
@@ -547,3 +550,4 @@ class AppTheme {
   );
 }
 ''';
+}

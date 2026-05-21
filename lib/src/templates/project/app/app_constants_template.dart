@@ -2,6 +2,7 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String appConstantsTemplate(ProjectConfig config) {
   final isMaterial = config.themeType == ThemeType.material;
+  final fontFamily = config.resolvedDesignPreset.typography.fontFamily;
 
   return '''
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class AppConstants {
 
   static const String appName = '${config.className}';
 
-  static const String fontFamily = 'Times New Roman';
+  static const String fontFamily = '$fontFamily';
 
   static const int otpInput = 6;
 

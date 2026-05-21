@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
+import 'package:petracore_flutter_frontend_starter/src/design_presets/design_preset.dart';
+import 'package:petracore_flutter_frontend_starter/src/design_presets/design_preset_registry.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/feature/pagination/pagination_index_template.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_bloc_template.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_event_template.dart';
@@ -22,6 +24,7 @@ class ProjectConfig {
   final String description;
   final String projectPath;
   final ThemeType themeType;
+  final DesignPresetId designPreset;
 
   ProjectConfig({
     required this.projectName,
@@ -29,10 +32,14 @@ class ProjectConfig {
     required this.description,
     required this.projectPath,
     this.themeType = ThemeType.mix,
+    this.designPreset = DesignPresetId.defaultPreset,
   });
 
   String get className => ReCase(projectName).pascalCase;
   String get packageName => projectName.toLowerCase().replaceAll('-', '_');
+
+  DesignPreset get resolvedDesignPreset =>
+      DesignPresetRegistry.resolve(designPreset);
 }
 
 class ProjectGenerator {
@@ -367,6 +374,7 @@ class ProjectGenerator {
       '.vscode/settings.json': templates.vscodeSettings,
       '.vscode/launch.json': templates.vscodeLaunch,
       'env.json': templates.envJson,
+      'petracore.config.json': templates.petracoreConfig,
     };
 
     final progress = Logger.fileProgress('Project config');

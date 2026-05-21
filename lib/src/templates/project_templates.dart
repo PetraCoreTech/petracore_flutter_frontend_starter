@@ -18,6 +18,7 @@ class ProjectTemplates {
   String get vscodeLaunch => vscodeLaunchTemplate(config);
   String get envJson => envJsonTemplate(config);
   String get pubspecYaml => pubspecYamlTemplate(config);
+  String get petracoreConfig => petracoreConfigTemplate(config);
 
   /// Project Config
   String get mainDart => mainDartTemplate(config);
@@ -35,12 +36,13 @@ class ProjectTemplates {
   String get themeBarrel => _isMaterial
       ? materialThemeBarrelTemplate()
       : themeBarrelTemplate();
-  String get colorValues => colorValuesTemplate();
+  DesignPreset get _preset => config.resolvedDesignPreset;
+  String get colorValues => colorValuesTemplate(_preset.colors);
   String get themeToken => themeTokenTemplate();
   String get themeColorToken => themeColorTokenTemplate();
   String get themeTextStyleToken => themeTextStyleTokenTemplate();
   String get themeRadiusToken => themeRadiusTokenTemplate();
-  String get baseTheme => baseThemeTemplate(config);
+  String get baseTheme => baseThemeTemplate(config, _preset.typography, _preset.radius);
   String get lightTheme => lightThemeTemplate(config);
   String get darkTheme => darkThemeTemplate(config);
   String get materialTheme => materialThemeTemplate(config);
