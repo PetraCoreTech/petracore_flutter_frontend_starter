@@ -27,7 +27,7 @@ dependencies:
   # UI & Design
   flextras: ^1.0.0
   flutter_screenutil: ^5.4.0
-  flutter_hooks: ^0.20.5
+  flutter_hooks: ^0.21.3
   animations: ^2.0.7
   gap: ^3.0.1
   lottie: ^3.1.3
