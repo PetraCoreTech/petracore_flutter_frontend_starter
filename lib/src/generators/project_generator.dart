@@ -175,9 +175,6 @@ class ProjectGenerator {
       path.join(config.projectPath, 'lib', 'app', 'constants'),
 
       path.join(config.projectPath, 'lib', 'app', 'string_values'),
-      path.join(config.projectPath, 'lib', 'app', 'theme'),
-      path.join(config.projectPath, 'lib', 'app', 'theme', 'design_tokens'),
-      path.join(config.projectPath, 'lib', 'app', 'theme', 'themes'),
 
       /// Core
       path.join(config.projectPath, 'lib', 'core'),
@@ -445,9 +442,6 @@ class ProjectGenerator {
       /// App/StringValues
       'lib/app/constants/content_strings.dart': templates.contentStrings,
 
-      /// App/Theme
-      'lib/app/theme/theme.dart': templates.themeBarrel,
-      'lib/app/theme/material_theme.dart': templates.materialTheme,
     };
 
     files.addAll({

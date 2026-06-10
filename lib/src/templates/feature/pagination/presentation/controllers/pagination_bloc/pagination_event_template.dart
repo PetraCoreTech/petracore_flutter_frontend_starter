@@ -6,6 +6,6 @@ sealed class PaginationEvent {}
 
 final class FetchPaginatedResult<P> extends PaginationEvent {
   FetchPaginatedResult(this.params);
-  final Params params;
+  final P params;
 }
 ''';

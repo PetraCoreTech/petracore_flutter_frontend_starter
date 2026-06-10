@@ -4,7 +4,7 @@ String errorResponseTemplate(ProjectConfig config) => '''
 import 'package:${config.projectName}/core/core.dart';
 
 class ErrorResponse implements Exception {
-  ErrorResponse({this.message, this.status});
+  ErrorResponse({required this.message, this.status});
 
   factory ErrorResponse.fromJson(Map<String, dynamic> json) {
     String? res;
@@ -27,7 +27,7 @@ class ErrorResponse implements Exception {
     return ErrorResponse(message: input, status: status);
   }
 
-  String? message;
+  late String message;
 
   static const String _msgKey = 'message';
 

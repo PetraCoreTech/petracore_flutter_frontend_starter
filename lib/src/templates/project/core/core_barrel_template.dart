@@ -6,11 +6,11 @@ export 'package:flutter/material.dart' hide Notification, Route;
 export 'package:flutter_bloc/flutter_bloc.dart';
 export 'package:flutter_hooks/flutter_hooks.dart';
 export 'package:flutter_screenutil/flutter_screenutil.dart';
-export 'package:flutter_styled_toast/flutter_styled_toast.dart';
-export 'package:flutter_svg/flutter_svg.dart';
 export 'package:gap/gap.dart';
 export 'package:go_router/go_router.dart';
 export 'package:${config.packageName}/app/app.dart';
+export 'package:${config.packageName}/app/constants/app_constants.dart';
+export 'package:${config.packageName}/app/constants/content_strings.dart';
 export 'package:${config.packageName}/navigation/navigation_index.dart';
 
 export 'package:app_ui_kit/app_ui_kit.dart';

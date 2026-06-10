@@ -27,10 +27,6 @@ class ProjectTemplates {
   String get appConstants => appConstantsTemplate(config);
   String get contentStrings => contentStringsTemplate();
 
-  /// App/Theme
-  String get themeBarrel => materialThemeBarrelTemplate();
-  String get materialTheme => materialThemeTemplate(config);
-
   /// Core
   String get coreBarrel => coreBarrelTemplate(config);
 

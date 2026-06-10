@@ -2,6 +2,7 @@ String bootstrapTemplate() => '''
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:app_ui_kit/app_ui_kit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';

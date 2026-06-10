@@ -2,7 +2,7 @@ String successResponseTemplate() => '''
 class SuccessResponse {
   SuccessResponse({
     this.success,
-    this.message,
+    required this.message,
   });
 
   SuccessResponse.fromJson(Map<String, dynamic> json) {
@@ -11,6 +11,6 @@ class SuccessResponse {
   }
 
   bool? success;
-  String? message;
+  late String message;
 }
 ''';
