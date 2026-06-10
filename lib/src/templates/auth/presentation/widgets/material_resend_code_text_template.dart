@@ -4,7 +4,6 @@ String materialResendCodeTextTemplate(ProjectConfig config) => '''
 import 'dart:async';
 
 import 'package:flutter/gestures.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 
 class ResendCodeText extends StatefulWidget {

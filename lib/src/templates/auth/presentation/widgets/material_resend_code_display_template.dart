@@ -1,7 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
 
 String materialResendCodeDisplayTemplate(ProjectConfig config) => '''
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/core/core.dart';
 import 'package:${config.projectName}/features/auth/auth_index.dart';
 

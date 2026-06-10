@@ -21,10 +21,7 @@ class ResetPasswordController {
         );
         context.read<AuthBloc>().add(event);
       } else {
-        ToastHelper(context).showToast(
-          content: 'Passwords must be the same!',
-          toastType: ToastType.error,
-        );
+        ToastHelper.showInfo(context, 'Passwords must be the same!');
       }
     }
   }

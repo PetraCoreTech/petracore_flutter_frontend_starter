@@ -2,7 +2,9 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String routerTemplate(ProjectConfig config) => '''
 import 'package:${config.packageName}/core/core.dart';
+import 'package:${config.packageName}/features/auth/auth_index.dart';
 import 'package:${config.packageName}/features/main_app/main_app_index.dart';
+import 'package:${config.packageName}/navigation/routes/auth_routes.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -13,7 +15,7 @@ final router = GoRouter(
     GoRoute(
       path: AppRoutes.entry.path,
       name: AppRoutes.entry.name,
-      builder: (context, state) => const AppEntryScreen(),
+      builder: (context, state) => const SplashScreen(),
     ),
     GoRoute(
       path: AppRoutes.dashboard.path,
@@ -22,7 +24,9 @@ final router = GoRouter(
     ),
 
     // petracore:start:feature_routes
-    // petracore:end:feature_routes
+
+    ...authRoutes,
+// petracore:end:feature_routes
   ],
 );
 ''';

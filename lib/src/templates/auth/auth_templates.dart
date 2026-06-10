@@ -64,6 +64,10 @@ class AuthTemplates {
   String get resetPasswordScreen => materialResetPasswordScreenTemplate(config);
 
   /// Auth/Presentation/Widgets
+  String get animatedSplashLogo => animatedSplashLogoTemplate(config);
   String get resendCodeDisplay => materialResendCodeDisplayTemplate(config);
   String get resendCodeText => materialResendCodeTextTemplate(config);
+
+  /// Auth Routes
+  String get authRoutes => authRoutesTemplate(config);
 }

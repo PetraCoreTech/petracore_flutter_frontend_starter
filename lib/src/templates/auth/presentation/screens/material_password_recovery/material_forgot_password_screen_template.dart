@@ -2,7 +2,6 @@ import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_st
 
 String materialForgotPasswordScreenTemplate(ProjectConfig config) => '''
 import 'package:${config.projectName}/core/core.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/features/auth/auth_index.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -37,12 +36,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthError) {
-              ToastHelper(context).showToast(
-                toastType: ToastType.error,
-                content: state.error.message,
-              );
+              ToastHelper.showError(context, state.error.message);
             } else if (state is AuthConfirmed) {
-              ToastHelper(context).showToast(content: state.response.message);
+              ToastHelper.showSuccess(context, state.response.message);
               context.goNamed(AppRoutes.forgotPasswordVerify.name);
             }
           },
@@ -50,43 +46,48 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ],
       child: Form(
         key: controller.formKey,
-        child: ScreenFrame.unbounded(
+        child: AppScaffold(
           isLoading: state is AuthLoading,
           appBar: const AppBarV1(),
-          children: [
-            Text(
-              'Forgot password?',
-              style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.onSurface),
-            ),
-            const Gap(4),
-            Text(
-              """Please provide the email address associated with the account you wish to recover. We'll send a recovery code to that email.""",
-              style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-            ),
-            const Gap(24),
-            BaseTextField(
-              labelText: ContentStrings.email,
-              keyboardType: TextInputType.emailAddress,
-              validator: (_) =>
-                  InputFieldValidator.requiredEmail(controller.email),
-              controller: controller.email,
-              onFieldSubmitted: (value) => controller.requestResetOtp(),
-            ),
-            const Gap(48),
-            AppButton(
-              text: 'Send code',
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              onTap: controller.requestResetOtp,
-            ),
-            const Gap(16),
-            AppTextButton(
-              text: 'Back to login',
-            onTap: () {
-              context.goNamed(AppRoutes.login.name);
-            },
-            ),
-            const Gap(32),
-          ],
+          body: ScreenFrame.unbounded(
+            children: [
+              Text(
+                'Forgot password?',
+                style: theme.textTheme.titleLarge
+                    ?.copyWith(color: theme.colorScheme.onSurface),
+              ),
+              const Gap(4),
+              Text(
+                """Please provide the email address associated with the account you wish to recover. We'll send a recovery code to that email.""",
+                style: theme.textTheme.bodyLarge
+                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              ),
+              const Gap(24),
+              BaseTextField(
+                labelText: ContentStrings.email,
+                keyboardType: TextInputType.emailAddress,
+                validator: (_) =>
+                    InputFieldValidator.requiredEmail(controller.email),
+                controller: controller.email,
+                onFieldSubmitted: (value) => controller.requestResetOtp(),
+              ),
+              const Gap(48),
+              AppButton(
+                text: 'Send code',
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                onTap: controller.requestResetOtp,
+              ),
+              const Gap(16),
+              AppTextButton(
+                text: 'Back to login',
+                onTap: () {
+                  context.goNamed(AppRoutes.login.name);
+                },
+              ),
+              const Gap(32),
+            ],
+          ),
         ),
       ),
     );
