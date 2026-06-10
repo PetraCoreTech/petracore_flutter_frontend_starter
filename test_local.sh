@@ -51,7 +51,7 @@ test_init() {
     echo -e "${GREEN}=================================${NC}"
     
     # --verbose before the subcommand (global flag)
-    run_cli --verbose init test_app --force --no-interactive --theme material --design-preset apple
+    run_cli --verbose init test_app --force --no-interactive --design-preset apple
     
     if [ -d "test_app" ]; then
         echo -e "${GREEN}✅ Project initialization: PASSED${NC}"

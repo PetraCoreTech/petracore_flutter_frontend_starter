@@ -22,7 +22,7 @@ class ErrorResponse implements Exception {
     } else {
       res = json[_errKey] as String?;
     }
-    final input = res?.toLowerCase().capitalize();
+    final input = res?.toLowerCase().capitalize() ?? 'Error Occurred';
     final status = json['status'] as ResponseStatus?;
     return ErrorResponse(message: input, status: status);
   }

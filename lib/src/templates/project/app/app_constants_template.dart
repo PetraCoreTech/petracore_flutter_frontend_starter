@@ -1,12 +1,10 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String appConstantsTemplate(ProjectConfig config) {
-  final isMaterial = config.themeType == ThemeType.material;
   final fontFamily = config.resolvedDesignPreset.typography.fontFamily;
 
   return '''
 import 'package:flutter/material.dart';
-${isMaterial ? '' : "import 'package:${config.projectName}/app/theme/design_tokens/theme_token.dart';"}
 
 class AppConstants {
   AppConstants._();
@@ -42,10 +40,6 @@ class AppConstants {
     ...videoExtensions,
     ...imageExtensions,
   ];
-}${isMaterial ? '' : '''
-
-/// Shortcut to access Mix theme colors
-/// Usage: colors.primary.resolve(context)
-final colors = \$token.color;'''}
+}
 ''';
 }

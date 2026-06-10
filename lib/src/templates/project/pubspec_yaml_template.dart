@@ -1,8 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String pubspecYamlTemplate(ProjectConfig config) {
-  final isMaterial = config.themeType == ThemeType.material;
-
   return '''
 name: ${config.packageName}
 description: ${config.description}
@@ -28,18 +26,11 @@ dependencies:
 
   # UI & Design
   flextras: ^1.0.0
-  flutter_animated_dialog_updated: ^1.0.1
   flutter_screenutil: ^5.4.0
-  flutter_svg: ^2.0.17
-  flutter_hooks: ^0.18.6
+  flutter_hooks: ^0.20.5
   animations: ^2.0.7
   gap: ^3.0.1
-  google_fonts: ^4.0.4
-  cached_network_image: ^3.2.3
-  lottie: ^2.2.0
-${isMaterial ? '' : '  mix: ^1.4.5\n'}  flutter_styled_toast: 2.2.1
-  intl_phone_field: ^3.2.0
-  loading_overlay: 0.3.0
+  lottie: ^3.1.3
 
   # Network & API
   dio: ^5.3.3

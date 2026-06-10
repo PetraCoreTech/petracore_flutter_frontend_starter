@@ -1,6 +1,4 @@
 import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_starter.dart';
-import 'package:petracore_flutter_frontend_starter/src/templates/project/app/theme/color_values_template.dart';
-import 'package:petracore_flutter_frontend_starter/src/templates/project/app/theme/base_theme_template.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -116,60 +114,4 @@ void main() {
     });
   });
 
-  group('colorValuesTemplate preset-awareness', () {
-    test('generates default colors correctly', () {
-      final preset = DesignPresetRegistry.resolve(DesignPresetId.defaultPreset);
-      final output = colorValuesTemplate(preset.colors);
-      expect(output, contains('class AppColors'));
-      expect(output, contains('primary = Color(0xff33FF9C)'));
-      expect(output, contains('Colors.black'));
-    });
-
-    test('generates vercel colors correctly', () {
-      final preset = DesignPresetRegistry.resolve(DesignPresetId.vercel);
-      final output = colorValuesTemplate(preset.colors);
-      expect(output, contains('class AppColors'));
-      expect(output, contains('primary = Color(0xff000000)'));
-      expect(output, contains('Colors.black'));
-    });
-
-    test('generates apple colors correctly', () {
-      final preset = DesignPresetRegistry.resolve(DesignPresetId.apple);
-      final output = colorValuesTemplate(preset.colors);
-      expect(output, contains('class AppColors'));
-      expect(output, contains('primary = Color(0xff007AFF)'));
-    });
-  });
-
-  group('baseThemeTemplate preset-awareness', () {
-    test('includes font family from preset', () {
-      final config = ProjectConfig(
-        projectName: 'test_app',
-        organization: 'com.test',
-        description: 'test',
-        projectPath: '/tmp/test',
-        designPreset: DesignPresetId.vercel,
-      );
-      final preset = config.resolvedDesignPreset;
-      final output = baseThemeTemplate(config, preset.typography, preset.radius);
-      expect(output, contains("fontFamily: 'Inter'"));
-      expect(output, contains('Radius.circular(2)'));
-      expect(output, contains('Radius.circular(4)'));
-      expect(output, contains('Radius.circular(6)'));
-    });
-
-    test('default preset uses Times New Roman', () {
-      final config = ProjectConfig(
-        projectName: 'test_app',
-        organization: 'com.test',
-        description: 'test',
-        projectPath: '/tmp/test',
-      );
-      final preset = config.resolvedDesignPreset;
-      final output = baseThemeTemplate(config, preset.typography, preset.radius);
-      expect(output, contains("fontFamily: 'Times New Roman'"));
-      expect(output, contains('Radius.circular(4)'));
-      expect(output, contains('Radius.circular(8)'));
-    });
-  });
 }

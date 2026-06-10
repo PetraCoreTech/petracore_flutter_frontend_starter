@@ -133,19 +133,9 @@ export 'project/analysis_options_template.dart';
 export 'project/app/app_barrel_template.dart';
 export 'project/app/app_constants_template.dart';
 export 'project/app/content_strings_template.dart';
-export 'project/app/theme/base_theme_template.dart';
-export 'project/app/theme/color_values_template.dart';
-export 'project/app/theme/dark_theme_template.dart';
-export 'project/app/theme/light_theme_template.dart';
 export 'project/app/theme/material_theme_barrel_template.dart';
 export 'project/app/theme/material_theme_template.dart';
-export 'project/app/theme/theme_barrel_template.dart';
-export 'project/app/theme/theme_color_token_template.dart';
-export 'project/app/theme/theme_radius_token_template.dart';
-export 'project/app/theme/theme_text_style_token_template.dart';
-export 'project/app/theme/theme_token_template.dart';
-export 'project/app/view/app_view_template.dart';
-export 'project/app/view/material_app_view_template.dart';
+
 export 'project/bootstrap_template.dart';
 
 /// Api Client templates

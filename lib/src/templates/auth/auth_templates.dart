@@ -5,7 +5,6 @@ class AuthTemplates {
   AuthTemplates(this.config);
 
   final ProjectConfig config;
-  bool get _isMaterial => config.themeType == ThemeType.material;
 
   String get authIndex => authIndexTemplate();
 
@@ -54,39 +53,17 @@ class AuthTemplates {
 
   /// Auth/Presentation/Screens
   String get authScreensIndex => authScreenIndexTemplate();
-  String get splashScreen => _isMaterial
-      ? materialSplashScreenTemplate(config)
-      : splashScreenTemplate(config);
-  String get welcomeScreen => _isMaterial
-      ? materialWelcomeScreenTemplate(config)
-      : welcomeScreenTemplate(config);
-  String get getStartedScreen => _isMaterial
-      ? materialGetStartedScreenTemplate(config)
-      : getStartedScreenTemplate(config);
-  String get loginScreen => _isMaterial
-      ? materialLoginScreenTemplate(config)
-      : loginScreenTemplate(config);
-  String get signupScreen => _isMaterial
-      ? materialSignupScreenTemplate(config)
-      : signupScreenTemplate(config);
-  String get verifyOtpScreen => _isMaterial
-      ? materialVerifyOtpScreenTemplate(config)
-      : verifyOtpScreenTemplate(config);
-  String get forgotPasswordScreen => _isMaterial
-      ? materialForgotPasswordScreenTemplate(config)
-      : forgotPasswordScreenTemplate(config);
-  String get forgotPwdVerifyScreen => _isMaterial
-      ? materialForgotPwdVerifyScreenTemplate(config)
-      : forgotPwdVerifyScreenTemplate(config);
-  String get resetPasswordScreen => _isMaterial
-      ? materialResetPasswordScreenTemplate(config)
-      : resetPasswordScreenTemplate(config);
+  String get splashScreen => materialSplashScreenTemplate(config);
+  String get welcomeScreen => materialWelcomeScreenTemplate(config);
+  String get getStartedScreen => materialGetStartedScreenTemplate(config);
+  String get loginScreen => materialLoginScreenTemplate(config);
+  String get signupScreen => materialSignupScreenTemplate(config);
+  String get verifyOtpScreen => materialVerifyOtpScreenTemplate(config);
+  String get forgotPasswordScreen => materialForgotPasswordScreenTemplate(config);
+  String get forgotPwdVerifyScreen => materialForgotPwdVerifyScreenTemplate(config);
+  String get resetPasswordScreen => materialResetPasswordScreenTemplate(config);
 
   /// Auth/Presentation/Widgets
-  String get resendCodeDisplay => _isMaterial
-      ? materialResendCodeDisplayTemplate(config)
-      : resendCodeDisplayTemplate(config);
-  String get resendCodeText => _isMaterial
-      ? materialResendCodeTextTemplate(config)
-      : resendCodeTextTemplate(config);
+  String get resendCodeDisplay => materialResendCodeDisplayTemplate(config);
+  String get resendCodeText => materialResendCodeTextTemplate(config);
 }

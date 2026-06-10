@@ -29,14 +29,11 @@ class ProjectContextResolver {
     final description = pubspecYaml['description'] as String? ??
         'A Flutter project built with PetraCore architecture.';
 
-    final themeType = await _detectThemeType(normalized);
-
     return ProjectConfig(
       projectName: projectName,
       organization: organization,
       description: description,
       projectPath: normalized,
-      themeType: themeType,
     );
   }
 
@@ -58,13 +55,4 @@ class ProjectContextResolver {
     return 'com.petracore';
   }
 
-  static Future<ThemeType> _detectThemeType(String rootPath) async {
-    final materialThemeFile = File(
-      path.join(rootPath, 'lib', 'app', 'theme', 'material_theme.dart'),
-    );
-    if (await materialThemeFile.exists()) {
-      return ThemeType.material;
-    }
-    return ThemeType.mix;
-  }
 }

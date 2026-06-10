@@ -1,9 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
-String contextExtensionsTemplate(ProjectConfig config) {
-  final isMaterial = config.themeType == ThemeType.material;
-
-  return '''
+String contextExtensionsTemplate(ProjectConfig config) => '''
 import 'package:flutter/material.dart';
 
 extension ContextColorSchemeExt on BuildContext {
@@ -22,11 +19,8 @@ extension ListExt<T> on List<T> {
     return this[index];
   }
 }
-${isMaterial ? '''
 
 extension ThemeExt on BuildContext {
   TextTheme get textTheme => Theme.of(this).textTheme;
 }
-''' : ''}
 ''';
-}

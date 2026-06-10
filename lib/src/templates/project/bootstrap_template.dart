@@ -32,6 +32,13 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
+    AppUiKit.initialize(
+    config: const AppUiKitConfig(
+      fontFamily: 'Plus Jakarta Sans',
+      preset: AppUiKitPreset.spotify,
+    ),
+  );
+
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: kIsWeb
         ? HydratedStorage.webStorageDirectory

@@ -16,14 +16,11 @@ import 'package:petracore_flutter_frontend_starter/src/utils/file_utils.dart';
 import 'package:petracore_flutter_frontend_starter/src/utils/logger.dart';
 import 'package:recase/recase.dart';
 
-enum ThemeType { mix, material }
-
 class ProjectConfig {
   final String projectName;
   final String organization;
   final String description;
   final String projectPath;
-  final ThemeType themeType;
   final DesignPresetId designPreset;
 
   ProjectConfig({
@@ -31,7 +28,6 @@ class ProjectConfig {
     required this.organization,
     required this.description,
     required this.projectPath,
-    this.themeType = ThemeType.mix,
     this.designPreset = DesignPresetId.defaultPreset,
   });
 
@@ -177,7 +173,7 @@ class ProjectGenerator {
       /// App config
       path.join(config.projectPath, 'lib', 'app'),
       path.join(config.projectPath, 'lib', 'app', 'constants'),
-      path.join(config.projectPath, 'lib', 'app', 'view'),
+
       path.join(config.projectPath, 'lib', 'app', 'string_values'),
       path.join(config.projectPath, 'lib', 'app', 'theme'),
       path.join(config.projectPath, 'lib', 'app', 'theme', 'design_tokens'),
@@ -436,8 +432,6 @@ class ProjectGenerator {
   }
 
   Future<void> _generateAppFiles() async {
-    final isMaterial = config.themeType == ThemeType.material;
-
     final files = {
       'lib/main.dart': templates.mainDart,
       'lib/bootstrap.dart': templates.bootstrap,
@@ -445,36 +439,16 @@ class ProjectGenerator {
       /// App
       'lib/app/app.dart': templates.appBarrel,
 
-      /// App/View
-      'lib/app/view/app.dart': templates.appView,
-
       /// App/Constants
       'lib/app/constants/app_constants.dart': templates.appConstants,
 
       /// App/StringValues
       'lib/app/constants/content_strings.dart': templates.contentStrings,
+
+      /// App/Theme
+      'lib/app/theme/theme.dart': templates.themeBarrel,
+      'lib/app/theme/material_theme.dart': templates.materialTheme,
     };
-
-    /// Theme system files - differ based on theme type
-    /// color_values.dart is generated for BOTH themes (shared brand color palette)
-    files['lib/app/theme/color_values.dart'] = templates.colorValues;
-
-    if (isMaterial) {
-      files['lib/app/theme/theme.dart'] = templates.themeBarrel;
-      files['lib/app/theme/material_theme.dart'] = templates.materialTheme;
-    } else {
-      files['lib/app/theme/theme.dart'] = templates.themeBarrel;
-      files['lib/app/theme/design_tokens/theme_token.dart'] = templates.themeToken;
-      files['lib/app/theme/design_tokens/theme_color_token.dart'] =
-          templates.themeColorToken;
-      files['lib/app/theme/design_tokens/theme_text_style_token.dart'] =
-          templates.themeTextStyleToken;
-      files['lib/app/theme/design_tokens/theme_radius_token.dart'] =
-          templates.themeRadiusToken;
-      files['lib/app/theme/themes/base_theme.dart'] = templates.baseTheme;
-      files['lib/app/theme/themes/light_theme.dart'] = templates.lightTheme;
-      files['lib/app/theme/themes/dark_theme.dart'] = templates.darkTheme;
-    }
 
     files.addAll({
       'lib/features/shared/presentation/controllers/bloc_provider.dart':

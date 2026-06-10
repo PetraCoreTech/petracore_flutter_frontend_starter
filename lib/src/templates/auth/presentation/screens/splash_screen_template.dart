@@ -4,9 +4,7 @@ String splashScreenTemplate(ProjectConfig config) => '''
 import 'dart:async';
 
 import 'package:${config.projectName}/core/core.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/features/auth/auth_index.dart';
-import 'package:${config.projectName}/navigation/navigation_index.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -74,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
     final lastStatus = authHistory.last.authStatus;
     if (lastStatus.isLoggedIn) {
-      ToastHelper(context).showToast(content: 'Welcome back!');
+      ToastHelper.showInfo(context, 'Welcome back!');
       context.goNamed(AppRoutes.dashboard.name);
     } else if (lastStatus.isLoggedOut) {
       context.goNamed(AppRoutes.login.name);

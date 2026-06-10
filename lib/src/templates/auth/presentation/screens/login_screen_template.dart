@@ -3,9 +3,7 @@ import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_st
 String loginScreenTemplate(ProjectConfig config) => '''
 import 'package:flutter/gestures.dart';
 import 'package:${config.projectName}/core/core.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/features/auth/auth_index.dart';
-import 'package:${config.projectName}/navigation/navigation_index.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

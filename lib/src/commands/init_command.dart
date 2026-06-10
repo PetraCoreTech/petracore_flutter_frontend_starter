@@ -33,12 +33,6 @@ ArgParser initCommandParser() {
       defaultsTo: 'A new Flutter project built with PetraCore architecture.',
     )
     ..addOption(
-      'theme',
-      help: 'Theme system to use: mix (default) or material',
-      defaultsTo: 'mix',
-      allowed: ['mix', 'material'],
-    )
-    ..addOption(
       'design-preset',
       help: 'Design preset: default (default), vercel, airbnb, or apple',
       defaultsTo: 'default',
@@ -76,11 +70,6 @@ class InitCommand extends BaseCommand {
     Logger.header('Creating PetraCore Flutter Project: $projectName');
 
     final noInteractive = results['no-interactive'] as bool;
-    final themeExplicit = results.wasParsed('theme');
-    final themeValue = (noInteractive || themeExplicit)
-        ? results['theme'] as String
-        : _promptForTheme();
-
     final presetExplicit = results.wasParsed('design-preset');
     final presetValue = (noInteractive || presetExplicit)
         ? results['design-preset'] as String
@@ -91,7 +80,6 @@ class InitCommand extends BaseCommand {
       organization: results['org'] as String,
       description: results['description'] as String,
       projectPath: projectPath,
-      themeType: _parseThemeType(themeValue),
       designPreset: _parseDesignPreset(presetValue),
     );
 
@@ -155,15 +143,6 @@ class InitCommand extends BaseCommand {
     }
   }
 
-  ThemeType _parseThemeType(String theme) {
-    switch (theme) {
-      case 'material':
-        return ThemeType.material;
-      default:
-        return ThemeType.mix;
-    }
-  }
-
   DesignPresetId _parseDesignPreset(String value) {
     switch (value) {
       case 'vercel':
@@ -202,25 +181,6 @@ class InitCommand extends BaseCommand {
     return presets[0].id.name;
   }
 
-  String _promptForTheme() {
-    Logger.section('Theme Selection');
-    Logger.info('Choose your theme system:');
-    Logger.spacer();
-    Logger.item('1. Mix (default) - Design token-based theming with Mix package');
-    Logger.item('2. Material - Standard Flutter Material 3 ThemeData');
-    Logger.spacer();
-
-    stdout.write('Select theme (1 or 2, default: 1): ');
-    final input = stdin.readLineSync()?.trim() ?? '';
-
-    if (input == '2') {
-      Logger.info('Selected: Material theme\n');
-      return 'material';
-    }
-    Logger.info('Selected: Mix theme\n');
-    return 'mix';
-  }
-
   void _printHelp() {
     print('''
 Initialize a new Flutter project with PetraCore architecture
@@ -230,7 +190,6 @@ Usage: petracore init <project_name> [options]
 
   --org               Organization identifier (default: com.petracore)
   --description       Project description
-  --theme             Theme system: mix (default) or material
   --design-preset     Design preset: default (default), vercel, airbnb, apple
   --force             Force creation even if directory exists
   --no-interactive    Skip interactive prompts (use defaults or flags)
@@ -241,10 +200,10 @@ interactively. Use flags or --no-interactive to skip prompts in scripts.
 
 Examples:
   petracore init my_awesome_app
-  petracore init my_app --org com.mycompany --theme material
-  petracore init app_with_vercel --theme mix --design-preset vercel
+  petracore init my_app --org com.mycompany
+  petracore init app_with_vercel --design-preset vercel
   petracore init test_app --force --description "A test application"
-  petracore init my_app --no-interactive               # Uses default (mix, default preset)
+  petracore init my_app --no-interactive               # Uses defaults
 ''');
   }
 }

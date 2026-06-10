@@ -32,7 +32,6 @@ class ProjectConfigReader {
       final description = pubspecYaml['description'] as String? ??
           'A Flutter project built with PetraCore architecture.';
 
-      final themeType = await _detectThemeType(normalized);
       final designPreset = await _detectDesignPreset(normalized);
 
       final config = ProjectConfig(
@@ -40,7 +39,6 @@ class ProjectConfigReader {
         organization: organization,
         description: description,
         projectPath: normalized,
-        themeType: themeType,
         designPreset: designPreset,
       );
 
@@ -87,16 +85,6 @@ class ProjectConfigReader {
       description: 'A Flutter project built with PetraCore architecture.',
       projectPath: defaultPath,
     );
-  }
-
-  static Future<ThemeType> _detectThemeType(String rootPath) async {
-    final materialThemeFile = File(
-      path.join(rootPath, 'lib', 'app', 'theme', 'material_theme.dart'),
-    );
-    if (await materialThemeFile.exists()) {
-      return ThemeType.material;
-    }
-    return ThemeType.mix;
   }
 
   static Future<DesignPresetId> _detectDesignPreset(String rootPath) async {

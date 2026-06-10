@@ -16,7 +16,7 @@ class PaginatedListBuilder<T, P> extends StatefulWidget {
     this.shouldPaginate = true,
   });
   final UseCase<List<T>, P> useCase;
-  final P Function(int) params;
+  final Params Function(int) params;
   final List<T> items;
   final Widget Function(T) itemBuilder;
   final Widget Function(BuildContext, int)? separatorBuilder;

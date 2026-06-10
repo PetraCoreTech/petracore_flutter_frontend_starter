@@ -6,8 +6,6 @@ class ProjectTemplates {
 
   final ProjectConfig config;
 
-  bool get _isMaterial => config.themeType == ThemeType.material;
-
   /// Project Files
   String get analysisOptions => analysisOptionsTemplate();
   String get gitignore => gitignoreTemplate();
@@ -25,26 +23,12 @@ class ProjectTemplates {
   String get bootstrap => bootstrapTemplate();
 
   /// App
-  String get appBarrel => appBarrelTemplate();
-  String get appView => _isMaterial
-      ? materialAppViewTemplate(config)
-      : appViewTemplate(config);
+  String get appBarrel => appBarrelTemplate(config);
   String get appConstants => appConstantsTemplate(config);
   String get contentStrings => contentStringsTemplate();
 
   /// App/Theme
-  String get themeBarrel => _isMaterial
-      ? materialThemeBarrelTemplate()
-      : themeBarrelTemplate();
-  DesignPreset get _preset => config.resolvedDesignPreset;
-  String get colorValues => colorValuesTemplate(_preset.colors);
-  String get themeToken => themeTokenTemplate();
-  String get themeColorToken => themeColorTokenTemplate();
-  String get themeTextStyleToken => themeTextStyleTokenTemplate();
-  String get themeRadiusToken => themeRadiusTokenTemplate();
-  String get baseTheme => baseThemeTemplate(config, _preset.typography, _preset.radius);
-  String get lightTheme => lightThemeTemplate(config);
-  String get darkTheme => darkThemeTemplate(config);
+  String get themeBarrel => materialThemeBarrelTemplate();
   String get materialTheme => materialThemeTemplate(config);
 
   /// Core
