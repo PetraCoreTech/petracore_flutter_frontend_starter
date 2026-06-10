@@ -1,6 +1,7 @@
 .dart_tool/
 .idea/
 agent-docs/
+/pubspec.lock
 
 # FVM Version Cache
 .fvm/
