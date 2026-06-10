@@ -64,6 +64,9 @@ ${isMaterial ? '' : '  mix: ^1.4.5\n'}  flutter_styled_toast: 2.2.1
   # UI Components
   cupertino_icons: ^1.0.6
 
+  # App UI Kit
+  app_ui_kit: ^0.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

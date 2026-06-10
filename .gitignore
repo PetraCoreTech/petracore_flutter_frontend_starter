@@ -1,3 +1,6 @@
 .dart_tool/
 .idea/
 agent-docs/
+
+# FVM Version Cache
+.fvm/

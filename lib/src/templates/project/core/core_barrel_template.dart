@@ -17,7 +17,7 @@ ${isMaterial ? '' : "export 'package:mix/mix.dart' hide \$token, MixDurationInt;
 export 'package:${config.packageName}/app/app.dart';
 export 'package:${config.packageName}/navigation/navigation_index.dart';
 
-export 'components/components_index.dart';
+export 'package:app_ui_kit/app_ui_kit.dart';
 export 'data/data_index.dart';
 export 'utils/utils_index.dart';
 ''';
