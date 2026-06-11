@@ -53,15 +53,15 @@ class AuthTemplates {
 
   /// Auth/Presentation/Screens
   String get authScreensIndex => authScreenIndexTemplate();
-  String get splashScreen => materialSplashScreenTemplate(config);
-  String get welcomeScreen => materialWelcomeScreenTemplate(config);
-  String get getStartedScreen => materialGetStartedScreenTemplate(config);
-  String get loginScreen => materialLoginScreenTemplate(config);
-  String get signupScreen => materialSignupScreenTemplate(config);
-  String get verifyOtpScreen => materialVerifyOtpScreenTemplate(config);
-  String get forgotPasswordScreen => materialForgotPasswordScreenTemplate(config);
-  String get forgotPwdVerifyScreen => materialForgotPwdVerifyScreenTemplate(config);
-  String get resetPasswordScreen => materialResetPasswordScreenTemplate(config);
+  String get splashScreen => splashScreenTemplate(config);
+  String get welcomeScreen => welcomeScreenTemplate(config);
+  String get getStartedScreen => getStartedScreenTemplate(config);
+  String get loginScreen => loginScreenTemplate(config);
+  String get signupScreen => signupScreenTemplate(config);
+  String get verifyOtpScreen => verifyOtpScreenTemplate(config);
+  String get forgotPasswordScreen => forgotPasswordScreenTemplate(config);
+  String get forgotPwdVerifyScreen => forgotPwdVerifyScreenTemplate(config);
+  String get resetPasswordScreen => resetPasswordScreenTemplate(config);
 
   /// Auth/Presentation/Widgets
   String get animatedSplashLogo => animatedSplashLogoTemplate(config);

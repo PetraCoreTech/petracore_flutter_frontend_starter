@@ -386,6 +386,8 @@ class AuthFlowGenerator {
     if (config.includeSplashScreen) {
       files['lib/features/auth/presentation/screens/onboarding/splash_screen.dart'] =
           templates.splashScreen;
+      files['lib/features/auth/presentation/widgets/animated_splash_logo.dart'] =
+          templates.animatedSplashLogo;
     }
 
     if (config.includeWelcomeScreen) {
@@ -645,11 +647,27 @@ class AuthFlowGenerator {
     }
 
     final buffer = StringBuffer();
+    final existingConstants = <String>{};
+
+    if (await GeneratedRegionWriter.regionExists(
+          filePath: routesPath,
+          regionName: 'route_constants',
+        )) {
+      final existing = await _readRegionContent(
+        routesPath, 'route_constants',
+      );
+      for (final match in RegExp(r"static const (\w+) =")
+          .allMatches(existing)) {
+        existingConstants.add(match.group(1)!);
+      }
+    }
 
     void addConstant(String name, String pathStr) {
+      if (existingConstants.contains(name)) return;
       if (buffer.isNotEmpty) buffer.writeln();
       buffer.write(
           "  static const $name = AppRoute(path: '$pathStr', name: '$name');");
+      existingConstants.add(name);
     }
 
     if (config.includeSplashScreen) addConstant('splash', '/');
@@ -664,6 +682,10 @@ class AuthFlowGenerator {
     }
 
     final newConstants = buffer.toString();
+    if (newConstants.isEmpty) {
+      Logger.verbose('All auth route constants already exist, skipping');
+      return;
+    }
 
     if (await GeneratedRegionWriter.regionExists(
           filePath: routesPath,

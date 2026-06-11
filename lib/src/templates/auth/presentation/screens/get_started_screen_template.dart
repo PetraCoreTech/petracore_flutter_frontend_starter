@@ -2,7 +2,6 @@ import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_st
 
 String getStartedScreenTemplate(ProjectConfig config) => '''
 import 'package:${config.projectName}/core/core.dart';
-import 'package:${config.projectName}/app/app.dart';
 import 'package:${config.projectName}/features/auth/auth_index.dart';
 
 class GetStartedScreen extends StatefulWidget {
@@ -19,7 +18,6 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
   void initState() {
     super.initState();
     controller = EmailController(context)..initValues();
-    controller.initValues();
   }
 
   @override
@@ -30,10 +28,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final onSurfaceDark = colors.onSurfaceDark.resolve(context);
-    final onSurfaceLight = colors.onSurfaceLight.resolve(context);
-    final heading4 = \$token.textStyle.heading4.resolve(context);
-    final paragraph2 = \$token.textStyle.paragraph2.resolve(context);
+    final theme = Theme.of(context);
     final email = context.watch<EmailCubit>().state;
     final state = context.watch<AuthBloc>().state;
     return MultiBlocListener(
@@ -42,58 +37,59 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
         BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthError) {
-              ToastHelper(context).showToast(
-                toastType: ToastType.error,
-                content: state.error.message,
-              );
+              ToastHelper.showError(context, state.error.message);
             } else if (state is UserConfirmed) {
-              if (state.response.success! == true) {
+              if (state.response.success == true) {
                // context.goNamed(AppRoutes.login.name);
               } else {
                 AuthHelper(context).requestOtp(email);
               }
             } else if (state is AuthConfirmed) {
-              ToastHelper(context).showToast(content: state.response.message);
+              ToastHelper.showSuccess(context, state.response.message);
               // context.goNamed(AppRoutes.verifyEmail.name);
             }
           },
         ),
       ],
-      child: ScreenFrame.unbounded(
+      child: AppScaffold(
         isLoading: state is AuthLoading,
         appBar: const AppBarV1(),
-        children: [
-          Text(
-            '<ContentString.getStarted>',
-            style: heading4.copyWith(color: onSurfaceDark),
-          ),
-          const Gap(4),
-          Text(
-            '<ContentString.enterEmail>',
-            style: paragraph2.copyWith(color: onSurfaceLight),
-          ),
-          const Gap(24),
-          Form(
-            key: controller.formKey,
-            child: BaseTextField(
-              labelText: ContentStrings.email,
-              keyboardType: TextInputType.emailAddress,
-              maxLines: 1,
-              validator: (_) => InputFieldValidator.requiredEmail(
-                controller.email,
+        body: ScreenFrame.unbounded(
+          child: Column(
+            children: [
+              Text(
+                '<ContentString.getStarted>',
+                style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.onSurface),
               ),
-              onFieldSubmitted: (value) => controller.checkUser(),
-              controller: controller.email,
-            ),
+              const Gap(4),
+              Text(
+                '<ContentString.enterEmail>',
+                style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              ),
+              const Gap(24),
+              Form(
+                key: controller.formKey,
+                child: BaseTextField(
+                  labelText: ContentStrings.email,
+                  keyboardType: TextInputType.emailAddress,
+                  maxLines: 1,
+                  validator: (_) => InputFieldValidator.requiredEmail(
+                    controller.email,
+                  ),
+                  onFieldSubmitted: (value) => controller.checkUser(),
+                  controller: controller.email,
+                ),
+              ),
+              const Gap(48),
+              AppButton(
+                text: ContentStrings.contd,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                onTap: controller.checkUser,
+              ),
+              const Gap(32),
+            ],
           ),
-          const Gap(48),
-          AppButton(
-            text: ContentStrings.contd,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            onTap: controller.checkUser,
-          ),
-          const Gap(32),
-        ],
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:args/args.dart';
 import 'package:path/path.dart' as path;
 import '../design_presets/design_preset.dart';
 import '../design_presets/design_preset_registry.dart';
+import '../generators/auth_flow_generator.dart';
 import '../generators/project_generator.dart';
 import '../utils/logger.dart';
 import '../utils/validation.dart';
@@ -48,6 +49,12 @@ ArgParser initCommandParser() {
       help: 'Skip interactive prompts and use defaults',
       defaultsTo: false,
       negatable: false,
+    )
+    ..addFlag(
+      'include-auth',
+      help: 'Generate auth feature alongside the project',
+      defaultsTo: false,
+      negatable: false,
     );
 }
 
@@ -75,6 +82,11 @@ class InitCommand extends BaseCommand {
         ? results['design-preset'] as String
         : _promptForDesignPreset();
 
+    final authExplicit = results.wasParsed('include-auth');
+    final includeAuth = (noInteractive || authExplicit)
+        ? results['include-auth'] as bool
+        : _promptForAuth();
+
     final config = ProjectConfig(
       projectName: projectName,
       organization: results['org'] as String,
@@ -84,6 +96,10 @@ class InitCommand extends BaseCommand {
     );
 
     await _generateProject(config);
+
+    if (includeAuth) {
+      await _generateAuth(projectName, projectPath);
+    }
   }
 
   void _validateProjectName(String? projectName) {
@@ -156,6 +172,35 @@ class InitCommand extends BaseCommand {
     }
   }
 
+  bool _promptForAuth() {
+    Logger.section('Auth Feature');
+    stdout.write('Generate auth feature alongside the project? (y/N): ');
+    final input = stdin.readLineSync()?.toLowerCase().trim() ?? '';
+    final result = input == 'y' || input == 'yes';
+    Logger.info(result ? 'Auth feature will be generated\n' : 'Skipping auth feature\n');
+    return result;
+  }
+
+  Future<void> _generateAuth(String projectName, String projectPath) async {
+    Logger.header('Generating Auth Feature');
+    final config = AuthFlowConfig(
+      projectName: projectName,
+      outputPath: projectPath,
+      includeLogin: true,
+      includeSignup: true,
+      includeEmailVerification: false,
+      includePhoneVerification: false,
+      includeForgotPassword: true,
+      includeOtp: true,
+      includeSocialAuth: false,
+      includeDeviceToken: false,
+      includeWelcomeScreen: true,
+      includeSplashScreen: true,
+    );
+    final generator = AuthFlowGenerator(config);
+    await generator.generate();
+  }
+
   String _promptForDesignPreset() {
     Logger.section('Design Preset');
     Logger.info('Choose a design preset:');
@@ -193,9 +238,10 @@ Usage: petracore init <project_name> [options]
   --design-preset     Design preset: default (default), vercel, airbnb, apple
   --force             Force creation even if directory exists
   --no-interactive    Skip interactive prompts (use defaults or flags)
+  --include-auth      Generate auth feature alongside the project
   --help, -h          Show this help
 
-When --theme or --design-preset are not specified, you will be prompted
+When --design-preset or --include-auth are not specified, you will be prompted
 interactively. Use flags or --no-interactive to skip prompts in scripts.
 
 Examples:
@@ -204,6 +250,7 @@ Examples:
   petracore init app_with_vercel --design-preset vercel
   petracore init test_app --force --description "A test application"
   petracore init my_app --no-interactive               # Uses defaults
+  petracore init my_app --include-auth                 # With auth feature
 ''');
   }
 }

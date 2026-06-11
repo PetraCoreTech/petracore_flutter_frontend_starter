@@ -7,7 +7,7 @@ class SuccessResponse {
 
   SuccessResponse.fromJson(Map<String, dynamic> json) {
     success = json['success'] as bool?;
-    message = json['message'] as String?;
+    message = (json['message'] as String?) ?? 'Action confirmed';
   }
 
   bool? success;

@@ -6,7 +6,6 @@ import 'dart:async';
 import 'package:${config.projectName}/core/core.dart';
 import 'package:${config.projectName}/features/auth/auth_index.dart';
 
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -18,47 +17,59 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Timer(const Duration(milliseconds: 1000), _navigate);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Timer(const Duration(milliseconds: 2200), _navigate);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldV1(
+    return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // App Logo or Brand
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: colors.primary.resolve(context),
-                borderRadius: BorderRadius.circular(16),
+        child: AnimatedSplashLogo(
+          icon: Container(
+            width: 140,
+            height: 140,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(32),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.white, Color(0xFFE3F2FD)],
+                stops: [0.0, 0.5],
               ),
-              child: const Icon(
-                Icons.flutter_dash,
-                size: 64,
-                color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.25),
+                  offset: const Offset(8, 12),
+                  blurRadius: 20,
+                  spreadRadius: -2,
+                ),
+                BoxShadow(
+                  color: Colors.white.withValues(alpha: 0.3),
+                  offset: const Offset(-4, -4),
+                  blurRadius: 12,
+                ),
+              ],
+            ),
+            child: ShaderMask(
+              shaderCallback: (bounds) => const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF1E88E5),
+                  Color(0xFF1565C0),
+                  Color(0xFF1A237E),
+                ],
+              ).createShader(bounds),
+              blendMode: BlendMode.srcIn,
+              child: const Padding(
+                padding: EdgeInsets.all(24),
+                child: Icon(Icons.flutter_dash, size: 92),
               ),
             ),
-            const Gap(24),
-            Text(
-              '${config.className}',
-              style: \$token.textStyle.heading3.resolve(context).copyWith(
-                color: colors.onSurfaceLight.resolve(context),
-              ),
-            ),
-            const Gap(8),
-            Text(
-              'Welcome to your app',
-              style: \$token.textStyle.heading4.resolve(context).copyWith(
-                color: colors.onSurfaceLight.resolve(context),
-              ),
-            ),
-          ],
+          ),
+          text: '${config.className}',
         ),
       ),
     );
