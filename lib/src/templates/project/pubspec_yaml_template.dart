@@ -56,7 +56,7 @@ dependencies:
   cupertino_icons: ^1.0.6
 
   # App UI Kit
-  app_ui_kit: ^0.0.1+3
+  app_ui_kit: ^0.0.1+4
 
 dev_dependencies:
   flutter_test:
