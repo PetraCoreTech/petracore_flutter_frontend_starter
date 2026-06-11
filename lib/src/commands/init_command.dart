@@ -9,6 +9,9 @@ import '../utils/logger.dart';
 import '../utils/validation.dart';
 import 'base_command.dart';
 
+/// Builds the [ArgParser] for the `init` command, defining options such as
+/// [org], [description], [design-preset], [force], [no-interactive], and
+/// [include-auth].
 ArgParser initCommandParser() {
   return ArgParser()
     ..addFlag(
@@ -58,6 +61,9 @@ ArgParser initCommandParser() {
     );
 }
 
+/// Command that initializes a new Flutter project with the full PetraCore
+/// architecture, including directory structure, core files, navigation,
+/// optional auth flow, and a selected [DesignPreset].
 class InitCommand extends BaseCommand {
   @override
   String get name => 'init';

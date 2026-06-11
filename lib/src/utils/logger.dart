@@ -1,22 +1,49 @@
 import 'dart:io';
 
+/// Log severity levels used to control which messages [Logger] displays.
 enum LogLevel {
+  /// Debug-level messages (highest verbosity).
   debug,
+
+  /// Verbose informational messages.
   verbose,
+
+  /// General informational messages.
   info,
+
+  /// Step/progress indicators.
   step,
+
+  /// Success confirmation messages.
   success,
+
+  /// Warning messages.
   warning,
+
+  /// Error messages.
   error,
+
+  /// Section header titles.
   header,
+
+  /// Section sub-titles.
   section,
+
+  /// List items within a section.
   item,
+
+  /// Key-value pair entries.
   keyValue,
 }
 
+/// Colored console logger with severity-based filtering and formatting.
+/// Supports structured output via [header], [section], [item], [keyValue],
+/// and progress tracking via [fileProgress].
 class Logger {
   static LogLevel _currentLogLevel = LogLevel.info;
 
+  /// Sets the minimum [LogLevel] for messages to be displayed.
+  /// Messages below this level are suppressed.
   static void setLogLevel(LogLevel level) {
     _currentLogLevel = level;
   }
@@ -88,12 +115,19 @@ class Logger {
     }
   }
 
+  /// Logs an informational [message].
   static void info(String message) => _log(LogLevel.info, message);
+  /// Logs a success confirmation [message].
   static void success(String message) => _log(LogLevel.success, message);
+  /// Logs a warning [message].
   static void warning(String message) => _log(LogLevel.warning, message);
+  /// Logs an error [message] to stderr.
   static void error(String message) => _log(LogLevel.error, message);
+  /// Logs a verbose informational [message] (gray, lower priority).
   static void verbose(String message) => _log(LogLevel.verbose, message);
+  /// Logs a debug-level [message] (blue, highest verbosity).
   static void debug(String message) => _log(LogLevel.debug, message);
+  /// Logs a step/progress indicator [message] (cyan, arrow-prefixed).
   static void step(String message) => _log(LogLevel.step, message);
 
   /// Clean header with a diamond and subtle underline
@@ -109,6 +143,7 @@ class Logger {
     stdout.writeln();
   }
 
+  /// Writes a blank line to stdout.
   static void spacer() => stdout.writeln();
 
   /// Section title with subtle dot prefix
@@ -133,30 +168,37 @@ class Logger {
     stdout.writeln('$white  $key:$reset $cyan$value$reset');
   }
 
-  /// Track and display file generation progress as a compact summary.
-  /// Call [start] before generating, then [tick] for each file, then [done].
-  static FileProgress fileProgress(String label) => FileProgress(label);
+/// Track and display file generation progress as a compact summary.
+/// Call [start] before generating, then [tick] for each file, then [done].
+static FileProgress fileProgress(String label) => FileProgress(label);
 }
 
+/// Tracks and displays file generation progress as a compact single-line
+/// progress indicator.
 class FileProgress {
   final String label;
   int _total = 0;
   int _done = 0;
   int _lastOutputLength = 0;
 
+  /// Creates a progress tracker with the given [label].
   FileProgress(this.label);
 
+  /// Starts tracking progress for [total] items and renders the initial line.
   void start(int total) {
     _total = total;
     _done = 0;
     _print();
   }
 
+  /// Advances progress by one item and re-renders the line.
   void tick() {
     _done++;
     _print();
   }
 
+  /// Marks all items as done and writes the final summary line with a
+  /// checkmark.
   void done() {
     _done = _total;
     // Clear the progress line

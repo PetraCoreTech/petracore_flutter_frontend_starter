@@ -1,6 +1,11 @@
 import '../generators/auth_flow_generator.dart';
 
+/// Validates [AuthFlowConfig] for consistency and completeness before
+/// code generation.
 class AuthValidation {
+  /// Validates [config] to ensure at least one core auth capability is enabled
+  /// and that dependent capabilities have their prerequisites satisfied.
+  /// Throws [ArgumentError] on invalid configurations.
   static void validateConfig(AuthFlowConfig config) {
     final hasCoreAuthFeature = config.includeLogin ||
         config.includeSignup ||

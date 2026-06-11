@@ -1,5 +1,7 @@
 import '../design_preset.dart';
 
+/// Vercel-inspired [DesignPreset] — monochrome precision with restrained
+/// accent usage, tight radii (2/4/6), and Inter typography.
 const DesignPreset vercelPreset = DesignPreset(
   id: DesignPresetId.vercel,
   displayName: 'Vercel-inspired',

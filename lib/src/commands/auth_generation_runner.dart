@@ -6,7 +6,17 @@ import '../generators/auth_flow_generator.dart';
 import '../utils/auth_validation.dart';
 import '../utils/logger.dart';
 
+/// Options that control the behavior of [AuthGenerationRunner.run].
+///
+/// Specifies the output directory, whether to use interactive prompts, and
+/// which authentication features to include.
 class AuthGenerationOptions {
+  /// Creates an [AuthGenerationOptions] instance.
+  ///
+  /// By default, [includeLogin] and [includeSignup] are `true`;
+  /// [includeEmailVerification], [includePhoneVerification],
+  /// [includeForgotPassword], [includeOtp], [includeSocialAuth], and
+  /// [includeDeviceToken] are `false`; [runPostGenerationActions] is `true`.
   AuthGenerationOptions({
     required this.outputDir,
     required this.interactive,
@@ -21,22 +31,51 @@ class AuthGenerationOptions {
     this.runPostGenerationActions = true,
   });
 
+  /// The target output directory for auth file generation.
   final String outputDir;
+
+  /// Whether to use interactive prompts to configure auth features.
   final bool interactive;
+
+  /// Whether to include login functionality.
   final bool includeLogin;
+
+  /// Whether to include signup functionality.
   final bool includeSignup;
+
+  /// Whether to include email verification.
   final bool includeEmailVerification;
+
+  /// Whether to include phone verification.
   final bool includePhoneVerification;
+
+  /// Whether to include forgot password flow.
   final bool includeForgotPassword;
+
+  /// Whether to include OTP (One-Time Password) functionality.
   final bool includeOtp;
+
+  /// Whether to include social authentication placeholders.
   final bool includeSocialAuth;
+
+  /// Whether to include device token support for push notifications.
   final bool includeDeviceToken;
+
+  /// Whether to run post-generation actions (e.g. updating shared providers).
   final bool runPostGenerationActions;
 
+  /// Resolves [outputDir] to a normalized absolute path.
   String get resolvedOutputDir => path.normalize(path.absolute(outputDir));
 }
 
+/// Runner that orchestrates auth feature generation from programmatic
+/// [AuthGenerationOptions], performing validation, interactive prompting
+/// (if enabled), and file generation via [AuthFlowGenerator].
 class AuthGenerationRunner {
+  /// Runs the auth generation flow using the provided [options].
+  ///
+  /// Validates options, checks for existing auth features, optionally
+  /// prompts the user interactively, and delegates to [AuthFlowGenerator].
   static Future<void> run(AuthGenerationOptions options) async {
     _validateOptions(options);
     final outputDir = options.resolvedOutputDir;

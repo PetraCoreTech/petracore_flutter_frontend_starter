@@ -1,5 +1,7 @@
 import '../design_preset.dart';
 
+/// Apple-inspired [DesignPreset] — premium whitespace, neutral palette,
+/// precise radii (6/10/14), subdued chrome, and SF Pro Display typography.
 const DesignPreset applePreset = DesignPreset(
   id: DesignPresetId.apple,
   displayName: 'Apple-inspired',

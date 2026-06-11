@@ -4,6 +4,8 @@ import 'presets/apple_preset.dart';
 import 'presets/default_preset.dart';
 import 'presets/vercel_preset.dart';
 
+/// Registry of all available [DesignPreset]s, providing lookup by
+/// [DesignPresetId] and access to the full list.
 class DesignPresetRegistry {
   static const Map<DesignPresetId, DesignPreset> _presets = {
     DesignPresetId.defaultPreset: defaultPreset,
@@ -12,8 +14,12 @@ class DesignPresetRegistry {
     DesignPresetId.apple: applePreset,
   };
 
+  /// Returns a list of every registered [DesignPreset].
   static List<DesignPreset> get all => _presets.values.toList();
 
+  /// Looks up and returns the [DesignPreset] for the given [id].
+  ///
+  /// Throws [ArgumentError] if [id] is not registered.
   static DesignPreset resolve(DesignPresetId id) {
     final preset = _presets[id];
     if (preset == null) {
@@ -22,5 +28,6 @@ class DesignPresetRegistry {
     return preset;
   }
 
+  /// Returns the default [DesignPreset] (the `defaultPreset` entry).
   static DesignPreset get defaultPresetConfig => resolve(DesignPresetId.defaultPreset);
 }

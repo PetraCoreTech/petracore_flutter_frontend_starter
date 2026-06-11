@@ -5,7 +5,11 @@ import 'package:yaml/yaml.dart';
 
 import '../generators/project_generator.dart';
 
+/// Resolves a [ProjectConfig] from a Flutter project root directory by
+/// parsing `pubspec.yaml` and detecting the Android application ID.
 class ProjectContextResolver {
+  /// Builds a [ProjectConfig] from the project at [rootPath].
+  /// Throws [StateError] if `pubspec.yaml` is missing or has no `name` field.
   static Future<ProjectConfig> fromProjectRoot(String rootPath) async {
     final normalized = path.normalize(path.absolute(rootPath));
 

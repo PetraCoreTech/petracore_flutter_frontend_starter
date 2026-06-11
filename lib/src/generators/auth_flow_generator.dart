@@ -7,27 +7,56 @@ import '../templates/auth/auth_templates.dart';
 import '../utils/auth_validation.dart';
 import '../utils/generated_region_writer.dart';
 
+/// Configuration for generating a complete authentication flow within a
+/// PetraCore Flutter project, controlling which auth features, onboarding
+/// screens, and additional options are included.
 class AuthFlowConfig {
+  /// The name of the project being generated into.
   final String projectName;
+
+  /// The absolute path to the project root where auth files will be created.
   final String outputPath;
 
-  // Auth features to generate
+  /// Whether to include login functionality.
   final bool includeLogin;
+
+  /// Whether to include signup functionality.
   final bool includeSignup;
+
+  /// Whether to include email verification flow.
   final bool includeEmailVerification;
+
+  /// Whether to include phone verification flow.
   final bool includePhoneVerification;
+
+  /// Whether to include forgot password flow.
   final bool includeForgotPassword;
+
+  /// Whether to include OTP (One-Time Password) functionality.
   final bool includeOtp;
 
-  // Onboarding screens
+  /// Whether to include a splash screen.
   final bool includeSplashScreen;
+
+  /// Whether to include a welcome / onboarding screen.
   final bool includeWelcomeScreen;
 
-  // Additional options
+  /// Whether to include social authentication placeholders.
   final bool includeSocialAuth;
+
+  /// Whether to include device token support for push notifications.
   final bool includeDeviceToken;
+
+  /// Whether to run post-generation actions (e.g. updating shared providers,
+  /// router, and route constants).
   final bool runPostGenerationActions;
 
+  /// Creates an [AuthFlowConfig].
+  ///
+  /// By default [includeLogin], [includeSignup], [includeForgotPassword],
+  /// [includeOtp], [includeSplashScreen], [includeWelcomeScreen], and
+  /// [includeDeviceToken] are `true`. [includeEmailVerification],
+  /// [includePhoneVerification], and [includeSocialAuth] are `false`.
   AuthFlowConfig({
     required this.projectName,
     required this.outputPath,
@@ -44,11 +73,14 @@ class AuthFlowConfig {
     this.runPostGenerationActions = true,
   });
 
+  /// [projectName] converted to a simple PascalCase by splitting on `_`
+  /// and capitalizing each word.
   String get className => projectName
       .split('_')
       .map((word) => word[0].toUpperCase() + word.substring(1))
       .join();
 
+  /// Creates a copy of this [AuthFlowConfig] with the given fields replaced.
   AuthFlowConfig copyWith({
     String? projectName,
     String? outputPath,
@@ -86,13 +118,29 @@ class AuthFlowConfig {
   }
 }
 
+/// Generates a complete authentication flow within a PetraCore Flutter
+/// project, including models, DTOs, repository layer, use cases, BLoC/Cubit
+/// state management, screens, controllers, onboarding screens, and router
+/// wiring.
 class AuthFlowGenerator {
+  /// The configuration driving auth flow generation.
   final AuthFlowConfig config;
+
+  /// The templates instance used to render auth source files.
   late final AuthTemplates templates;
+
+  /// The resolved project config, initialized during [generate].
   late final ProjectConfig projectConfig;
 
+  /// Creates an [AuthFlowGenerator] with the given [config].
   AuthFlowGenerator(this.config);
 
+  /// Executes the full auth flow generation pipeline.
+  ///
+  /// Validates the config, creates directory structure, writes all auth
+  /// source files (models, DTOs, repository, use cases, BLoC, screens,
+  /// controllers, onboarding, index files), and updates the shared
+  /// [BlocProvider], router, and route constants in the project.
   Future<void> generate() async {
     AuthValidation.validateConfig(config);
     Directory.current = config.outputPath;

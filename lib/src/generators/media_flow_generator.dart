@@ -5,13 +5,29 @@ import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_st
 import 'package:petracore_flutter_frontend_starter/src/templates/media/media_templates.dart';
 import 'package:petracore_flutter_frontend_starter/src/utils/generated_region_writer.dart';
 
+/// Generates a complete media feature within a PetraCore Flutter project,
+/// including Cloudinary-backed upload/download, image picker integration,
+/// media display widgets, upload/download BLoCs with progress, file
+/// size/type extensions, and all required dependencies.
 class MediaFlowGenerator {
+  /// Creates a [MediaFlowGenerator] with the given [config].
   MediaFlowGenerator(this.config);
 
+  /// The configuration driving media feature generation.
   final MediaConfig config;
+
+  /// The resolved project config, initialized during [generate].
   late final ProjectConfig projectConfig;
+
+  /// The templates instance used to render media source files.
   late final MediaTemplates templates;
 
+  /// Executes the full media feature generation pipeline.
+  ///
+  /// Creates directory structure, generates enums, extensions, parsers,
+  /// models, DTOs, params, Cloudinary service, repositories, use cases,
+  /// presentation entities, BLoCs, widgets, helpers, index files, and
+  /// updates the shared BlocProvider and pubspec dependencies.
   Future<void> generate() async {
     projectConfig = await ProjectConfigReader.readOrDefault(
       projectName: config.projectName,
@@ -440,10 +456,16 @@ class MediaFlowGenerator {
 
 }
 
+/// Configuration for generating a media feature, specifying the target
+/// project name and output root directory.
 class MediaConfig {
+  /// The name of the project being generated into.
   final String projectName;
+
+  /// The absolute path to the project root where files will be created.
   final String outputPath;
 
+  /// Creates a [MediaConfig] with the given [projectName] and [outputPath].
   MediaConfig({
     required this.projectName,
     required this.outputPath,

@@ -1,5 +1,7 @@
 import '../design_preset.dart';
 
+/// The default [DesignPreset] — balanced, clean, and modern with a
+/// PetraCore-branded green primary palette and Times New Roman typography.
 const DesignPreset defaultPreset = DesignPreset(
   id: DesignPresetId.defaultPreset,
   displayName: 'Default PetraCore',

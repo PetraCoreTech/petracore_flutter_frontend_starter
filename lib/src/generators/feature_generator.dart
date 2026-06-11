@@ -6,11 +6,22 @@ import 'package:petracore_flutter_frontend_starter/src/templates/feature_templat
 import 'package:petracore_flutter_frontend_starter/src/utils/generated_region_writer.dart';
 import 'package:recase/recase.dart';
 
+/// Configuration for the data layer of a generated feature, specifying
+/// the entity, service, and repository naming.
 class DataLayerConfig {
+  /// The entity name in snake_case (e.g. `user_profile`).
   final String entityName;
+
+  /// The service file name (e.g. `user_profile_service`).
   final String serviceName;
+
+  /// The repository file name (e.g. `user_profile_repository`).
   final String repositoryName;
 
+  /// Creates a [DataLayerConfig].
+  ///
+  /// If [serviceName] is omitted it defaults to `'${entityName}_service'`;
+  /// if [repositoryName] is omitted it defaults to `'${entityName}_repository'`.
   DataLayerConfig({
     required this.entityName,
     String? serviceName,
@@ -18,23 +29,56 @@ class DataLayerConfig {
   })  : serviceName = serviceName ?? '${entityName}_service',
         repositoryName = repositoryName ?? '${entityName}_repository';
 
+  /// [entityName] converted to PascalCase (e.g. `UserProfile`).
   String get pascalEntity => ReCase(entityName).pascalCase;
+
+  /// [entityName] converted to camelCase (e.g. `userProfile`).
   String get camelEntity => ReCase(entityName).camelCase;
+
+  /// [entityName] in snake_case (identity, e.g. `user_profile`).
   String get snakeEntity => ReCase(entityName).snakeCase;
 }
 
+/// Configuration for generating a new feature module within a PetraCore
+/// project, controlling which layers (BLoC, repository, use cases, models)
+/// and optional extras (list screen) are included.
 class FeatureConfig {
+  /// The feature name in snake_case (e.g. `user_profile`).
   final String featureName;
+
+  /// The absolute path to the project root.
   final String projectRoot;
+
+  /// The absolute path to the feature's root directory inside the project.
   final String featureRoot;
+
+  /// Whether to generate BLoC/Cubit state management.
   final bool includeBloc;
+
+  /// Whether to generate the repository layer.
   final bool includeRepository;
+
+  /// Whether to generate use cases.
   final bool includeUseCases;
+
+  /// Whether to generate data models with JSON serialization.
   final bool includeModels;
+
+  /// Whether to generate an additional list screen.
   final bool includeList;
+
+  /// The parent [ProjectConfig] for the project being generated into.
   final ProjectConfig projectConfig;
+
+  /// Optional custom data-layer naming configuration.
   final DataLayerConfig? dataLayerConfig;
 
+  /// Creates a [FeatureConfig].
+  ///
+  /// [includeBloc], [includeRepository], [includeUseCases], and
+  /// [includeModels] default to `true`; [includeList] defaults to `false`.
+  ///
+  /// Throws an [AssertionError] if [featureRoot] is not within [projectRoot].
   FeatureConfig({
     required this.featureName,
     required this.projectRoot,
@@ -51,8 +95,13 @@ class FeatureConfig {
           'featureRoot must be inside projectRoot',
         );
 
+  /// [featureName] converted to PascalCase (e.g. `UserProfile`).
   String get className => ReCase(featureName).pascalCase;
+
+  /// [featureName] converted to camelCase (e.g. `userProfile`).
   String get camelCase => ReCase(featureName).camelCase;
+
+  /// [featureName] in PascalCase (alias for [className]).
   String get pascalCase => ReCase(featureName).pascalCase;
 
   /// The import path relative to project root, e.g. "features/profile" or "modules/profile"
@@ -61,19 +110,40 @@ class FeatureConfig {
     return relativePath;
   }
 
+  /// The entity name, from [DataLayerConfig.entityName] or falling back to [featureName].
   String get entityName => dataLayerConfig?.entityName ?? featureName;
+
+  /// The entity name in PascalCase from the data layer, or [pascalCase].
   String get pascalEntity => dataLayerConfig?.pascalEntity ?? pascalCase;
+
+  /// The entity name in camelCase from the data layer, or [camelCase].
   String get camelEntity => dataLayerConfig?.camelEntity ?? camelCase;
+
+  /// The service name from the data layer, or `'${featureName}_service'`.
   String get serviceName => dataLayerConfig?.serviceName ?? '${featureName}_service';
+
+  /// The repository name from the data layer, or `'${featureName}_repository'`.
   String get repositoryName => dataLayerConfig?.repositoryName ?? '${featureName}_repository';
 }
 
+/// Generates a new feature module within a PetraCore Flutter project,
+/// creating directories, repository layer, use cases, BLoC/Cubit, data
+/// models, presentation layer, and wiring routes into the project router.
 class FeatureGenerator {
-  FeatureGenerator(this.config) : templates = FeatureTemplates(config);
+  /// The configuration driving feature generation.
   final FeatureConfig config;
 
+  /// The templates instance used to render feature source files.
   final FeatureTemplates templates;
 
+  /// Creates a [FeatureGenerator] with the given [config].
+  FeatureGenerator(this.config) : templates = FeatureTemplates(config);
+
+  /// Executes the full feature generation pipeline.
+  ///
+  /// Creates directory structure, writes all source files (index, repository,
+  /// use cases, BLoC, models, presentation), updates the shared
+  /// [BlocProvider], and registers feature routes in the project router.
   Future<void> generate() async {
     Logger.step('Creating feature directory structure...');
     await _createFeatureDirectories();

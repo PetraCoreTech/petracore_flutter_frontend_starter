@@ -19,6 +19,9 @@ import '../utils/project_config_reader.dart';
 import '../utils/validation.dart';
 import 'base_command.dart';
 
+/// Builds the [ArgParser] for the `feature` command, defining options for
+/// BLoC, repository, use cases, models, list screen, entity/service/repo
+/// naming, output directory, and non-interactive mode.
 ArgParser featureCommandParser() {
   return ArgParser()
     ..addFlag(
@@ -83,6 +86,8 @@ ArgParser featureCommandParser() {
     );
 }
 
+/// Builds the [ArgParser] for the top-level `generate` command, which
+/// delegates to the `feature` subcommand via [featureCommandParser].
 ArgParser generateCommandParser() {
     final parser = ArgParser()
       ..addFlag(
@@ -102,21 +107,33 @@ ArgParser generateCommandParser() {
   return parser;
 }
 
+/// Configuration for generating a pagination feature, specifying the
+/// target project name and output root directory.
 class PaginationConfig {
+  /// The name of the project being generated into.
   final String projectName;
+
+  /// The absolute path to the project root where files will be created.
   final String outputPath;
 
+  /// Creates a [PaginationConfig] with the given [projectName] and [outputPath].
   PaginationConfig({
     required this.projectName,
     required this.outputPath,
   });
 }
 
+/// Generates a reusable pagination feature inside an existing Flutter
+/// project, including BLoC (event/state/bloc), a list view, and a list
+/// builder widget.
 class PaginationFeatureGenerator {
+  /// The configuration driving this generation.
   final PaginationConfig config;
 
+  /// Creates a [PaginationFeatureGenerator] with the given [config].
   PaginationFeatureGenerator(this.config);
 
+  /// Generates the full pagination feature directory tree and all source files.
   Future<void> generate() async {
     await _createPaginationDirectories();
     await _generatePaginationFiles();
@@ -177,6 +194,11 @@ class PaginationFeatureGenerator {
   }
 }
 
+/// Command that generates a new feature module with clean architecture.
+///
+/// Supports special keyword detection: generating `auth` triggers the full
+/// auth flow, `media` triggers the complete media feature, and `pagination`
+/// generates a reusable pagination feature.
 class FeatureCommand extends BaseCommand {
   @override
   String get name => 'feature';

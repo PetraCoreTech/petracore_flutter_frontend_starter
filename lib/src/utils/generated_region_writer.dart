@@ -2,7 +2,12 @@ import 'dart:io';
 
 import 'logger.dart';
 
+/// Manages `// petracore:start:` / `// petracore:end:` marker regions in
+/// generated files, allowing safe re-generation of specific sections.
 class GeneratedRegionWriter {
+  /// Replaces the content between `// petracore:start:[regionName]` and
+  /// `// petracore:end:[regionName]` markers in [filePath] with [newContent].
+  /// Throws [StateError] if the file or markers are not found.
   static Future<void> replaceRegion({
     required String filePath,
     required String regionName,
@@ -44,6 +49,8 @@ class GeneratedRegionWriter {
     Logger.verbose('Updated region `$regionName` in $filePath');
   }
 
+  /// Returns `true` if both `start` and `end` markers for [regionName] exist
+  /// in [filePath].
   static Future<bool> regionExists({
     required String filePath,
     required String regionName,
@@ -56,6 +63,9 @@ class GeneratedRegionWriter {
         content.contains('// petracore:end:$regionName');
   }
 
+  /// Ensures a managed region exists in [filePath]. Creates the file with
+  /// markers and [defaultContent] if missing, or migrates an old-style marker
+  /// if found.
   static Future<void> ensureRegion({
     required String filePath,
     required String regionName,

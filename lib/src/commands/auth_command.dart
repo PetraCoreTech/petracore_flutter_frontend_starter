@@ -8,6 +8,10 @@ import '../utils/auth_validation.dart';
 import '../utils/logger.dart';
 import 'base_command.dart';
 
+/// Builds the [ArgParser] for the `auth` command, defining flags for all
+/// authentication features (login, signup, email verification, forgot
+/// password, OTP, social auth, device token, welcome, splash) and options
+/// for interactive mode and output directory.
 ArgParser authCommandParser() {
   return ArgParser()
     ..addFlag(
@@ -85,6 +89,9 @@ ArgParser authCommandParser() {
     );
 }
 
+/// Command that generates a complete authentication flow with clean
+/// architecture, including login/signup screens, BLoC state management,
+/// repository layer, DTOs, and optional features like OTP or social auth.
 class AuthCommand extends BaseCommand {
   @override
   String get name => 'auth';

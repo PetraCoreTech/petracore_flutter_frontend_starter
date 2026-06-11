@@ -1,8 +1,14 @@
 import 'dart:io';
 import 'logger.dart';
 
+/// Utilities for running shell and Flutter CLI commands.
 class CommandUtils {
-  /// Executes a shell command and returns the result
+  /// Executes a shell [command] with the given [arguments] and returns the
+  /// [ProcessResult].
+  ///
+  /// [workingDirectory]: optional working directory for the process.
+  /// [showOutput]: when `true`, stdout is printed to the console.
+  /// [throwOnError]: when `true`, throws [ProcessException] on non-zero exit.
   static Future<ProcessResult> runCommand(
     String command,
     List<String> arguments, {
@@ -45,7 +51,7 @@ class CommandUtils {
     return result;
   }
 
-  /// Checks if a command is available in the system PATH
+  /// Returns `true` if [command] is available on the system PATH.
   static Future<bool> isCommandAvailable(String command) async {
     try {
       final result = await Process.run(
@@ -58,7 +64,11 @@ class CommandUtils {
     }
   }
 
-  /// Runs flutter command with the given arguments
+  /// Runs `flutter` with the given [arguments]. Delegates to [runCommand].
+  ///
+  /// [workingDirectory]: optional working directory for the process.
+  /// [showOutput]: when `true`, stdout is printed to the console.
+  /// [throwOnError]: when `true`, throws [ProcessException] on non-zero exit.
   static Future<ProcessResult> runFlutterCommand(
     List<String> arguments, {
     String? workingDirectory,

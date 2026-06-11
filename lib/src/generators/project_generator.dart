@@ -16,13 +16,26 @@ import 'package:petracore_flutter_frontend_starter/src/utils/file_utils.dart';
 import 'package:petracore_flutter_frontend_starter/src/utils/logger.dart';
 import 'package:recase/recase.dart';
 
+/// Configuration for generating a new PetraCore Flutter project.
 class ProjectConfig {
+  /// The user-provided project name (e.g. `my_awesome_app`).
   final String projectName;
+
+  /// The organization identifier (e.g. `com.example`).
   final String organization;
+
+  /// A short description of the project.
   final String description;
+
+  /// The absolute filesystem path where the project will be created.
   final String projectPath;
+
+  /// The [DesignPresetId] to apply to the generated project.
   final DesignPresetId designPreset;
 
+  /// Creates a [ProjectConfig] with the given project settings.
+  ///
+  /// Defaults [designPreset] to [DesignPresetId.defaultPreset].
   ProjectConfig({
     required this.projectName,
     required this.organization,
@@ -31,19 +44,35 @@ class ProjectConfig {
     this.designPreset = DesignPresetId.defaultPreset,
   });
 
+  /// The project name converted to PascalCase (e.g. `MyAwesomeApp`).
   String get className => ReCase(projectName).pascalCase;
+
+  /// The project name sanitized to a valid Dart package name (lowercase, underscores).
   String get packageName => projectName.toLowerCase().replaceAll('-', '_');
 
+  /// Resolves [designPreset] to its full [DesignPreset] via [DesignPresetRegistry].
   DesignPreset get resolvedDesignPreset =>
       DesignPresetRegistry.resolve(designPreset);
 }
 
+/// Generates an entire PetraCore Flutter project from a [ProjectConfig],
+/// including running `flutter create`, setting up directories, core files,
+/// navigation, the main app feature, and a pagination feature.
 class ProjectGenerator {
+  /// The configuration driving project generation.
   final ProjectConfig config;
+
+  /// The templates instance used to render project files.
   final ProjectTemplates templates;
 
+  /// Creates a [ProjectGenerator] with the given [config].
   ProjectGenerator(this.config) : templates = ProjectTemplates(config);
 
+  /// Executes the full project generation pipeline.
+  ///
+  /// Checks Flutter availability, runs `flutter create`, configures Android
+  /// NDK, creates the PetraCore directory structure, and generates all
+  /// project, core, navigation, app, main-app, and pagination files.
   Future<void> generate() async {
     Logger.step('Checking Flutter installation...');
     await _checkFlutterInstallation();

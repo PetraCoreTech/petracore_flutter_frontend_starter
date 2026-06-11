@@ -1,5 +1,7 @@
 import '../design_preset.dart';
 
+/// Airbnb-inspired [DesignPreset] — warm accent palette (`#FF385C`),
+/// friendlier radii (8/12/16), softer surfaces, and Circular typography.
 const DesignPreset airbnbPreset = DesignPreset(
   id: DesignPresetId.airbnb,
   displayName: 'Airbnb-inspired',

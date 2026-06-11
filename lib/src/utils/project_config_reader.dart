@@ -8,7 +8,12 @@ import '../design_presets/design_preset.dart';
 import '../generators/project_generator.dart';
 import 'logger.dart';
 
+/// Reads [ProjectConfig] from an existing Flutter project directory by
+/// parsing `pubspec.yaml` and detecting the organization and design preset.
 class ProjectConfigReader {
+  /// Reads the project configuration from the directory at [rootPath].
+  /// Returns `null` if `pubspec.yaml` is missing or the project name cannot be
+  /// determined.
   static Future<ProjectConfig?> readFromDirectory(String rootPath) async {
     try {
       final normalized = path.normalize(path.absolute(rootPath));
@@ -72,6 +77,8 @@ class ProjectConfigReader {
     return 'com.petracore';
   }
 
+  /// Creates a [ProjectConfig] with default values. If [projectName] or
+  /// [projectPath] are omitted, sensible defaults are used.
   static ProjectConfig createDefaultConfig({
     String? projectName,
     String? projectPath,
@@ -109,6 +116,8 @@ class ProjectConfigReader {
     return DesignPresetId.defaultPreset;
   }
 
+  /// Tries to read the project config from [projectPath]; falls back to
+  /// [createDefaultConfig] if reading fails.
   static Future<ProjectConfig> readOrDefault({
     String? projectName,
     String? projectPath,
