@@ -95,6 +95,7 @@ class AuthFlowGenerator {
 
   Future<void> generate() async {
     AuthValidation.validateConfig(config);
+    Directory.current = config.outputPath;
     projectConfig = await ProjectConfigReader.readOrDefault(
       projectName: config.projectName,
       projectPath: config.outputPath,

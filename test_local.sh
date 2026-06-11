@@ -51,7 +51,7 @@ test_init() {
     echo -e "${GREEN}=================================${NC}"
     
     # --verbose before the subcommand (global flag)
-    run_cli --verbose init test_app --force --no-interactive --design-preset apple
+    run_cli --verbose init test_app --force --no-interactive --design-preset apple --include-auth
     
     if [ -d "test_app" ]; then
         echo -e "${GREEN}✅ Project initialization: PASSED${NC}"
@@ -83,26 +83,45 @@ test_init() {
         exit 1
     fi
     
-    # Verify AppEntryScreen is the initial route (not SplashScreen)
-    if grep -q "AppRoutes.entry.path" lib/navigation/router.dart && grep -q "AppEntryScreen" lib/navigation/router.dart; then
-        echo -e "${GREEN}✅ Router uses AppEntryScreen as entry point${NC}"
+    # Verify SplashScreen is the initial route
+    if grep -q "SplashScreen" lib/navigation/router.dart; then
+        echo -e "${GREEN}✅ Router uses SplashScreen as entry point${NC}"
     else
-        echo -e "${RED}❌ Router missing AppEntryScreen entry point${NC}"
+        echo -e "${RED}❌ Router missing SplashScreen entry point${NC}"
         exit 1
     fi
     
-    # Verify AppEntryScreen file exists
-    if [ -f "lib/features/main_app/presentation/screens/app_entry_screen.dart" ]; then
-        echo -e "${GREEN}✅ AppEntryScreen file generated${NC}"
+    # Verify auth feature was generated alongside
+    if [ -f "lib/features/auth/presentation/screens/onboarding/splash_screen.dart" ] && \
+       [ -f "lib/features/auth/presentation/screens/login/login_screen.dart" ] && \
+       [ -f "lib/features/auth/presentation/screens/signup/signup_screen.dart" ] && \
+       [ -f "lib/features/auth/presentation/widgets/animated_splash_logo.dart" ]; then
+        echo -e "${GREEN}✅ Auth feature generated alongside project${NC}"
     else
-        echo -e "${RED}❌ AppEntryScreen file missing${NC}"
+        echo -e "${RED}❌ Auth feature missing from generated project${NC}"
+        exit 1
+    fi
+    
+    # Verify auth routes file exists
+    if [ -f "lib/navigation/routes/auth_routes.dart" ]; then
+        echo -e "${GREEN}✅ Auth routes file generated${NC}"
+    else
+        echo -e "${RED}❌ Auth routes file missing${NC}"
+        exit 1
+    fi
+    
+    # Verify auth route was registered in the managed region
+    if grep -q "...authRoutes," lib/navigation/router.dart; then
+        echo -e "${GREEN}✅ Auth routes registered in managed region${NC}"
+    else
+        echo -e "${RED}❌ Auth routes not registered in managed region${NC}"
         exit 1
     fi
     
     # Verify petracore.config.json exists with correct preset
     if [ -f "petracore.config.json" ]; then
         echo -e "${GREEN}✅ petracore.config.json generated${NC}"
-        if grep -q '"designPreset": "default"' petracore.config.json && grep -q '"themeType": "mix"' petracore.config.json; then
+        if grep -q '"designPreset": "apple"' petracore.config.json && grep -q '"themeType": "material"' petracore.config.json; then
             echo -e "${GREEN}✅ petracore.config.json has correct preset and theme${NC}"
         else
             echo -e "${RED}❌ petracore.config.json missing expected values${NC}"
@@ -229,7 +248,7 @@ test_auth_flow_output() {
     # Verify route constants were added
     if grep -q "static const login" lib/navigation/routes.dart && \
        grep -q "static const signup" lib/navigation/routes.dart && \
-       grep -q "static const otp" lib/navigation/routes.dart; then
+       grep -q "static const verifyOtp" lib/navigation/routes.dart; then
         echo -e "${GREEN}✅ Auth route constants registered${NC}"
     else
         echo -e "${RED}❌ Auth route constants missing${NC}"

@@ -14,7 +14,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ScaffoldV1(
+    return AppScaffold(
       body: SafeArea(
         child: Center(
           child: Column(

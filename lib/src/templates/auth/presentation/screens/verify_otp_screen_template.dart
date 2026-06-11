@@ -95,7 +95,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
             ),
             const Gap(16),
             ResendCodeDisplay(
-              title: 'Didn\'t get a code? ',
+              title: 'Didn\\'t get a code? ',
               target: email,
               count: controller.count,
             ),
