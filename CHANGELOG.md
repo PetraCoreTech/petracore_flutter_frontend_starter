@@ -5,23 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.8] - 2026-05-14
+## [1.0.9] - 2026-06-11
 
 ### Added
-- 🗺️ **Nested Auth Routes**: Auth routes now follow a nested hierarchy in `auth_routes.dart`:
-  - `WelcomeScreen` is the parent route
-  - `LoginScreen` (with `ForgotPasswordScreen`, `ForgotPasswordVerifyScreen`, `ResetPasswordScreen` as children)
-  - `SignupScreen` and `VerifyOtpScreen` as sibling children of `WelcomeScreen`
-  - Switched from flat `addRoute()` helper to explicit nested generation — respects GoRouter's path scoping and shared UI patterns
-- 🔗 **Login Screen "Forgot Password?" Navigation**: "Forgot Password?" hyperlink on the login screen now navigates to `AppRoutes.forgotPassword` via `context.goNamed()` — was previously a no-op
+- 🏗️ **`--include-auth` Init Flag**: `petracore init` now accepts `--include-auth` to generate the full auth feature alongside the project in one step. Prompts interactively if not specified. Replaces the need for a separate `petracore auth` run
+- 🎨 **`--design-preset` Init Flag**: Replaces the old `--theme` flag. Choose from `default`, `vercel`, `airbnb`, or `apple` design presets (all backed by `app_ui_kit`)
+- 🧩 **`app_ui_kit` Theming**: All theme and component generation removed locally — everything comes from the `app_ui_kit: ^0.0.1` package (`AppScaffold`, `AppUiKit.themes`, etc.)
 
 ### Fixed
-- 🐛 **Route Name Typo**: Material forgot-password-verify screen now references `AppRoutes.forgotPasswordVerify` (was incorrectly using `AppRoutes.fpVerify`)
-- ✅ **Email Validation Logic**: `InputFieldValidator` email check no longer uses incorrect negation (`!input.isEmail()` → `input.isEmail()`) — invalid emails are now properly rejected
-- 📍 **ToastHelper Offset**: Changed toast position offset from `-8` to `8` for correct on-screen display
+- 🐛 **AnimatedSplashLogo Widget**: `AnimatedSplashLogo` is now correctly written to disk when splash screen is included (was previously never wired into generation)
+- 🔁 **Route Constant Duplication**: `_updateAppRoutes()` in `auth_flow_generator.dart` now parses existing region content and skips constants that already exist — safe to rerun
+- 📁 **Auth Generation Path Bug**: `AuthFlowGenerator.generate()` sets `Directory.current = config.outputPath` so relative paths resolve correctly when called from `init`
+- 🐍 **Escaped Quotes in Templates**: Fixed `Didn\'t` → `Didn\\'t` in `verify_otp_screen_template.dart` and `forgot_password_verify_screen_template.dart` so generated files contain valid Dart
+- 🧱 **`ScaffoldV1` → `AppScaffold`**: All templates now use `AppScaffold` from `app_ui_kit` (replaces the non-existent `ScaffoldV1`)
+- 🔍 **OTP Test Grep**: `test_local.sh` now greps for `static const verifyOtp` instead of `static const otp`
 
 ### Changed
-- 🔑 **Env JSON Key Convention**: Template keys standardized from `snake_case` to `UPPER_CASE` (`API_BASE_URL`, `APP_NAME`, `API_TIMEOUT`, `ENABLE_LOGGING`)
+- ♻️ **Screen Template Consolidation**: Moved 9 material screen templates from subdirectories to a flat `screens/` directory. Functions renamed to drop `material_` prefix. Old non-material (mix) templates deleted. Empty material subdirectories removed
+- ♻️ **Theme Generation Removed**: Deleted `material_theme_template.dart`, `material_theme_barrel_template.dart`, theme directories, and all theme file generation. All theming delegated to `app_ui_kit`
+- 🗑️ **Dead Template Files Removed**: Deleted unused `app_entry_screen_template.dart` and `dashboard_screen_template.dart` (non-material versions, never referenced) and their stale exports
+- 📋 **test_local.sh Updated**: Added `--include-auth` to init test, SplashScreen checks, auth file/route checks, corrected config preset to `"designPreset": "apple"` and `"themeType": "material"`
 
 ---
 

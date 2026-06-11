@@ -1,6 +1,6 @@
 # PetraCore Flutter Frontend Starter
 
-[![Pub Version](https://img.shields.io/badge/version-1.0.8-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
+[![Pub Version](https://img.shields.io/badge/version-1.0.9-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful CLI tool and package for generating Flutter projects with **clean architecture**, **Firebase integration**, and **industry best practices**. Based on proven patterns from production applications.
@@ -9,7 +9,7 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 
 - 🏗️ **Clean Architecture**: Feature-based modular structure with clear separation of concerns
 - 🔥 **Firebase Integration**: Pre-configured Firestore, Analytics, and Cloud Messaging
-- 🎨 **Dual Theme System**: Choose between Material 3 or custom Mix design tokens
+- 🎨 **Design Presets**: Choose from default, Vercel, Airbnb, or Apple design presets via `app_ui_kit`
 - 🎨 **Modern UI**: Responsive design and comprehensive component library  
 - 🧩 **BLoC Pattern**: Predictable state management with Hydrated BLoC
 - 🚀 **CLI Tools**: Generate projects and features instantly
@@ -20,14 +20,14 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 - 📦 **Rich Packages**: Carefully selected and battle-tested dependencies
 - ✨ **Enhanced CLI**: Beautiful, professional logging with levels (debug, info, warning, error, success) and colored output for improved user experience
 
-## 🆕 Recent Improvements (v1.0.8)
+## 🆕 Recent Improvements (v1.0.9)
 
-- **Nested Auth Routes**: Auth routes are now generated as a nested hierarchy rather than a flat list. `WelcomeScreen` is the parent route, with `LoginScreen` (containing forgot-password children), `SignupScreen`, and `VerifyOtpScreen` as child routes — matching GoRouter best practices for shared UI and proper URL scoping
-- **Login Screen "Forgot Password?" Navigation**: The "Forgot Password?" link on the login screen now correctly navigates to `AppRoutes.forgotPassword` via `context.goNamed()` — no longer a no-op
-- **Fixed Route Name**: Material forgot-password-verify screen now uses `AppRoutes.forgotPasswordVerify` (was incorrectly using `AppRoutes.fpVerify`)
-- **Fixed Email Validation**: Email validator in `InputFieldValidator` now correctly returns "Email is invalid" when `input.isEmail()` is `false` (previously had a negated condition that passed invalid emails)
-- **ToastHelper Offset Fixed**: Toast position offset changed from `-8` to `8` to display properly on screen
-- **Env JSON Keys Standardized**: Template keys changed from `snake_case` to `UPPER_CASE` convention (`API_BASE_URL`, `APP_NAME`, etc.)
+- **`--include-auth` Flag**: Generate auth alongside the project in one step — `petracore init my_app --include-auth`
+- **`app_ui_kit` Theming**: All theme and component generation removed locally. Everything comes from the `app_ui_kit` package (`AppScaffold`, `AppUiKit.themes`, design presets)
+- **`--design-preset` Flag**: Choose from `default`, `vercel`, `airbnb`, or `apple` design presets (replaces the old `--theme` flag)
+- **Route Deduplication**: Auth route constants no longer duplicate on rerun — safe to generate auth multiple times
+- **AnimatedSplashLogo Fix**: Splash screen logo widget is now correctly generated to disk
+- **Screen Consolidation**: Flat screen directory structure, no more material/mix subdirectories
 
 ## 📋 What You Get
 
@@ -38,11 +38,7 @@ your_project/
 │   ├── app/                    # App-level configuration
 │   │   ├── constants/          # App constants and string values
 │   │   ├── view/               # Main app widget
-│   │   └── theme/              # Theming configuration
-│   │       ├── color_values.dart # Shared brand color palette (always generated)
-│   │       ├── theme.dart        # Material 3 theme (if --theme material)
-│   │       ├── design_tokens/    # Mix design tokens (if --theme mix)
-│   │       └── themes/           # Mix theme files (if --theme mix)
+│   │   └── theme/              # Color values (brand palette from design preset)
 │   ├── core/                   # Shared utilities and components
 │   │   ├── components/        # Reusable UI components
 │   │   ├── data/              # Core data services and domain logic
@@ -86,17 +82,17 @@ dart pub add petracore_flutter_frontend_starter
 ### Create a New Project
 
 ```bash
-# Interactive theme selection (you'll be prompted to choose Mix or Material)
+# Interactive mode (prompts for design preset, auth, etc.)
 petracore init my_awesome_app
 
-# With Material 3 theme (skips interactive prompt)
-petracore init my_material_app --theme material
+# With specific design preset (skips interactive prompt)
+petracore init my_app --design-preset apple
+
+# Generate with auth feature included
+petracore init my_app --include-auth
 
 # With custom organization
 petracore init my_app --org com.mycompany
-
-# Without Firebase (coming soon)
-# petracore init simple_app --no-firebase
 
 # With custom description
 petracore init my_app --description "My amazing Flutter application"
@@ -132,7 +128,10 @@ petracore generate feature chat
 ### Generate Complete Authentication Flow
 
 ```bash
-# Interactive mode - guided setup
+# Generate auth alongside project (recommended — one step)
+petracore init my_app --include-auth
+
+# Or generate auth in an existing project (interactive)
 petracore auth
 
 # Non-interactive with specific features
@@ -143,6 +142,7 @@ petracore auth --login --signup --email-verification --forgot-password --phone-v
 
 # Basic auth setup
 petracore auth --no-interactive --login --signup
+```
 
 ### Generate Complete Media Feature
 
@@ -157,7 +157,8 @@ petracore feature media
 ### Available Options
 
 #### Init Command Options
-- `--theme`: Theme type - `mix` (default) or `material`. If omitted, you'll be prompted interactively
+- `--design-preset`: Design preset - `default` (default), `vercel`, `airbnb`, or `apple`
+- `--include-auth`: Generate auth feature alongside the project
 - `--no-interactive`: Skip interactive prompts and use defaults
 - `--org`: Organization identifier (default: com.petracore)
 - `--description`: Project description
@@ -309,40 +310,31 @@ firebase_messaging: ^15.2.4    # Cloud Messaging
 
 4. **Navigation routes are auto-registered**: Both auth and feature generators automatically register routes in `lib/navigation/routes.dart` (using the `Route` data class), create a per-feature route list in `lib/navigation/routes/<feature>_routes.dart`, and update `router.dart` — no manual editing needed.
 
-## 🎨 Dual Theme System
+## 🎨 Design Presets & Theming
 
-PetraCore supports two theme architectures:
+PetraCore uses the `app_ui_kit` package for all theming and UI components — no theme files are generated locally.
 
-### Material 3 Theme
-Pure Flutter Material 3 implementation using standard `ThemeData`:
-- Generated files: `lib/app/theme/theme.dart`
-- Uses `AppColors` from `color_values.dart` for all color references
-- Components use `Theme.of(context)` for styling
-- No external dependencies beyond Flutter Material
+### Design Presets
+Choose a preset when creating a project with `--design-preset`:
+- **default**: Standard Material 3 design
+- **vercel**: Vercel-inspired design language
+- **airbnb**: Airbnb-inspired design language
+- **apple**: Apple-inspired design language (SF fonts, system colors)
 
-### Mix Theme
-Petracore's custom design token system:
-- Generated files: `lib/app/theme/design_tokens/` and `lib/app/theme/themes/`
-- Uses `$token.color` for accessing design tokens
-- Components use Mix design system patterns
-- Full design token architecture with color, radius, and text style tokens
-
-### Shared: Color Values
-`color_values.dart` is generated for **both** theme types as the source of truth for brand colors:
+### Color Values
+`lib/app/theme/color_values.dart` is generated as the source of truth for brand colors:
 - Primary, secondary, technical colors
 - Neutral palette (50-600 scale)
 - Error, success, warning, info states
 - Surface colors (white, black, overlays)
 
-### Theme Customization
-- **Material**: Modify `AppColors` in `color_values.dart` - all theme colors derive from these values
-- **Mix**: Modify design tokens in `design_tokens/` and theme files in `themes/`
-- **Both**: Update `AppConstants.fontFamily` for typography changes
+### Components
+All components (`AppScaffold`, `BaseScaffold`, buttons, inputs, etc.) come from `app_ui_kit`. Use `AppUiKit.themes` to access the active theme. Modify `color_values.dart` to customize brand colors — all theme colors derive from these values.
 
 ## 🎨 Customization
 
 ### Themes and Design
-- Modify `lib/app/theme/` for custom themes
+- Modify `lib/app/theme/color_values.dart` to customize brand colors
 - Update `lib/app/constants/app_constants.dart` for design tokens
 - Add custom fonts to `fonts/` directory
 
@@ -374,16 +366,16 @@ flutter test
 ### Creating a Complete App
 
 ```bash
-# Create a full-featured app
+# Create a full-featured app with auth included
 petracore init social_media_app \
   --org com.yourcompany \
   --description "A social media application with real-time features" \
+  --include-auth
 
 cd social_media_app
 flutter pub get
 
 # Generate core features
-petracore feature auth
 petracore feature user_profile  
 petracore feature feed
 petracore feature chat
