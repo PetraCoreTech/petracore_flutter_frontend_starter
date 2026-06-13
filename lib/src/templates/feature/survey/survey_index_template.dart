@@ -5,5 +5,6 @@ export 'presentation/entities/survey_question_entity.dart';
 export 'presentation/enums/survey_mode.dart';
 export 'presentation/widgets/survey_answer_display.dart';
 export 'presentation/widgets/survey_builder.dart';
+export 'presentation/widgets/survey_option_selector.dart';
 export 'presentation/widgets/survey_question_display.dart';
 ''';

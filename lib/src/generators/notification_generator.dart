@@ -38,7 +38,7 @@ class NotificationGenerator {
       'presentation/controllers/notification_bloc_provider.dart': templates.notificationBlocProvider,
       'presentation/controllers/notification_controller_index.dart': templates.notificationControllerIndex,
       'presentation/entities/notification_item_entity.dart': templates.notificationItemEntity,
-      'presentation/entities/notification_type_entity.dart': templates.notificationTypeEntity,
+      'presentation/entities/notification_type_entity.dart': templates.notificationType,
       'presentation/widgets/notification_badge.dart': templates.notificationBadge,
       'presentation/widgets/notification_card.dart': templates.notificationCard,
       'presentation/widgets/notification_list.dart': templates.notificationList,

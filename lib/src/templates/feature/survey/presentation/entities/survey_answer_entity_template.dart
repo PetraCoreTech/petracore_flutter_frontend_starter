@@ -4,6 +4,7 @@ class SurveyAnswer {
     required this.question,
     this.answer,
   });
+
   String question;
   dynamic answer;
 

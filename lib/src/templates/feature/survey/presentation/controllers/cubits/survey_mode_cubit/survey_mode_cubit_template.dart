@@ -1,5 +1,5 @@
 String surveyModeCubitTemplate(String projectName) => '''
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:$projectName/features/survey/presentation/enums/survey_mode.dart';
 
 final surveyModeCubit = SurveyModeCubit();

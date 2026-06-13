@@ -1,16 +1,16 @@
 String notificationCubitTemplate(String projectName) => '''
 import 'dart:async';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:$projectName/features/notification/presentation/entities/notification_item_entity.dart';
 
 class NotificationState {
-  final List<NotificationItem> notifications;
-  final int unreadCount;
-
   const NotificationState({
     this.notifications = const [],
     this.unreadCount = 0,
   });
+
+  final List<NotificationItem> notifications;
+  final int unreadCount;
 
   NotificationState copyWith({
     List<NotificationItem>? notifications,
@@ -36,7 +36,7 @@ class NotificationCubit extends Cubit<NotificationState> {
     emit(state.copyWith(
       notifications: List.from(_allNotifications),
       unreadCount: unreadCount,
-    ));
+    ),);
   }
 
   void markAsRead(String id) {
@@ -46,7 +46,7 @@ class NotificationCubit extends Cubit<NotificationState> {
       emit(state.copyWith(
         notifications: List.from(_allNotifications),
         unreadCount: unreadCount,
-      ));
+      ),);
     }
   }
 
@@ -57,7 +57,7 @@ class NotificationCubit extends Cubit<NotificationState> {
     emit(state.copyWith(
       notifications: List.from(_allNotifications),
       unreadCount: 0,
-    ));
+    ),);
   }
 
   void removeNotification(String id) {
@@ -65,7 +65,7 @@ class NotificationCubit extends Cubit<NotificationState> {
     emit(state.copyWith(
       notifications: List.from(_allNotifications),
       unreadCount: unreadCount,
-    ));
+    ),);
   }
 
   void clearAll() {

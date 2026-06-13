@@ -99,7 +99,10 @@ class _QuestionMode<T> extends StatelessWidget {
                           if (pageIndex != 0)
                             Expanded(
                               child: OutlinedButton(
-                                onPressed: controller.previousPage,
+                                onPressed: () => controller.previousPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                ),
                                 child: const Text('Prev'),
                               ),
                             ),
@@ -109,7 +112,10 @@ class _QuestionMode<T> extends StatelessWidget {
                           if (pageIndex != surveys.length - 1)
                             Expanded(
                               child: OutlinedButton(
-                                onPressed: controller.nextPage,
+                                onPressed: () => controller.nextPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                ),
                                 child: const Text('Next'),
                               ),
                             ),

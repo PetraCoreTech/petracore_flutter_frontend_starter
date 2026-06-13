@@ -39,10 +39,12 @@ class SurveyOptionSelector<T> extends StatelessWidget {
             Expanded(child: title),
             const SizedBox(width: 8),
             if (isSelected)
-              Icon(Icons.radio_button_checked,
-                  color: Theme.of(context).cardColor)
+              Icon(
+                Icons.radio_button_checked,
+                color: Theme.of(context).cardColor,
+              )
             else
-              Icon(Icons.radio_button_unchecked),
+              const Icon(Icons.radio_button_unchecked),
           ],
         ),
       ),

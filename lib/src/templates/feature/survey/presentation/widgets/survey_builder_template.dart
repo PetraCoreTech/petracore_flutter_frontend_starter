@@ -50,7 +50,9 @@ class _SurveyBuilderState<T> extends State<SurveyBuilder<T>> {
           ?.where((e) => e.question == survey.id)
           .singleOrNull;
       return SurveyAnswer(
-          question: widget.builder(e).id, answer: input?.answer);
+        question: widget.builder(e).id,
+        answer: input?.answer,
+      );
     }).toList();
   }
 
@@ -60,7 +62,7 @@ class _SurveyBuilderState<T> extends State<SurveyBuilder<T>> {
     final mode = context.watch<SurveyModeCubit>().state;
 
     if (widget.surveys.isEmpty) {
-      return Center(child: Text('Nothing here yet'));
+      return const Center(child: Text('Nothing here yet'));
     }
 
     return ListenableBuilder(

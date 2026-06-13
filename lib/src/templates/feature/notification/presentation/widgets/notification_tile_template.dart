@@ -1,6 +1,7 @@
 String notificationTileTemplate(String projectName) => '''
 import 'package:flutter/material.dart';
 import 'package:$projectName/features/notification/presentation/entities/notification_item_entity.dart';
+import 'package:$projectName/features/notification/presentation/entities/notification_type_entity.dart';
 
 class NotificationTile extends StatelessWidget {
   const NotificationTile({

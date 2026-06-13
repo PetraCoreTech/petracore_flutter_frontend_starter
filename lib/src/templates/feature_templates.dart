@@ -50,7 +50,7 @@ class FeatureTemplates {
   String get notificationBlocProvider => notificationBlocProviderTemplate(projectConfig.projectName);
   String get notificationControllerIndex => notificationControllerIndexTemplate(projectConfig.projectName);
   String get notificationItemEntity => notificationItemEntityTemplate(projectConfig.projectName);
-  String get notificationTypeEntity => notificationTypeEntityTemplate(projectConfig.projectName);
+  String get notificationType => notificationTypeTemplate(projectConfig.projectName);
   String get notificationBadge => notificationBadgeTemplate(projectConfig.projectName);
   String get notificationCard => notificationCardTemplate(projectConfig.projectName);
   String get notificationList => notificationListTemplate(projectConfig.projectName);

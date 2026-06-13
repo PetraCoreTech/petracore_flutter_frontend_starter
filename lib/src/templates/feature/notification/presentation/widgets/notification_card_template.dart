@@ -15,7 +15,7 @@ class NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: notification.isRead ? null : Theme.of(context).primaryColor.withOpacity(0.05),
+      color: notification.isRead ? null : Theme.of(context).primaryColor.withValues(alpha: 0.05),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -28,7 +28,7 @@ class NotificationCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(

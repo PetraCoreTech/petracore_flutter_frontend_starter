@@ -1,4 +1,4 @@
-String notificationTypeEntityTemplate(String projectName) => '''
+String notificationTypeTemplate(String projectName) => '''
 enum NotificationType {
   general,
   announcement,

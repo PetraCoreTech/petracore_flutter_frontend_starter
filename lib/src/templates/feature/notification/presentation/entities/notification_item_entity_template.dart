@@ -1,4 +1,6 @@
 String notificationItemEntityTemplate(String projectName) => '''
+import 'notification_type_entity.dart';
+
 class NotificationItem {
   NotificationItem({
     required this.id,

@@ -69,7 +69,7 @@ export 'feature/notification/presentation/controllers/cubits/notification_cubit/
 export 'feature/notification/presentation/controllers/notification_bloc_provider_template.dart';
 export 'feature/notification/presentation/controllers/notification_controller_index_template.dart';
 export 'feature/notification/presentation/entities/notification_item_entity_template.dart';
-export 'feature/notification/presentation/entities/notification_type_entity_template.dart';
+export 'feature/notification/presentation/entities/notification_type_template.dart';
 export 'feature/notification/presentation/widgets/notification_badge_template.dart';
 export 'feature/notification/presentation/widgets/notification_card_template.dart';
 export 'feature/notification/presentation/widgets/notification_list_template.dart';
