@@ -542,7 +542,6 @@ class AuthFlowGenerator {
 
     if (config.includeWelcomeScreen) {
       _buildWelcomeRoute(authRoutesContent);
-      _buildStandaloneAuthRoutes(authRoutesContent, indent: 0);
     } else {
       _buildStandaloneAuthRoutes(authRoutesContent, indent: 0);
     }

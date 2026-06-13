@@ -1,8 +1,8 @@
 String successResponseTemplate() => '''
 class SuccessResponse {
   SuccessResponse({
-    this.success,
     required this.message,
+    this.success,
   });
 
   SuccessResponse.fromJson(Map<String, dynamic> json) {
