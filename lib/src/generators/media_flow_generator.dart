@@ -175,6 +175,8 @@ class MediaFlowGenerator {
           templates.attachmentModel,
       'lib/features/media/data/models/attached_media_model.dart':
           templates.attachedMediaModel,
+      'lib/features/media/data/models/uint8_list_converter.dart':
+          templates.uint8ListConverter,
     };
 
     final progress = Logger.fileProgress('Media models');

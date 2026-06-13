@@ -6,11 +6,13 @@ import 'dart:typed_data';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:${config.packageName}/features/media/data/enums/media_type.dart';
 import 'package:${config.packageName}/features/media/data/extensions/media_type_extension.dart';
+import 'package:${config.packageName}/features/media/data/models/uint8_list_converter.dart';
 
 part 'attached_media_model.g.dart';
 
 typedef Json = Map<String, dynamic>;
 
+@Uint8ListConverter()
 @JsonSerializable(fieldRename: FieldRename.snake)
 class AttachedMedia {
   AttachedMedia({

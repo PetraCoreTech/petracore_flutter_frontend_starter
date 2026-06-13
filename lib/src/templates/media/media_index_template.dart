@@ -12,6 +12,7 @@ export 'data/extensions/media_type_extension.dart';
 export 'data/extensions/xfile_extension.dart';
 export 'data/models/attached_media_model.dart';
 export 'data/models/attachment_model.dart';
+export 'data/models/uint8_list_converter.dart';
 export 'data/parsers/media_type_parser.dart';
 export 'data/remote/cloudinary/cloudinary_service.dart';
 export 'data/remote/cloudinary/dtos/delete_upload_dto.dart';

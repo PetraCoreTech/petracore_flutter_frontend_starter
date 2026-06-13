@@ -119,6 +119,7 @@ export 'media/data/extensions/media_type_extension_template.dart';
 export 'media/data/extensions/xfile_extension_template.dart';
 export 'media/data/models/attached_media_model_template.dart';
 export 'media/data/models/attachment_model_template.dart';
+export 'media/data/models/uint8_list_converter_template.dart';
 export 'media/data/parsers/media_type_parser_template.dart';
 export 'media/data/remote/cloudinary/cloudinary_service_template.dart';
 export 'media/data/remote/cloudinary/dtos/delete_upload_dto_template.dart';

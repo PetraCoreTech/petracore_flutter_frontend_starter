@@ -25,6 +25,7 @@ class MediaTemplates {
   /// Data/Models
   String get attachmentModel => attachmentModelTemplate(config);
   String get attachedMediaModel => attachedMediaModelTemplate(config);
+  String get uint8ListConverter => uint8ListConverterTemplate(config.packageName);
 
   /// Data/Remote/Cloudinary
   String get cloudinaryService => cloudinaryServiceTemplate(config);
