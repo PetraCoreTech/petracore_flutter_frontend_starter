@@ -2,12 +2,6 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String deleteUploadDtoTemplate(ProjectConfig config) => '''
 class DeleteUploadDto {
-  final String? url;
-  final String? publicId;
-  final List<String>? urls;
-  final List<String>? publicIds;
-  final bool isMultiple;
-
   DeleteUploadDto({
     this.url,
     this.publicId,
@@ -15,5 +9,10 @@ class DeleteUploadDto {
     this.publicIds,
     this.isMultiple = false,
   });
+  final String? url;
+  final String? publicId;
+  final List<String>? urls;
+  final List<String>? publicIds;
+  final bool isMultiple;
 }
 ''';

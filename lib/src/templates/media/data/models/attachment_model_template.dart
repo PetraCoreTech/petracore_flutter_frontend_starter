@@ -1,27 +1,15 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String attachmentModelTemplate(ProjectConfig config) => '''
-import 'package:${config.packageName}/core/core.dart';
-import 'package:${config.packageName}/features/media/data/enums/media_type.dart';
-import 'package:${config.packageName}/features/media/data/parsers/media_type_parser.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:${config.packageName}/features/media/data/enums/media_type.dart';
+import 'package:${config.packageName}/features/media/data/parsers/media_type_parser.dart';
 
 part 'attachment_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Attachment extends Equatable {
-  final String name;
-  final String? publicId;
-  final double? size;
-  final String? url;
-  @JsonKey(
-    fromJson: MediaTypeParser.typeFromJson,
-    readValue: MediaTypeParser.readStatus,
-  )
-  final MediaType? mediaType;
-  final DateTime? date;
-
   const Attachment({
     required this.name,
     this.publicId,
@@ -33,6 +21,17 @@ class Attachment extends Equatable {
 
   factory Attachment.fromJson(Map<String, dynamic> json) =>
       _\$AttachmentFromJson(json);
+
+  final String name;
+  final String? publicId;
+  final double? size;
+  final String? url;
+  @JsonKey(
+    fromJson: MediaTypeParser.typeFromJson,
+    readValue: MediaTypeParser.readStatus,
+  )
+  final MediaType? mediaType;
+  final DateTime? date;
 
   Map<String, dynamic> toJson() => _\$AttachmentToJson(this);
 

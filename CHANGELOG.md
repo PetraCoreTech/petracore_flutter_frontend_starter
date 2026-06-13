@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9+1] - 2026-06-13
+
+### Changed
+- ♻️ **Design Preset Simplification**: Removed the entire local `DesignPresetId` enum, `DesignPreset`/`DesignPresetColors`/`DesignPresetTypography`/`DesignPresetRadius` classes, `DesignPresetRegistry`, and all 12 individual preset files
+- ♻️ **`ProjectConfig.designPreset`**: Now a plain `String` instead of `DesignPresetId`. The `resolvedDesignPreset` getter and all `DesignPresetRegistry` imports removed
+- ♻️ **`init_command.dart`**: `_parseDesignPreset` validates against a hardcoded string list; `_promptForDesignPreset` uses inline `(name, displayName, description)` tuples instead of `DesignPresetRegistry`
+- ♻️ **`bootstrap_template.dart`**: Accepts `String presetName`; maps `"default"` → `"baseline"` for `AppUiKitPreset`, other names pass through directly
+- ♻️ **`project_config_reader.dart`**: `_detectDesignPreset` returns `String` directly from `petracore.config.json`
+- ♻️ **`app_constants_template.dart`**: Font family hardcoded to `'Plus Jakarta Sans'` (removed `resolvedDesignPreset` dependency)
+- ♻️ **Preset storage in `petracore.config.json`**: Stores the preset name string directly (no `.name` call needed)
+
+### Removed
+- 🗑️ **Entire `lib/src/design_presets/` directory**: 14 files deleted (enum, 4 classes, registry, 12 preset definitions)
+- 🗑️ **Design preset exports** from `petracore_flutter_frontend_starter.dart`
+
 ## [1.0.9] - 2026-06-11
 
 ### Added

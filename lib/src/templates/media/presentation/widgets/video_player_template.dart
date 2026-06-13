@@ -5,9 +5,8 @@ import 'package:${config.packageName}/core/core.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class VideoPlayer extends StatefulWidget {
+  const VideoPlayer({required this.url, super.key});
   final String url;
-
-  const VideoPlayer({super.key, required this.url});
 
   @override
   State<VideoPlayer> createState() => _VideoPlayerState();

@@ -12,30 +12,30 @@ class DownloadRepository {
   DownloadRepository._();
 
   Future<Either<SuccessResponse, ErrorResponse>> downloadResource(
-      DownloadDto dto) async {
+      DownloadDto dto,
+      ) async {
     try {
       await FileSaver.instance.saveFile(
         name: dto.title,
-        link: LinkType.url,
-        url: dto.url,
+        link: LinkDetails(link: dto.url),
       );
-      return const Left(SuccessResponse(message: 'File downloaded'));
+      return Left(SuccessResponse(message: 'File downloaded'));
     } catch (e) {
       return Right(ErrorResponse(message: e.toString()));
     }
   }
 
   Future<Either<SuccessResponse, ErrorResponse>> downloadResources(
-      List<DownloadDto> dtos) async {
+      List<DownloadDto> dtos,
+      ) async {
     try {
       for (final dto in dtos) {
-        await FileSaver.instance.saveFile(
-          name: dto.title,
-          link: LinkType.url,
-          url: dto.url,
-        );
+      await FileSaver.instance.saveFile(
+        name: dto.title,
+        link: LinkDetails(link: dto.url),
+      );
       }
-      return const Left(SuccessResponse(message: 'Files downloaded'));
+      return Left(SuccessResponse(message: 'Files downloaded'));
     } catch (e) {
       return Right(ErrorResponse(message: e.toString()));
     }

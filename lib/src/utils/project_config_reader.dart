@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
-import '../design_presets/design_preset.dart';
 import '../generators/project_generator.dart';
 import 'logger.dart';
 
@@ -94,7 +93,7 @@ class ProjectConfigReader {
     );
   }
 
-  static Future<DesignPresetId> _detectDesignPreset(String rootPath) async {
+  static Future<String> _detectDesignPreset(String rootPath) async {
     final petracoreConfig = File(
       path.join(rootPath, 'petracore.config.json'),
     );
@@ -103,17 +102,12 @@ class ProjectConfigReader {
         final content = await petracoreConfig.readAsString();
         final json = jsonDecode(content) as Map<String, dynamic>;
         final presetStr = json['designPreset'] as String?;
-        if (presetStr != null) {
-          return DesignPresetId.values.firstWhere(
-            (e) => e.name == presetStr,
-            orElse: () => DesignPresetId.defaultPreset,
-          );
-        }
+        if (presetStr != null && presetStr.isNotEmpty) return presetStr;
       } catch (_) {
         // ignore parse errors
       }
     }
-    return DesignPresetId.defaultPreset;
+    return 'default';
   }
 
   /// Tries to read the project config from [projectPath]; falls back to

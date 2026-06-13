@@ -1,7 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String mediaTypeExtensionTemplate(ProjectConfig config) => '''
-import 'package:${config.packageName}/core/core.dart';
 import 'package:${config.packageName}/features/media/data/enums/media_type.dart';
 
 extension FileTypeExtension on MediaType {

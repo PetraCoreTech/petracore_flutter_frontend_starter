@@ -2,6 +2,8 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String selectedMediaItemTemplate(ProjectConfig config) => '''
 import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:${config.packageName}/core/core.dart';
 import 'package:${config.packageName}/features/media/presentation/widgets/photo_display.dart';
 import 'package:${config.packageName}/features/media/data/extensions/media_type_extension.dart';

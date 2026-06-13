@@ -17,11 +17,7 @@ class MediaHelper {
     final result = await mediaRepository.pickImages(author ?? '');
     result.fold(
       (files) => onImagePicked?.call(files),
-      (error) => InteractionHelper.showToast(
-        context,
-        message: error.message ?? 'Failed to pick images',
-        isError: true,
-      ),
+      (error) => ToastHelper.showError(context, error.message),
     );
   }
 
@@ -32,11 +28,7 @@ class MediaHelper {
     final result = await mediaRepository.pickImage(author ?? '');
     result.fold(
       (file) => onImagePicked?.call(file),
-      (error) => InteractionHelper.showToast(
-        context,
-        message: error.message ?? 'Failed to pick image',
-        isError: true,
-      ),
+      (error) => ToastHelper.showError(context, error.message),
     );
   }
 

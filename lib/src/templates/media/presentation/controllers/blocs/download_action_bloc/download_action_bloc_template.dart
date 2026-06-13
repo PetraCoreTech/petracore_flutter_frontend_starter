@@ -1,13 +1,13 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String downloadActionBlocTemplate(ProjectConfig config) => '''
+import 'package:equatable/equatable.dart';
 import 'package:${config.packageName}/core/core.dart';
-import 'package:${config.packageName}/features/media/data/remote/download/dtos/download_dto.dart';
-import 'package:${config.packageName}/features/media/data/domain/download_use_cases.dart';
-import 'package:${config.packageName}/features/media/presentation/entities/download_entity.dart';
-import 'package:${config.packageName}/features/media/presentation/controllers/blocs/download_action_bloc/download_action_event.dart';
-import 'package:${config.packageName}/features/media/presentation/controllers/blocs/download_action_bloc/download_action_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:${config.packageName}/features/media/media_index.dart';
+
+
+part 'download_action_event.dart';
+part 'download_action_state.dart';
 
 final downloadActionBloc = DownloadActionBloc();
 

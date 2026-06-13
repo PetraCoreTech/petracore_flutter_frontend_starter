@@ -20,7 +20,7 @@ class ProjectTemplates {
 
   /// Project Config
   String get mainDart => mainDartTemplate(config);
-  String get bootstrap => bootstrapTemplate();
+  String get bootstrap => bootstrapTemplate(config.designPreset);
 
   /// App
   String get appBarrel => appBarrelTemplate(config);

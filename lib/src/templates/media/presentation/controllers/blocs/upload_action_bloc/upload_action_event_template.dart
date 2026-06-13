@@ -1,9 +1,7 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String uploadActionEventTemplate(ProjectConfig config) => '''
-import 'package:${config.packageName}/features/media/data/models/attached_media_model.dart';
-import 'package:${config.packageName}/features/media/data/remote/cloudinary/dtos/delete_upload_dto.dart';
-import 'package:equatable/equatable.dart';
+part of 'upload_action_bloc.dart';
 
 sealed class UploadActionEvent extends Equatable {
   const UploadActionEvent();

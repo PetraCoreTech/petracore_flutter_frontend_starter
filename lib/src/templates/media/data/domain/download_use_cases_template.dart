@@ -1,10 +1,10 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String downloadUseCasesTemplate(ProjectConfig config) => '''
+import 'package:dartz/dartz.dart';
 import 'package:${config.packageName}/core/core.dart';
 import 'package:${config.packageName}/features/media/data/remote/download/dtos/download_dto.dart';
 import 'package:${config.packageName}/features/media/data/remote/download/download_repository.dart';
-import 'package:dartz/dartz.dart';
 
 final singleDownloadUseCase = SingleDownloadUseCase();
 final multipleDownloadUseCase = MultipleDownloadUseCase();
@@ -20,7 +20,8 @@ class MultipleDownloadUseCase
     extends UseCase<SuccessResponse, List<DownloadDto>> {
   @override
   Future<Either<SuccessResponse, ErrorResponse>> call(
-      List<DownloadDto> params) {
+      List<DownloadDto> params,
+      ) {
     return downloadRepository.downloadResources(params);
   }
 }

@@ -2,94 +2,6 @@ import 'package:petracore_flutter_frontend_starter/petracore_flutter_frontend_st
 import 'package:test/test.dart';
 
 void main() {
-  group('DesignPresetRegistry', () {
-    test('resolves all presets without throwing', () {
-      for (final id in DesignPresetId.values) {
-        expect(
-          () => DesignPresetRegistry.resolve(id),
-          returnsNormally,
-        );
-      }
-    });
-
-    test('default preset returns expected values', () {
-      final preset = DesignPresetRegistry.resolve(DesignPresetId.defaultPreset);
-      expect(preset.displayName, contains('Default'));
-      expect(preset.typography.fontFamily, 'Times New Roman');
-      expect(preset.radius.small, 4);
-      expect(preset.radius.medium, 8);
-      expect(preset.radius.large, 100);
-    });
-
-    test('vercel preset returns expected values', () {
-      final preset = DesignPresetRegistry.resolve(DesignPresetId.vercel);
-      expect(preset.displayName, contains('Vercel'));
-      expect(preset.typography.fontFamily, 'Inter');
-      expect(preset.radius.small, 2);
-      expect(preset.radius.medium, 4);
-      expect(preset.radius.large, 6);
-    });
-
-    test('airbnb preset returns expected values', () {
-      final preset = DesignPresetRegistry.resolve(DesignPresetId.airbnb);
-      expect(preset.displayName, contains('Airbnb'));
-      expect(preset.typography.fontFamily, 'Circular');
-      expect(preset.radius.small, 8);
-      expect(preset.radius.medium, 12);
-      expect(preset.radius.large, 16);
-    });
-
-    test('apple preset returns expected values', () {
-      final preset = DesignPresetRegistry.resolve(DesignPresetId.apple);
-      expect(preset.displayName, contains('Apple'));
-      expect(preset.typography.fontFamily, 'SF Pro Display');
-      expect(preset.radius.small, 6);
-      expect(preset.radius.medium, 10);
-      expect(preset.radius.large, 14);
-    });
-
-    test('all presets return all required color keys', () {
-      final requiredKeys = [
-        'white',
-        'black',
-        'primary',
-        'primaryGrading',
-        'neutral50',
-        'neutral100',
-        'neutral200',
-        'neutral300',
-        'neutral400',
-        'neutral500',
-        'neutral600',
-        'surface001',
-        'warning',
-        'error',
-        'shimmer',
-      ];
-      for (final id in DesignPresetId.values) {
-        final preset = DesignPresetRegistry.resolve(id);
-        for (final key in requiredKeys) {
-          expect(
-            preset.colors.values.containsKey(key),
-            isTrue,
-            reason: 'Preset ${id.name} missing color: $key',
-          );
-        }
-      }
-    });
-
-    test('throws for unknown preset ID', () {
-      expect(
-        () => DesignPresetRegistry.resolve(DesignPresetId.defaultPreset),
-        returnsNormally,
-      );
-    });
-
-    test('registry exposes all presets', () {
-      expect(DesignPresetRegistry.all.length, DesignPresetId.values.length);
-    });
-  });
-
   group('ProjectConfig.designPreset', () {
     test('default config uses default preset', () {
       final config = ProjectConfig(
@@ -98,20 +10,45 @@ void main() {
         description: 'test',
         projectPath: '/tmp/test',
       );
-      expect(config.designPreset, DesignPresetId.defaultPreset);
+      expect(config.designPreset, 'default');
     });
 
-    test('resolvedDesignPreset matches configured id', () {
+    test('accepts known preset names', () {
       final config = ProjectConfig(
         projectName: 'test_app',
         organization: 'com.test',
         description: 'test',
         projectPath: '/tmp/test',
-        designPreset: DesignPresetId.vercel,
+        designPreset: 'vercel',
       );
-      expect(config.resolvedDesignPreset.id, DesignPresetId.vercel);
-      expect(config.resolvedDesignPreset.typography.fontFamily, 'Inter');
+      expect(config.designPreset, 'vercel');
+    });
+
+    test('accepts all known preset names', () {
+      final known = [
+        'default',
+        'vercel',
+        'airbnb',
+        'apple',
+        'spotify',
+        'vibrant',
+        'highContrast',
+        'starbucks',
+        'linear',
+        'notion',
+        'mongodb',
+        'raycast',
+      ];
+      for (final name in known) {
+        final config = ProjectConfig(
+          projectName: 'test_app',
+          organization: 'com.test',
+          description: 'test',
+          projectPath: '/tmp/test',
+          designPreset: name,
+        );
+        expect(config.designPreset, name);
+      }
     });
   });
-
 }

@@ -4,18 +4,17 @@ String uploadRepositoryTemplate(ProjectConfig config) => '''
 import 'package:${config.packageName}/core/core.dart';
 import 'package:${config.packageName}/features/media/data/models/attached_media_model.dart';
 import 'package:${config.packageName}/features/media/data/remote/cloudinary/cloudinary_service.dart';
-import 'package:${config.packageName}/features/media/data/remote/cloudinary/dtos/file_upload_dto.dart';
 import 'package:${config.packageName}/features/media/data/remote/cloudinary/dtos/delete_upload_dto.dart';
 import 'package:${config.packageName}/features/media/data/remote/upload/params/upload_params.dart';
-import 'package:cloudinary/cloudinary.dart' show CloudinaryResponse;
 import 'package:dartz/dartz.dart';
 
 final uploadRepository = UploadRepository(cloudinaryService);
 
 class UploadRepository {
+  UploadRepository(this.cloudinaryService);
+
   final CloudinaryService cloudinaryService;
 
-  UploadRepository(this.cloudinaryService);
 
   Future<Either<AttachedMedia, ErrorResponse>> uploadResource(
       UploadParams params) async {
@@ -73,7 +72,7 @@ class UploadRepository {
         urls: dto.urls,
         isMultiple: dto.isMultiple,
       );
-      return const Left(SuccessResponse(message: 'Resource deleted'));
+      return Left(SuccessResponse(message: 'Resource deleted'));
     } catch (e) {
       return Right(ErrorResponse(message: e.toString()));
     }

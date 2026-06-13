@@ -2,15 +2,13 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String uploadActionBlocTemplate(ProjectConfig config) => '''
 import 'dart:async';
+
+import 'package:equatable/equatable.dart';
 import 'package:${config.packageName}/core/core.dart';
-import 'package:${config.packageName}/features/media/data/models/attached_media_model.dart';
-import 'package:${config.packageName}/features/media/data/remote/cloudinary/dtos/delete_upload_dto.dart';
-import 'package:${config.packageName}/features/media/data/remote/cloudinary/dtos/file_upload_dto.dart';
-import 'package:${config.packageName}/features/media/data/remote/upload/params/upload_params.dart';
-import 'package:${config.packageName}/features/media/data/domain/upload_use_cases.dart';
-import 'package:${config.packageName}/features/media/presentation/controllers/blocs/upload_action_bloc/upload_action_event.dart';
-import 'package:${config.packageName}/features/media/presentation/controllers/blocs/upload_action_bloc/upload_action_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:${config.packageName}/features/media/media_index.dart';
+
+part 'upload_action_event.dart';
+part 'upload_action_state.dart';
 
 final uploadActionBloc = UploadActionBloc();
 

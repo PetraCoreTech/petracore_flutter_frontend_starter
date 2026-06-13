@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
-import 'package:petracore_flutter_frontend_starter/src/design_presets/design_preset.dart';
-import 'package:petracore_flutter_frontend_starter/src/design_presets/design_preset_registry.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/feature/pagination/pagination_index_template.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_bloc_template.dart';
 import 'package:petracore_flutter_frontend_starter/src/templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_event_template.dart';
@@ -30,18 +28,18 @@ class ProjectConfig {
   /// The absolute filesystem path where the project will be created.
   final String projectPath;
 
-  /// The [DesignPresetId] to apply to the generated project.
-  final DesignPresetId designPreset;
+  /// The design preset name (e.g. `default`, `vercel`, `airbnb`).
+  final String designPreset;
 
   /// Creates a [ProjectConfig] with the given project settings.
   ///
-  /// Defaults [designPreset] to [DesignPresetId.defaultPreset].
+  /// Defaults [designPreset] to `default`.
   ProjectConfig({
     required this.projectName,
     required this.organization,
     required this.description,
     required this.projectPath,
-    this.designPreset = DesignPresetId.defaultPreset,
+    this.designPreset = 'default',
   });
 
   /// The project name converted to PascalCase (e.g. `MyAwesomeApp`).
@@ -49,10 +47,6 @@ class ProjectConfig {
 
   /// The project name sanitized to a valid Dart package name (lowercase, underscores).
   String get packageName => projectName.toLowerCase().replaceAll('-', '_');
-
-  /// Resolves [designPreset] to its full [DesignPreset] via [DesignPresetRegistry].
-  DesignPreset get resolvedDesignPreset =>
-      DesignPresetRegistry.resolve(designPreset);
 }
 
 /// Generates an entire PetraCore Flutter project from a [ProjectConfig],

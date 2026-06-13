@@ -16,11 +16,12 @@ class MediaRepository {
   final ImagePicker _picker = ImagePicker();
 
   Future<Either<List<AttachedMedia>, ErrorResponse>> pickImages(
-      String author) async {
+      String author,
+      ) async {
     try {
       final files = await _picker.pickMultiImage();
       if (files.isEmpty) {
-        return const Right(ErrorResponse(message: 'No images selected'));
+        return Right(ErrorResponse(message: 'No images selected'));
       }
       final mediaList = files.map((file) {
         return AttachedMedia(
@@ -44,7 +45,7 @@ class MediaRepository {
     try {
       final file = await _picker.pickImage(source: source ?? ImageSource.gallery);
       if (file == null) {
-        return const Right(ErrorResponse(message: 'No image selected'));
+        return Right(ErrorResponse(message: 'No image selected'));
       }
       final media = AttachedMedia(
         name: file.name,

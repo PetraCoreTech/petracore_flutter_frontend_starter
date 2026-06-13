@@ -2,22 +2,19 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String mediaDisplayTemplate(ProjectConfig config) => '''
 import 'package:${config.packageName}/core/core.dart';
-import 'package:${config.packageName}/features/media/data/models/attached_media_model.dart';
-import 'package:${config.packageName}/features/media/presentation/widgets/video_player.dart';
-import 'package:${config.packageName}/features/media/data/enums/media_type.dart';
-import 'package:${config.packageName}/features/media/data/extensions/media_type_extension.dart';
+import 'package:${config.packageName}/features/media/media_index.dart';
+
 
 class MediaDisplay extends StatefulWidget {
-  final List<AttachedMedia>? attachedMedia;
-  final List<String>? media;
-  final int index;
-
   const MediaDisplay({
     super.key,
     this.attachedMedia,
     this.media,
     this.index = 0,
   });
+  final List<AttachedMedia>? attachedMedia;
+  final List<String>? media;
+  final int index;
 
   @override
   State<MediaDisplay> createState() => _MediaDisplayState();

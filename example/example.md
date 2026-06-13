@@ -209,6 +209,30 @@ petracore init my_app --design-preset airbnb
 
 # Apple-inspired (blue accent, SF Pro Display, precise radii)
 petracore init my_app --design-preset apple
+
+# Spotify-inspired (green-on-dark, media-centric)
+petracore init my_app --design-preset spotify
+
+# Vibrant (saturated palettes, denser rhythm)
+petracore init my_app --design-preset vibrant
+
+# High Contrast (maximum readability)
+petracore init my_app --design-preset highContrast
+
+# Starbucks-inspired (warm neutrals, green palette)
+petracore init my_app --design-preset starbucks
+
+# Linear-inspired (dark interface, lavender accent)
+petracore init my_app --design-preset linear
+
+# Notion-inspired (calm canvas, blue accent)
+petracore init my_app --design-preset notion
+
+# MongoDB-inspired (developer green, dark surfaces)
+petracore init my_app --design-preset mongodb
+
+# Raycast-inspired (utility-dark, crisp neutrals)
+petracore init my_app --design-preset raycast
 ```
 
 ## Tips and Best Practices

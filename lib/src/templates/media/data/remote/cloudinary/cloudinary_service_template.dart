@@ -1,10 +1,10 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String cloudinaryServiceTemplate(ProjectConfig config) => '''
+import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:${config.packageName}/core/core.dart';
 import 'package:${config.packageName}/features/media/data/remote/cloudinary/dtos/file_upload_dto.dart';
 import 'package:${config.packageName}/features/media/data/remote/cloudinary/dtos/delete_upload_dto.dart';
-import 'package:cloudinary/cloudinary.dart';
 
 final cloudinaryService = CloudinaryService._();
 
@@ -29,14 +29,14 @@ final class CloudinaryService {
     String? fileName,
     void Function(int, int)? progressCallback,
   }) async {
-    final response = await cloudinary.upload(
-      file: dto.path != null
-          ? CloudinaryFile.fromPath(dto.path!)
-          : CloudinaryFile.fromBytes(dto.fileBytes!,
-              identifier: dto.name),
-      resourceType: resourceType ?? CloudinaryResourceType.image,
-      fileName: fileName ?? dto.name,
-      progressCallback: progressCallback,
+    final response = await cloudinary.uploadResource(
+      CloudinaryUploadResource(
+        filePath: dto.path,
+        fileBytes: dto.fileBytes,
+        resourceType: resourceType ?? CloudinaryResourceType.image,
+        fileName: fileName ?? dto.name,
+        progressCallback: progressCallback,
+      ),
     );
     return response;
   }
@@ -68,13 +68,13 @@ final class CloudinaryService {
     CloudinaryResourceType? resourceType,
   }) async {
     if (isMultiple) {
-      return cloudinary.delete(
+      return cloudinary.deleteResources(
         publicIds: publicIds,
         urls: urls,
         resourceType: resourceType ?? CloudinaryResourceType.image,
       );
     }
-    return cloudinary.delete(
+    return cloudinary.deleteResource(
       publicId: publicId,
       url: url,
       resourceType: resourceType ?? CloudinaryResourceType.image,

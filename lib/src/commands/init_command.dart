@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:path/path.dart' as path;
-import '../design_presets/design_preset.dart';
-import '../design_presets/design_preset_registry.dart';
 import '../generators/auth_flow_generator.dart';
 import '../generators/project_generator.dart';
 import '../utils/logger.dart';
@@ -38,9 +36,22 @@ ArgParser initCommandParser() {
     )
     ..addOption(
       'design-preset',
-      help: 'Design preset: default (default), vercel, airbnb, or apple',
+      help: 'Design preset for visual language',
       defaultsTo: 'default',
-      allowed: ['default', 'vercel', 'airbnb', 'apple'],
+      allowed: [
+        'default',
+        'vercel',
+        'airbnb',
+        'apple',
+        'spotify',
+        'vibrant',
+        'highContrast',
+        'starbucks',
+        'linear',
+        'notion',
+        'mongodb',
+        'raycast',
+      ],
     )
     ..addFlag(
       'force',
@@ -63,7 +74,7 @@ ArgParser initCommandParser() {
 
 /// Command that initializes a new Flutter project with the full PetraCore
 /// architecture, including directory structure, core files, navigation,
-/// optional auth flow, and a selected [DesignPreset].
+/// optional auth flow, and a selected design preset.
 class InitCommand extends BaseCommand {
   @override
   String get name => 'init';
@@ -165,17 +176,13 @@ class InitCommand extends BaseCommand {
     }
   }
 
-  DesignPresetId _parseDesignPreset(String value) {
-    switch (value) {
-      case 'vercel':
-        return DesignPresetId.vercel;
-      case 'airbnb':
-        return DesignPresetId.airbnb;
-      case 'apple':
-        return DesignPresetId.apple;
-      default:
-        return DesignPresetId.defaultPreset;
-    }
+  String _parseDesignPreset(String value) {
+    const known = [
+      'default', 'vercel', 'airbnb', 'apple', 'spotify', 'vibrant',
+      'highContrast', 'starbucks', 'linear', 'notion', 'mongodb', 'raycast',
+    ];
+    if (known.contains(value)) return value;
+    return 'default';
   }
 
   bool _promptForAuth() {
@@ -211,12 +218,25 @@ class InitCommand extends BaseCommand {
     Logger.section('Design Preset');
     Logger.info('Choose a design preset:');
     Logger.spacer();
-    final presets = DesignPresetRegistry.all;
+    final presets = [
+      ('default', 'Default PetraCore', 'PetraCore default design language — balanced, clean, and modern.'),
+      ('vercel', 'Vercel-inspired', 'Monochrome precision with restrained accent usage, tight radii, and crisp typography.'),
+      ('airbnb', 'Airbnb-inspired', 'Warm rounded consumer interface with generous spacing and approachable surfaces.'),
+      ('apple', 'Apple-inspired', 'San Francisco typography and clean, translucent surfaces with minimal ornament.'),
+      ('spotify', 'Spotify-inspired', 'Green-on-dark, media-centric visual style with vibrant accents.'),
+      ('vibrant', 'Vibrant', 'More saturated palettes, higher chroma, and slightly denser visual rhythm.'),
+      ('highContrast', 'High Contrast', 'Maximum readability with strong color contrast and clear visual hierarchy.'),
+      ('starbucks', 'Starbucks-inspired', 'Warm neutrals with layered green palette and cozy interface feel.'),
+      ('linear', 'Linear-inspired', 'Precise dark interface with lavender accent and clean typographic hierarchy.'),
+      ('notion', 'Notion-inspired', 'Calm neutral canvas with restrained blue accents and clean typography.'),
+      ('mongodb', 'MongoDB-inspired', 'Developer-focused green palette with dark surfaces and technical feel.'),
+      ('raycast', 'Raycast-inspired', 'Utility-dark shell with crisp neutrals and functional minimalism.'),
+    ];
     for (var i = 0; i < presets.length; i++) {
-      final label = i == 0
-          ? '${i + 1}. ${presets[i].displayName} (default)'
-          : '${i + 1}. ${presets[i].displayName}';
-      Logger.item(label);
+      final p = presets[i];
+      final defaultLabel = i == 0 ? ' (default)' : '';
+      Logger.item('${i + 1}. ${p.$2}$defaultLabel');
+      Logger.item(p.$3, indent: 4);
     }
     Logger.spacer();
 
@@ -225,11 +245,11 @@ class InitCommand extends BaseCommand {
     final index = int.tryParse(input);
     if (index != null && index >= 1 && index <= presets.length) {
       final selected = presets[index - 1];
-      Logger.info('Selected: ${selected.displayName}\n');
-      return selected.id.name;
+      Logger.info('Selected: ${selected.$2}\n');
+      return selected.$1;
     }
-    Logger.info('Selected: ${presets[0].displayName}\n');
-    return presets[0].id.name;
+    Logger.info('Selected: ${presets[0].$2}\n');
+    return presets[0].$1;
   }
 
   void _printHelp() {
@@ -241,7 +261,10 @@ Usage: petracore init <project_name> [options]
 
   --org               Organization identifier (default: com.petracore)
   --description       Project description
-  --design-preset     Design preset: default (default), vercel, airbnb, apple
+  --design-preset     Design preset (default: default)
+                      Options: default, vercel, airbnb, apple, spotify,
+                      vibrant, highContrast, starbucks, linear, notion,
+                      mongodb, raycast
   --force             Force creation even if directory exists
   --no-interactive    Skip interactive prompts (use defaults or flags)
   --include-auth      Generate auth feature alongside the project

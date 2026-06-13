@@ -1,4 +1,6 @@
-String bootstrapTemplate() => '''
+String bootstrapTemplate(String presetName) {
+  final appUiKitPreset = _appUiKitPresetName(presetName);
+  return '''
 import 'dart:async';
 import 'dart:developer';
 
@@ -33,10 +35,10 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-    AppUiKit.initialize(
+  AppUiKit.initialize(
     config: const AppUiKitConfig(
       fontFamily: 'Plus Jakarta Sans',
-      preset: AppUiKitPreset.spotify,
+      preset: AppUiKitPreset.$appUiKitPreset,
     ),
   );
 
@@ -49,3 +51,10 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   runApp(await builder());
 }
 ''';
+}
+
+String _appUiKitPresetName(String presetName) {
+  // CLI names map to AppUiKitPreset names; only 'default' diverges.
+  if (presetName == 'default') return 'baseline';
+  return presetName;
+}

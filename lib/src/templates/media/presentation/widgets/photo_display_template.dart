@@ -6,15 +6,6 @@ import 'dart:typed_data';
 import 'package:${config.packageName}/core/core.dart';
 
 class PhotoDisplay extends StatelessWidget {
-  final String? url;
-  final String? path;
-  final Uint8List? fileBytes;
-  final double? height;
-  final double? width;
-  final BoxFit? fit;
-  final VoidCallback? onTap;
-  final bool hasBorder;
-
   const PhotoDisplay({
     super.key,
     this.url,
@@ -26,6 +17,14 @@ class PhotoDisplay extends StatelessWidget {
     this.onTap,
     this.hasBorder = false,
   });
+  final String? url;
+  final String? path;
+  final Uint8List? fileBytes;
+  final double? height;
+  final double? width;
+  final BoxFit? fit;
+  final VoidCallback? onTap;
+  final bool hasBorder;
 
   @override
   Widget build(BuildContext context) {

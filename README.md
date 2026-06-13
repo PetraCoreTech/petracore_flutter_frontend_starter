@@ -20,11 +20,12 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 - 📦 **Rich Packages**: Carefully selected and battle-tested dependencies
 - ✨ **Enhanced CLI**: Beautiful, professional logging with levels (debug, info, warning, error, success) and colored output for improved user experience
 
-## 🆕 Recent Improvements (v1.0.9)
+## 🆕 Recent Improvements (v1.1.0)
 
+- **♻️ Design Preset Simplification**: Removed the entire local `DesignPresetId`/`DesignPreset` class hierarchy. Preset names are now plain strings — no local color/typography/radius definitions. All visual tokens come from `app_ui_kit` via `AppUiKitPreset` in generated `bootstrap.dart`
+- **`--design-preset` Values**: The `design-preset` CLI option accepts the same 12 preset names: `default`, `vercel`, `airbnb`, `apple`, `spotify`, `vibrant`, `highContrast`, `starbucks`, `linear`, `notion`, `mongodb`, `raycast`
 - **`--include-auth` Flag**: Generate auth alongside the project in one step — `petracore init my_app --include-auth`
 - **`app_ui_kit` Theming**: All theme and component generation removed locally. Everything comes from the `app_ui_kit` package (`AppScaffold`, `AppUiKit.themes`, design presets)
-- **`--design-preset` Flag**: Choose from `default`, `vercel`, `airbnb`, or `apple` design presets (replaces the old `--theme` flag)
 - **Route Deduplication**: Auth route constants no longer duplicate on rerun — safe to generate auth multiple times
 - **AnimatedSplashLogo Fix**: Splash screen logo widget is now correctly generated to disk
 - **Screen Consolidation**: Flat screen directory structure, no more material/mix subdirectories
@@ -316,10 +317,18 @@ PetraCore uses the `app_ui_kit` package for all theming and UI components — no
 
 ### Design Presets
 Choose a preset when creating a project with `--design-preset`:
-- **default**: Standard Material 3 design
-- **vercel**: Vercel-inspired design language
-- **airbnb**: Airbnb-inspired design language
-- **apple**: Apple-inspired design language (SF fonts, system colors)
+- **default**: Balanced defaults suitable for most products
+- **vercel**: Minimal, geometric design language inspired by Vercel
+- **airbnb**: Warm and rounded consumer UI inspired by Airbnb
+- **apple**: San Francisco typography and clean surfaces inspired by Apple
+- **spotify**: Green-on-dark, media-centric style inspired by Spotify
+- **vibrant**: Saturated palettes with denser visual rhythm
+- **highContrast**: Maximum readability with strong foreground/background separation
+- **starbucks**: Warm neutrals with layered green palette inspired by Starbucks
+- **linear**: Precise dark interface with lavender accent inspired by Linear
+- **notion**: Calm neutral canvas with blue accent inspired by Notion
+- **mongodb**: Developer-focused green with dark surfaces inspired by MongoDB
+- **raycast**: Utility-dark shell with crisp neutrals inspired by Raycast
 
 ### Color Values
 `lib/app/theme/color_values.dart` is generated as the source of truth for brand colors:

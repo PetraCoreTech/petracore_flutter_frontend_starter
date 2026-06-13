@@ -1,8 +1,7 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String downloadActionEventTemplate(ProjectConfig config) => '''
-import 'package:${config.packageName}/features/media/presentation/entities/download_entity.dart';
-import 'package:equatable/equatable.dart';
+part of 'download_action_bloc.dart';
 
 sealed class DownloadActionEvent extends Equatable {
   const DownloadActionEvent();
@@ -12,16 +11,16 @@ sealed class DownloadActionEvent extends Equatable {
 }
 
 final class DownloadSingleFile extends DownloadActionEvent {
-  final DownloadEntity data;
   const DownloadSingleFile(this.data);
+  final DownloadEntity data;
 
   @override
   List<Object?> get props => [data];
 }
 
 final class DownloadMultipleFiles extends DownloadActionEvent {
-  final List<DownloadEntity> data;
   const DownloadMultipleFiles(this.data);
+  final List<DownloadEntity> data;
 
   @override
   List<Object?> get props => [data];

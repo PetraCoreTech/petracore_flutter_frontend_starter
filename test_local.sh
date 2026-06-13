@@ -164,8 +164,45 @@ test_feature_output() {
     fi
 }
 
-# Function to test basic feature keyword
-test_feature() {
+# Function to test basic feature generation (no --output)
+test_feature_basic() {
+    echo -e "${GREEN}🧪 Testing Basic Feature Generation${NC}"
+    echo -e "${GREEN}====================================${NC}"
+    
+    run_cli --verbose feature blog --no-interactive
+    
+    if [ -d "lib/features/blog" ]; then
+        echo -e "${GREEN}✅ Basic feature generation: PASSED${NC}"
+        
+        # Verify files were generated in lib/features/
+        if [ -f "lib/features/blog/blog_index.dart" ] && \
+           [ -f "lib/features/blog/presentation/screens/blog_screen.dart" ]; then
+            echo -e "${GREEN}✅ Feature files generated in lib/features/blog/${NC}"
+        else
+            echo -e "${RED}❌ Feature files missing from lib/features/blog/${NC}"
+            exit 1
+        fi
+        
+        # Verify route constant was added
+        if grep -q "static const blog" lib/navigation/routes.dart; then
+            echo -e "${GREEN}✅ Blog route constant registered${NC}"
+        else
+            echo -e "${RED}❌ Blog route constant missing${NC}"
+            exit 1
+        fi
+        
+        # Clean up test feature
+        rm -rf lib/features/blog
+        rm -f lib/navigation/routes/blog_routes.dart
+        echo -e "${GREEN}✅ Test feature cleaned up${NC}"
+    else
+        echo -e "${RED}❌ Basic feature generation: FAILED${NC}"
+        exit 1
+    fi
+}
+
+# Function to test media feature keyword
+test_feature_media() {
     echo -e "${GREEN}🧪 Testing Media Feature (keyword)${NC}"
     echo -e "${GREEN}===================================${NC}"
     
@@ -174,6 +211,9 @@ test_feature() {
     
     if [ -d "lib/features/media" ]; then
         echo -e "${GREEN}✅ Media feature generation: PASSED${NC}"
+        # Clean up
+        rm -rf lib/features/media
+        echo -e "${GREEN}✅ Media feature cleaned up${NC}"
     else
         echo -e "${RED}❌ Media feature generation: FAILED${NC}"
         exit 1
@@ -314,6 +354,8 @@ run_tests() {
     cleanup
     setup
     test_init
+    test_feature_basic
+    test_feature_media
     test_feature_output
     test_auth_flow_output
     test_flutter_commands
@@ -329,17 +371,19 @@ interactive_mode() {
     echo -e "${BLUE}===========================${NC}"
     echo ""
     echo "Choose what you want to test:"
-    echo "1. Full test suite (recommended)"
-    echo "2. Test project initialization only"
-    echo "3. Test feature with --output only (requires existing project)"
-    echo "4. Test complete auth flow with --output only (requires existing project)"
-    echo "5. Test auth flow without welcome screen (requires existing project)"
-    echo "6. Test basic auth feature only (requires existing project)"
-    echo "7. Test unit tests only"
-    echo "8. Custom CLI command"
-    echo "9. Exit"
+    echo "1.  Full test suite (recommended)"
+    echo "2.  Test project initialization only"
+    echo "3.  Test basic feature generation (requires existing project)"
+    echo "4.  Test feature with --output flag (requires existing project)"
+    echo "5.  Test media feature generation (requires existing project)"
+    echo "6.  Test complete auth flow (requires existing project)"
+    echo "7.  Test auth flow without welcome screen (requires existing project)"
+    echo "8.  Test basic auth feature (requires existing project)"
+    echo "9.  Test unit tests only"
+    echo "10. Custom CLI command"
+    echo "11. Exit"
     echo ""
-    read -p "Enter your choice (1-9): " choice
+    read -p "Enter your choice (1-11): " choice
     
     case $choice in
         1)
@@ -355,38 +399,59 @@ interactive_mode() {
                 echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
                 exit 1
             }
-            test_feature_output
+            test_feature_basic
             ;;
         4)
             cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
                 echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
                 exit 1
             }
-            test_auth_flow_output
+            test_feature_output
             ;;
         5)
             cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
                 echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
                 exit 1
             }
-            test_auth_no_welcome
+            test_feature_media
             ;;
         6)
             cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
                 echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
                 exit 1
             }
-            test_auth_basic
+            test_auth_flow_output
             ;;
         7)
-            test_unit
+            cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+                echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
+                exit 1
+            }
+            test_auth_no_welcome
             ;;
         8)
+            cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+                echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
+                exit 1
+            }
+            test_auth_basic
+            ;;
+        9)
+            test_unit
+            ;;
+        10)
+            cd "$HOME/StudioProjects/petracore_local_test" 2>/dev/null || {
+                echo -e "${YELLOW}⚠️  Test directory not found. Commands will run from current directory.${NC}"
+            }
+            if [ -d "test_app" ]; then
+                cd test_app
+                echo -e "${GREEN}📂 Running inside test_app project${NC}"
+            fi
             echo -e "${YELLOW}Enter CLI command (without 'dart run bin/main.dart'):${NC}"
             read -p "> " custom_command
             run_cli $custom_command
             ;;
-        9)
+        11)
             echo -e "${BLUE}👋 Goodbye!${NC}"
             exit 0
             ;;
@@ -402,24 +467,28 @@ show_help() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
     echo "OPTIONS:"
-    echo "  -h, --help        Show this help message"
-    echo "  -i, --init        Test project initialization only"
-    echo "  -f, --feature     Test feature with --output only"
-    echo "  -a, --auth        Test complete auth flow with --output"
-    echo "  --auth-basic      Test basic auth feature only"
-    echo "  --auth-no-welcome Test auth flow without welcome screen"
-    echo "  -t, --test        Run full test suite"
-    echo "  -c, --clean       Clean up test directory"
-    echo "  -u, --unit        Run package unit tests"
+    echo "  -h, --help         Show this help message"
+    echo "  -i, --init         Test project initialization only"
+    echo "  -b, --feature-basic Test basic feature generation"
+    echo "  -f, --feature      Test feature with --output flag"
+    echo "  -m, --feature-media Test media feature generation"
+    echo "  -a, --auth         Test complete auth flow"
+    echo "  --auth-no-welcome  Test auth flow without welcome screen"
+    echo "  --auth-basic       Test basic auth feature only"
+    echo "  -t, --test         Run full test suite"
+    echo "  -c, --clean        Clean up test directory"
+    echo "  -u, --unit         Run package unit tests"
     echo ""
     echo "If no options are provided, interactive mode will be launched."
     echo ""
     echo "Examples:"
-    echo "  $0                 # Launch interactive mode"
-    echo "  $0 --test          # Run full test suite"
-    echo "  $0 --init          # Test project initialization only"
+    echo "  $0                    # Launch interactive mode"
+    echo "  $0 --test             # Run full test suite"
+    echo "  $0 --init             # Test project initialization only"
+    echo "  $0 --feature-basic    # Test basic feature generation"
+    echo "  $0 --feature-media    # Test media feature generation"
     echo "  $0 --auth-no-welcome  # Test auth without welcome screen"
-    echo "  $0 --clean         # Clean up test directory"
+    echo "  $0 --clean            # Clean up test directory"
 }
 
 # Parse command line arguments
@@ -433,12 +502,26 @@ case "$1" in
         setup
         test_init
         ;;
+    -b|--feature-basic)
+        cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+            echo -e "${RED}❌ No existing project found. Run with --init first.${NC}"
+            exit 1
+        }
+        test_feature_basic
+        ;;
     -f|--feature)
         cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
             echo -e "${RED}❌ No existing project found. Run with --init first.${NC}"
             exit 1
         }
         test_feature_output
+        ;;
+    -m|--feature-media)
+        cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+            echo -e "${RED}❌ No existing project found. Run with --init first.${NC}"
+            exit 1
+        }
+        test_feature_media
         ;;
     -a|--auth)
         cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {

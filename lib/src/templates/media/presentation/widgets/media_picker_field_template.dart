@@ -6,22 +6,21 @@ import 'package:${config.packageName}/features/media/data/models/attached_media_
 import 'package:${config.packageName}/features/media/presentation/widgets/selected_media_item.dart';
 
 class MediaPickerField extends StatelessWidget {
+  const MediaPickerField({
+    required this.files,
+    required this.onPick,
+    required this.onRemove,
+    super.key,
+    this.label,
+    this.title,
+    this.maxFiles = 5,
+  });
   final List<AttachedMedia> files;
   final VoidCallback onPick;
   final ValueChanged<AttachedMedia> onRemove;
   final String? label;
   final String? title;
   final int maxFiles;
-
-  const MediaPickerField({
-    super.key,
-    required this.files,
-    required this.onPick,
-    required this.onRemove,
-    this.label,
-    this.title,
-    this.maxFiles = 5,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,16 +44,15 @@ class MediaPickerField extends StatelessWidget {
 }
 
 class UploadedMediaDisplay extends StatelessWidget {
+  const UploadedMediaDisplay({
+    required this.files,
+    required this.onRemove,
+    super.key,
+    this.label,
+  });
   final List<AttachedMedia> files;
   final ValueChanged<AttachedMedia> onRemove;
   final String? label;
-
-  const UploadedMediaDisplay({
-    super.key,
-    required this.files,
-    required this.onRemove,
-    this.label,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -76,13 +74,6 @@ class UploadedMediaDisplay extends StatelessWidget {
 }
 
 class _AttachmentGrid extends StatelessWidget {
-  final List<AttachedMedia> files;
-  final ValueChanged<AttachedMedia> onRemove;
-  final int maxFiles;
-  final VoidCallback? onPick;
-  final String? title;
-  final bool readOnly;
-
   const _AttachmentGrid({
     required this.files,
     required this.onRemove,
@@ -91,6 +82,12 @@ class _AttachmentGrid extends StatelessWidget {
     this.title,
     this.readOnly = false,
   });
+  final List<AttachedMedia> files;
+  final ValueChanged<AttachedMedia> onRemove;
+  final int maxFiles;
+  final VoidCallback? onPick;
+  final String? title;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -98,14 +95,16 @@ class _AttachmentGrid extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: [
-        ...files.map((file) => SelectedMediaItem(
-              url: file.url,
-              path: file.path,
-              fileBytes: file.fileBytes,
-              height: 80,
-              width: 80,
-              onCancel: readOnly ? null : () => onRemove(file),
-            )),
+        ...files.map(
+          (file) => SelectedMediaItem(
+            url: file.url,
+            path: file.path,
+            fileBytes: file.fileBytes,
+            height: 80,
+            width: 80,
+            onCancel: readOnly ? null : () => onRemove(file),
+          ),
+        ),
         if (!readOnly && files.length < maxFiles)
           _AddMediaButton(onPick: onPick, title: title),
       ],
@@ -114,10 +113,9 @@ class _AttachmentGrid extends StatelessWidget {
 }
 
 class _AddMediaButton extends StatelessWidget {
+  const _AddMediaButton({this.onPick, this.title});
   final VoidCallback? onPick;
   final String? title;
-
-  const _AddMediaButton({this.onPick, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +132,8 @@ class _AddMediaButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.add_photo_alternate_outlined),
-            if (title != null) Text(title!, style: const TextStyle(fontSize: 10)),
+            if (title != null)
+              Text(title!, style: const TextStyle(fontSize: 10)),
           ],
         ),
       ),

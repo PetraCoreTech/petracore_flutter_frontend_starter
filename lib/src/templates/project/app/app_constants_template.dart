@@ -1,8 +1,6 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String appConstantsTemplate(ProjectConfig config) {
-  final fontFamily = config.resolvedDesignPreset.typography.fontFamily;
-
   return '''
 import 'package:flutter/material.dart';
 
@@ -11,7 +9,7 @@ class AppConstants {
 
   static const String appName = '${config.className}';
 
-  static const String fontFamily = '$fontFamily';
+  static const String fontFamily = 'Plus Jakarta Sans';
 
   static const int otpInput = 6;
 
