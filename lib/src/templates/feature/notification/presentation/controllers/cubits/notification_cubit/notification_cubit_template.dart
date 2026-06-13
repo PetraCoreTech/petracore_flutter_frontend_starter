@@ -1,5 +1,4 @@
 String notificationCubitTemplate(String projectName) => '''
-import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:$projectName/features/notification/presentation/entities/notification_item_entity.dart';
 

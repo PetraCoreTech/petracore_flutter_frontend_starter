@@ -1,5 +1,5 @@
 String notificationItemEntityTemplate(String projectName) => '''
-import 'notification_type_entity.dart';
+import 'package:${projectName}/features/notification/presentation/entities/notification_type_entity.dart';
 
 class NotificationItem {
   NotificationItem({
@@ -13,16 +13,7 @@ class NotificationItem {
     this.imageUrl,
   });
 
-  final String id;
-  final String title;
-  final String body;
-  final NotificationType type;
-  final DateTime createdAt;
-  bool isRead;
-  final Map<String, dynamic>? data;
-  final String? imageUrl;
-
-  factory NotificationItem.fromJson(Map<String, dynamic> json) {
+    factory NotificationItem.fromJson(Map<String, dynamic> json) {
     return NotificationItem(
       id: json['id'] as String,
       title: json['title'] as String,
@@ -37,6 +28,15 @@ class NotificationItem {
       imageUrl: json['image_url'] as String?,
     );
   }
+
+  final String id;
+  final String title;
+  final String body;
+  final NotificationType type;
+  final DateTime createdAt;
+  bool isRead;
+  final Map<String, dynamic>? data;
+  final String? imageUrl;
 
   Map<String, dynamic> toJson() => {
     'id': id,
