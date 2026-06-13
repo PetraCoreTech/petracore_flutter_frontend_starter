@@ -2,8 +2,11 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:path/path.dart' as path;
 import '../generators/auth_flow_generator.dart';
+import '../generators/feature_generator.dart';
+import '../generators/notification_generator.dart';
 import '../generators/project_generator.dart';
 import '../utils/logger.dart';
+import '../utils/project_config_reader.dart';
 import '../utils/validation.dart';
 import 'base_command.dart';
 
@@ -69,6 +72,12 @@ ArgParser initCommandParser() {
       help: 'Generate auth feature alongside the project',
       defaultsTo: false,
       negatable: false,
+    )
+    ..addFlag(
+      'no-notifications',
+      help: 'Skip notification feature generation',
+      defaultsTo: false,
+      negatable: false,
     );
 }
 
@@ -104,6 +113,8 @@ class InitCommand extends BaseCommand {
         ? results['include-auth'] as bool
         : _promptForAuth();
 
+    final skipNotifications = results['no-notifications'] as bool;
+
     final config = ProjectConfig(
       projectName: projectName,
       organization: results['org'] as String,
@@ -113,6 +124,10 @@ class InitCommand extends BaseCommand {
     );
 
     await _generateProject(config);
+
+    if (!skipNotifications) {
+      await _generateNotificationFeature(projectName, projectPath);
+    }
 
     if (includeAuth) {
       await _generateAuth(projectName, projectPath);
@@ -252,6 +267,21 @@ class InitCommand extends BaseCommand {
     return presets[0].$1;
   }
 
+  Future<void> _generateNotificationFeature(String projectName, String projectPath) async {
+    final projectConfig = ProjectConfigReader.createDefaultConfig(
+      projectName: projectName,
+      projectPath: projectPath,
+    );
+    final config = FeatureConfig(
+      featureName: 'notification',
+      projectRoot: projectPath,
+      featureRoot: path.join(projectPath, 'lib/features/notification'),
+      projectConfig: projectConfig,
+    );
+    final generator = NotificationGenerator(config);
+    await generator.generate();
+  }
+
   void _printHelp() {
     print('''
 Initialize a new Flutter project with PetraCore architecture
@@ -268,6 +298,7 @@ Usage: petracore init <project_name> [options]
   --force             Force creation even if directory exists
   --no-interactive    Skip interactive prompts (use defaults or flags)
   --include-auth      Generate auth feature alongside the project
+  --no-notifications  Skip notification feature generation (included by default)
   --help, -h          Show this help
 
 When --design-preset or --include-auth are not specified, you will be prompted

@@ -201,6 +201,113 @@ test_feature_basic() {
     fi
 }
 
+# Function to test notification feature is auto-generated during init
+test_notification_init() {
+    echo -e "${GREEN}🧪 Testing Notification Feature (auto-generated during init)${NC}"
+    echo -e "${GREEN}===========================================================${NC}"
+
+    if [ -d "lib/features/notification" ]; then
+        echo -e "${GREEN}✅ Notification feature directory exists${NC}"
+    else
+        echo -e "${RED}❌ Notification feature directory missing${NC}"
+        exit 1
+    fi
+
+    if [ -f "lib/features/notification/notification_index.dart" ] && \
+       [ -f "lib/features/notification/presentation/entities/notification_item_entity.dart" ] && \
+       [ -f "lib/features/notification/presentation/entities/notification_type_entity.dart" ] && \
+       [ -f "lib/features/notification/presentation/controllers/cubits/notification_cubit/notification_cubit.dart" ] && \
+       [ -f "lib/features/notification/presentation/controllers/notification_bloc_provider.dart" ] && \
+       [ -f "lib/features/notification/presentation/controllers/notification_controller_index.dart" ] && \
+       [ -f "lib/features/notification/presentation/widgets/notification_badge.dart" ] && \
+       [ -f "lib/features/notification/presentation/widgets/notification_card.dart" ] && \
+       [ -f "lib/features/notification/presentation/widgets/notification_list.dart" ] && \
+       [ -f "lib/features/notification/presentation/widgets/notification_tile.dart" ]; then
+        echo -e "${GREEN}✅ All notification feature files generated${NC}"
+    else
+        echo -e "${RED}❌ Some notification feature files missing${NC}"
+        ls lib/features/notification/ 2>/dev/null || true
+        ls lib/features/notification/presentation/controllers/cubits/notification_cubit/ 2>/dev/null || true
+        ls lib/features/notification/presentation/widgets/ 2>/dev/null || true
+        exit 1
+    fi
+
+    # Verify bloc provider was registered
+    if grep -q "notificationBlocProvider" lib/features/shared/presentation/controllers/bloc_provider.dart; then
+        echo -e "${GREEN}✅ Notification bloc provider registered${NC}"
+    else
+        echo -e "${RED}❌ Notification bloc provider not registered${NC}"
+        exit 1
+    fi
+}
+
+# Function to test notification keyword feature
+test_notification_keyword() {
+    echo -e "${GREEN}🧪 Testing Notification Keyword Feature${NC}"
+    echo -e "${GREEN}========================================${NC}"
+
+    # Remove existing notification feature
+    if [ -d "lib/features/notification" ]; then
+        rm -rf lib/features/notification
+    fi
+
+    run_cli --verbose feature notification
+
+    if [ -d "lib/features/notification" ]; then
+        echo -e "${GREEN}✅ Notification keyword generation: PASSED${NC}"
+    else
+        echo -e "${RED}❌ Notification keyword generation: FAILED${NC}"
+        exit 1
+    fi
+}
+
+# Function to test survey keyword feature
+test_survey_keyword() {
+    echo -e "${GREEN}🧪 Testing Survey Keyword Feature${NC}"
+    echo -e "${GREEN}=================================${NC}"
+
+    run_cli --verbose feature survey
+
+    if [ -d "lib/features/survey" ]; then
+        echo -e "${GREEN}✅ Survey keyword generation: PASSED${NC}"
+    else
+        echo -e "${RED}❌ Survey keyword generation: FAILED${NC}"
+        exit 1
+    fi
+
+    if [ -f "lib/features/survey/survey_index.dart" ] && \
+       [ -f "lib/features/survey/presentation/entities/survey_question_entity.dart" ] && \
+       [ -f "lib/features/survey/presentation/entities/survey_answer_entity.dart" ] && \
+       [ -f "lib/features/survey/presentation/enums/survey_mode.dart" ] && \
+       [ -f "lib/features/survey/presentation/controllers/cubits/survey_mode_cubit/survey_mode_cubit.dart" ] && \
+       [ -f "lib/features/survey/presentation/controllers/survey_bloc_provider.dart" ] && \
+       [ -f "lib/features/survey/presentation/controllers/survey_controller_index.dart" ] && \
+       [ -f "lib/features/survey/presentation/widgets/survey_builder.dart" ] && \
+       [ -f "lib/features/survey/presentation/widgets/overview_mode.dart" ] && \
+       [ -f "lib/features/survey/presentation/widgets/question_mode.dart" ] && \
+       [ -f "lib/features/survey/presentation/widgets/survey_answer_display.dart" ] && \
+       [ -f "lib/features/survey/presentation/widgets/survey_question_display.dart" ] && \
+       [ -f "lib/features/survey/presentation/widgets/survey_option_selector.dart" ]; then
+        echo -e "${GREEN}✅ All survey feature files generated${NC}"
+    else
+        echo -e "${RED}❌ Some survey feature files missing${NC}"
+        ls -R lib/features/survey/ 2>/dev/null || true
+        exit 1
+    fi
+
+    # Verify bloc provider was registered
+    if grep -q "surveyBlocProvider" lib/features/shared/presentation/controllers/bloc_provider.dart; then
+        echo -e "${GREEN}✅ Survey bloc provider registered${NC}"
+    else
+        echo -e "${RED}❌ Survey bloc provider not registered${NC}"
+        exit 1
+    fi
+
+    # Clean up survey feature
+    rm -rf lib/features/survey
+    echo -e "${GREEN}✅ Survey feature cleaned up${NC}"
+}
+
 # Function to test media feature keyword
 test_feature_media() {
     echo -e "${GREEN}🧪 Testing Media Feature (keyword)${NC}"
@@ -354,6 +461,9 @@ run_tests() {
     cleanup
     setup
     test_init
+    test_notification_init
+    test_notification_keyword
+    test_survey_keyword
     test_feature_basic
     test_feature_media
     test_feature_output
@@ -376,14 +486,17 @@ interactive_mode() {
     echo "3.  Test basic feature generation (requires existing project)"
     echo "4.  Test feature with --output flag (requires existing project)"
     echo "5.  Test media feature generation (requires existing project)"
-    echo "6.  Test complete auth flow (requires existing project)"
-    echo "7.  Test auth flow without welcome screen (requires existing project)"
-    echo "8.  Test basic auth feature (requires existing project)"
-    echo "9.  Test unit tests only"
-    echo "10. Custom CLI command"
-    echo "11. Exit"
+    echo "6.  Test notification feature (auto-generated during init)"
+    echo "7.  Test notification keyword feature (requires existing project)"
+    echo "8.  Test survey keyword feature (requires existing project)"
+    echo "9.  Test complete auth flow (requires existing project)"
+    echo "10. Test auth flow without welcome screen (requires existing project)"
+    echo "11. Test basic auth feature (requires existing project)"
+    echo "12. Test unit tests only"
+    echo "13. Custom CLI command"
+    echo "14. Exit"
     echo ""
-    read -p "Enter your choice (1-11): " choice
+    read -p "Enter your choice (1-14): " choice
     
     case $choice in
         1)
@@ -420,26 +533,47 @@ interactive_mode() {
                 echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
                 exit 1
             }
-            test_auth_flow_output
+            test_notification_init
             ;;
         7)
             cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
                 echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
                 exit 1
             }
-            test_auth_no_welcome
+            test_notification_keyword
             ;;
         8)
             cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
                 echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
                 exit 1
             }
-            test_auth_basic
+            test_survey_keyword
             ;;
         9)
-            test_unit
+            cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+                echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
+                exit 1
+            }
+            test_auth_flow_output
             ;;
         10)
+            cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+                echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
+                exit 1
+            }
+            test_auth_no_welcome
+            ;;
+        11)
+            cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+                echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
+                exit 1
+            }
+            test_auth_basic
+            ;;
+        12)
+            test_unit
+            ;;
+        13)
             cd "$HOME/StudioProjects/petracore_local_test" 2>/dev/null || {
                 echo -e "${YELLOW}⚠️  Test directory not found. Commands will run from current directory.${NC}"
             }
@@ -451,7 +585,7 @@ interactive_mode() {
             read -p "> " custom_command
             run_cli $custom_command
             ;;
-        11)
+        14)
             echo -e "${BLUE}👋 Goodbye!${NC}"
             exit 0
             ;;
@@ -475,6 +609,9 @@ show_help() {
     echo "  -a, --auth         Test complete auth flow"
     echo "  --auth-no-welcome  Test auth flow without welcome screen"
     echo "  --auth-basic       Test basic auth feature only"
+    echo "  -n, --notification-init Test notification auto-generated during init"
+    echo "  --notification-keyword  Test notification keyword feature generation"
+    echo "  -s, --survey-keyword    Test survey keyword feature generation"
     echo "  -t, --test         Run full test suite"
     echo "  -c, --clean        Clean up test directory"
     echo "  -u, --unit         Run package unit tests"
@@ -487,6 +624,8 @@ show_help() {
     echo "  $0 --init             # Test project initialization only"
     echo "  $0 --feature-basic    # Test basic feature generation"
     echo "  $0 --feature-media    # Test media feature generation"
+    echo "  $0 --notification-init # Test notification auto-generated during init"
+    echo "  $0 --survey-keyword   # Test survey keyword feature"
     echo "  $0 --auth-no-welcome  # Test auth without welcome screen"
     echo "  $0 --clean            # Clean up test directory"
 }
@@ -543,6 +682,27 @@ case "$1" in
             exit 1
         }
         test_auth_no_welcome
+        ;;
+    -n|--notification-init)
+        cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+            echo -e "${RED}❌ No existing project found. Run with --init first.${NC}"
+            exit 1
+        }
+        test_notification_init
+        ;;
+    --notification-keyword)
+        cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+            echo -e "${RED}❌ No existing project found. Run with --init first.${NC}"
+            exit 1
+        }
+        test_notification_keyword
+        ;;
+    -s|--survey-keyword)
+        cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+            echo -e "${RED}❌ No existing project found. Run with --init first.${NC}"
+            exit 1
+        }
+        test_survey_keyword
         ;;
     -t|--test)
         run_tests

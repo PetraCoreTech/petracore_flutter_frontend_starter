@@ -7,6 +7,8 @@ import 'package:recase/recase.dart';
 import '../generators/auth_flow_generator.dart';
 import '../generators/feature_generator.dart';
 import '../generators/media_flow_generator.dart';
+import '../generators/notification_generator.dart';
+import '../generators/survey_generator.dart';
 import '../templates/feature/pagination/pagination_index_template.dart';
 import '../templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_event_template.dart';
 import '../templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_state_template.dart';
@@ -256,6 +258,18 @@ class FeatureCommand extends BaseCommand {
     // 📄 PAGINATION KEYWORD ANALYSIS - Check if user wants pagination feature
     if (featureName.toLowerCase() == 'pagination') {
       await _handlePaginationKeyword();
+      return;
+    }
+
+    // 🔔 NOTIFICATION KEYWORD ANALYSIS
+    if (featureName.toLowerCase() == 'notification') {
+      await _handleNotificationKeyword();
+      return;
+    }
+
+    // 📋 SURVEY KEYWORD ANALYSIS
+    if (featureName.toLowerCase() == 'survey') {
+      await _handleSurveyKeyword();
       return;
     }
 
@@ -622,6 +636,91 @@ class FeatureCommand extends BaseCommand {
         Logger.item('3. Use PaginatedListBuilder in your features that need pagination');
       } catch (e) {
         Logger.error('Failed to generate pagination feature: $e');
+        exit(1);
+      }
+    }
+
+    /// Handle the 'notification' keyword
+    Future<void> _handleNotificationKeyword() async {
+      if (!File('pubspec.yaml').existsSync()) {
+        Logger.error('Not in a Flutter project directory');
+        Logger.info('Run this command from the root of your Flutter project');
+        exit(1);
+      }
+
+      final currentDir = path.normalize(path.absolute(Directory.current.path));
+      final projectConfig = await ProjectConfigReader.readOrDefault(projectPath: currentDir);
+
+      final config = FeatureConfig(
+        featureName: 'notification',
+        projectRoot: currentDir,
+        featureRoot: path.join(currentDir, 'lib/features/notification'),
+        projectConfig: projectConfig,
+      );
+
+      Logger.header('Generating Notification Feature');
+      final generator = NotificationGenerator(config);
+
+      try {
+        await generator.generate();
+        Logger.success('Notification feature created successfully!');
+        Logger.section('Generated files');
+        Logger.item('lib/features/notification/');
+        Logger.item('  ├── notification_index.dart');
+        Logger.item('  └── presentation/');
+        Logger.item('      ├── controllers/');
+        Logger.item('      │   └── cubits/notification_cubit/');
+        Logger.item('      ├── entities/');
+        Logger.item('      └── widgets/');
+        Logger.section('Next steps');
+        Logger.item('1. Run: flutter pub get');
+        Logger.item('2. Import notification_index.dart in your app');
+        Logger.item('3. Use NotificationBadge and NotificationList widgets');
+      } catch (e) {
+        Logger.error('Failed to generate notification feature: $e');
+        exit(1);
+      }
+    }
+
+    /// Handle the 'survey' keyword
+    Future<void> _handleSurveyKeyword() async {
+      if (!File('pubspec.yaml').existsSync()) {
+        Logger.error('Not in a Flutter project directory');
+        Logger.info('Run this command from the root of your Flutter project');
+        exit(1);
+      }
+
+      final currentDir = path.normalize(path.absolute(Directory.current.path));
+      final projectConfig = await ProjectConfigReader.readOrDefault(projectPath: currentDir);
+
+      final config = FeatureConfig(
+        featureName: 'survey',
+        projectRoot: currentDir,
+        featureRoot: path.join(currentDir, 'lib/features/survey'),
+        projectConfig: projectConfig,
+      );
+
+      Logger.header('Generating Survey Feature');
+      final generator = SurveyGenerator(config);
+
+      try {
+        await generator.generate();
+        Logger.success('Survey feature created successfully!');
+        Logger.section('Generated files');
+        Logger.item('lib/features/survey/');
+        Logger.item('  ├── survey_index.dart');
+        Logger.item('  └── presentation/');
+        Logger.item('      ├── controllers/');
+        Logger.item('      │   └── cubits/survey_mode_cubit/');
+        Logger.item('      ├── entities/');
+        Logger.item('      ├── enums/');
+        Logger.item('      └── widgets/');
+        Logger.section('Next steps');
+        Logger.item('1. Run: flutter pub get');
+        Logger.item('2. Import survey_index.dart in your app');
+        Logger.item('3. Use SurveyBuilder widget for quizzes and forms');
+      } catch (e) {
+        Logger.error('Failed to generate survey feature: $e');
         exit(1);
       }
     }

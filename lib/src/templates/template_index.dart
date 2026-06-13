@@ -62,6 +62,33 @@ export 'feature/pagination/presentation/controllers/pagination_bloc/pagination_e
 export 'feature/pagination/presentation/controllers/pagination_bloc/pagination_state_template.dart';
 export 'feature/pagination/presentation/widgets/paginated_list_builder_template.dart';
 export 'feature/pagination/presentation/widgets/paginated_list_view_template.dart';
+
+// Notification templates
+export 'feature/notification/notification_index_template.dart';
+export 'feature/notification/presentation/controllers/cubits/notification_cubit/notification_cubit_template.dart';
+export 'feature/notification/presentation/controllers/notification_bloc_provider_template.dart';
+export 'feature/notification/presentation/controllers/notification_controller_index_template.dart';
+export 'feature/notification/presentation/entities/notification_item_entity_template.dart';
+export 'feature/notification/presentation/entities/notification_type_entity_template.dart';
+export 'feature/notification/presentation/widgets/notification_badge_template.dart';
+export 'feature/notification/presentation/widgets/notification_card_template.dart';
+export 'feature/notification/presentation/widgets/notification_list_template.dart';
+export 'feature/notification/presentation/widgets/notification_tile_template.dart';
+
+// Survey templates
+export 'feature/survey/survey_index_template.dart';
+export 'feature/survey/presentation/controllers/cubits/survey_mode_cubit/survey_mode_cubit_template.dart';
+export 'feature/survey/presentation/controllers/survey_bloc_provider_template.dart';
+export 'feature/survey/presentation/controllers/survey_controller_index_template.dart';
+export 'feature/survey/presentation/entities/survey_answer_entity_template.dart';
+export 'feature/survey/presentation/entities/survey_question_entity_template.dart';
+export 'feature/survey/presentation/enums/survey_mode_enum_template.dart';
+export 'feature/survey/presentation/widgets/overview_mode_template.dart';
+export 'feature/survey/presentation/widgets/question_mode_template.dart';
+export 'feature/survey/presentation/widgets/survey_answer_display_template.dart';
+export 'feature/survey/presentation/widgets/survey_builder_template.dart';
+export 'feature/survey/presentation/widgets/survey_option_selector_template.dart';
+export 'feature/survey/presentation/widgets/survey_question_display_template.dart';
 export 'feature/presentation/controllers/action_bloc_event_template.dart';
 export 'feature/presentation/controllers/action_bloc_state_template.dart';
 export 'feature/presentation/controllers/action_bloc_template.dart';
