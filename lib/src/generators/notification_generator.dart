@@ -22,8 +22,13 @@ class NotificationGenerator {
 
   Future<void> _createDirectories() async {
     final dirs = [
+      path.join(config.featureRoot, 'data', 'enums'),
+      path.join(config.featureRoot, 'data', 'extensions'),
+      path.join(config.featureRoot, 'data', 'models'),
+      path.join(config.featureRoot, 'data', 'parsers'),
+      path.join(config.featureRoot, 'data', 'remote', 'dtos'),
+      path.join(config.featureRoot, 'data', 'use_cases'),
       path.join(config.featureRoot, 'presentation', 'controllers', 'cubits', 'notification_cubit'),
-      path.join(config.featureRoot, 'presentation', 'entities'),
       path.join(config.featureRoot, 'presentation', 'widgets'),
     ];
     for (final dir in dirs) {
@@ -34,11 +39,21 @@ class NotificationGenerator {
   Future<void> _generateFiles() async {
     final files = {
       'notification_index.dart': templates.notificationIndex,
+      // Data layer
+      'data/enums/notification_type.dart': templates.notificationTypeEnum,
+      'data/extensions/remote_message_extension.dart': templates.remoteMessageExtension,
+      'data/models/notification_model.dart': templates.notificationModel,
+      'data/parsers/notification_type_converter.dart': templates.notificationTypeConverter,
+      'data/remote/dtos/notification_params.dart': templates.notificationParams,
+      'data/remote/dtos/notify_dto.dart': templates.notifyDto,
+      'data/remote/notification_service.dart': templates.notificationService,
+      'data/remote/fcm_notification_service.dart': templates.fcmNotificationService,
+      'data/remote/notification_repository.dart': templates.notificationRepository,
+      'data/use_cases/notification_use_cases.dart': templates.notificationUseCases,
+      // Presentation layer
       'presentation/controllers/cubits/notification_cubit/notification_cubit.dart': templates.notificationCubit,
       'presentation/controllers/notification_bloc_provider.dart': templates.notificationBlocProvider,
       'presentation/controllers/notification_controller_index.dart': templates.notificationControllerIndex,
-      'presentation/entities/notification_item_entity.dart': templates.notificationItemEntity,
-      'presentation/entities/notification_type_entity.dart': templates.notificationType,
       'presentation/widgets/notification_badge.dart': templates.notificationBadge,
       'presentation/widgets/notification_card.dart': templates.notificationCard,
       'presentation/widgets/notification_list.dart': templates.notificationList,

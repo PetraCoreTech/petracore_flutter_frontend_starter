@@ -65,11 +65,19 @@ export 'feature/pagination/presentation/widgets/paginated_list_view_template.dar
 
 // Notification templates
 export 'feature/notification/notification_index_template.dart';
+export 'feature/notification/data/enums/notification_type_enum_template.dart';
+export 'feature/notification/data/extensions/remote_message_extension_template.dart';
+export 'feature/notification/data/models/notification_model_template.dart';
+export 'feature/notification/data/parsers/notification_type_converter_template.dart';
+export 'feature/notification/data/remote/dtos/notification_params_template.dart';
+export 'feature/notification/data/remote/dtos/notify_dto_template.dart';
+export 'feature/notification/data/remote/fcm_notification_service_template.dart';
+export 'feature/notification/data/remote/notification_repository_template.dart';
+export 'feature/notification/data/remote/notification_service_template.dart';
+export 'feature/notification/data/use_cases/notification_use_cases_template.dart';
 export 'feature/notification/presentation/controllers/cubits/notification_cubit/notification_cubit_template.dart';
 export 'feature/notification/presentation/controllers/notification_bloc_provider_template.dart';
 export 'feature/notification/presentation/controllers/notification_controller_index_template.dart';
-export 'feature/notification/presentation/entities/notification_item_entity_template.dart';
-export 'feature/notification/presentation/entities/notification_type_template.dart';
 export 'feature/notification/presentation/widgets/notification_badge_template.dart';
 export 'feature/notification/presentation/widgets/notification_card_template.dart';
 export 'feature/notification/presentation/widgets/notification_list_template.dart';

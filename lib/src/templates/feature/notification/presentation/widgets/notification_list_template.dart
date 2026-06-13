@@ -33,18 +33,18 @@ class NotificationList extends StatelessWidget {
         if (itemBuilder != null) {
           return itemBuilder!(
             notification,
-            () => onNotificationTap?.call(notification.id),
+            () => onNotificationTap?.call(notification.id ?? ''),
           );
         }
         return NotificationTile(
           notification: notification,
           onTap: () {
-            cubit.markAsRead(notification.id);
-            onNotificationTap?.call(notification.id);
+            cubit.markAsRead(notification.id ?? '');
+            onNotificationTap?.call(notification.id ?? '');
           },
           onDismissed: () {
-            cubit.removeNotification(notification.id);
-            onDismissed?.call(notification.id);
+            cubit.removeNotification(notification.id ?? '');
+            onDismissed?.call(notification.id ?? '');
           },
         );
       },

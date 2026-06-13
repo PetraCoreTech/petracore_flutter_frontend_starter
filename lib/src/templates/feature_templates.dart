@@ -46,11 +46,21 @@ class FeatureTemplates {
 
   /// Notification Feature
   String get notificationIndex => notificationIndexTemplate(projectConfig.projectName);
+  /// Notification Data Layer
+  String get notificationTypeEnum => notificationTypeEnumTemplate(projectConfig.projectName);
+  String get remoteMessageExtension => remoteMessageExtensionTemplate(projectConfig.projectName);
+  String get notificationModel => notificationModelTemplate(projectConfig.projectName);
+  String get notificationTypeConverter => notificationTypeConverterTemplate(projectConfig.projectName);
+  String get notificationParams => notificationParamsTemplate(projectConfig.projectName);
+  String get notifyDto => notifyDtoTemplate(projectConfig.projectName);
+  String get notificationService => notificationServiceTemplate(projectConfig.projectName);
+  String get fcmNotificationService => fcmNotificationServiceTemplate(projectConfig.projectName);
+  String get notificationRepository => notificationRepositoryTemplate(projectConfig.projectName);
+  String get notificationUseCases => notificationUseCasesTemplate(projectConfig.projectName);
+  /// Notification Presentation
   String get notificationCubit => notificationCubitTemplate(projectConfig.projectName);
   String get notificationBlocProvider => notificationBlocProviderTemplate(projectConfig.projectName);
   String get notificationControllerIndex => notificationControllerIndexTemplate(projectConfig.projectName);
-  String get notificationItemEntity => notificationItemEntityTemplate(projectConfig.projectName);
-  String get notificationType => notificationTypeTemplate(projectConfig.projectName);
   String get notificationBadge => notificationBadgeTemplate(projectConfig.projectName);
   String get notificationCard => notificationCardTemplate(projectConfig.projectName);
   String get notificationList => notificationListTemplate(projectConfig.projectName);

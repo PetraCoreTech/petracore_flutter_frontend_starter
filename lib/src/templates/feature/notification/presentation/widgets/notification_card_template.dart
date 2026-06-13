@@ -15,7 +15,7 @@ class NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: notification.isRead ? null : Theme.of(context).primaryColor.withValues(alpha: 0.05),
+      color: notification.isRead == true ? null : Theme.of(context).primaryColor.withValues(alpha: 0.05),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -60,7 +60,7 @@ class NotificationCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      _timeAgo(notification.createdAt),
+                      _timeAgo(notification.dateCreated ?? DateTime.now()),
                       style: TextStyle(
                         fontSize: 11,
                         color: Theme.of(context).textTheme.bodySmall?.color,
@@ -69,7 +69,7 @@ class NotificationCard extends StatelessWidget {
                   ],
                 ),
               ),
-              if (!notification.isRead)
+              if (notification.isRead != true)
                 Container(
                   width: 8,
                   height: 8,
@@ -86,12 +86,10 @@ class NotificationCard extends StatelessWidget {
   }
 
   IconData _iconForType(NotificationType type) => switch (type) {
-    NotificationType.announcement => Icons.campaign,
-    NotificationType.assignment => Icons.assignment,
-    NotificationType.quiz => Icons.quiz,
-    NotificationType.message => Icons.message,
-    NotificationType.system => Icons.settings,
-    NotificationType.general => Icons.notifications,
+    NotificationType.journal => Icons.book,
+    NotificationType.friendRequest => Icons.person_add,
+    NotificationType.friends => Icons.people,
+    NotificationType.chat => Icons.chat,
   };
 
   String _timeAgo(DateTime date) {

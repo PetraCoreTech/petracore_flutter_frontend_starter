@@ -1,7 +1,6 @@
 String notificationTileTemplate(String projectName) => '''
 import 'package:flutter/material.dart';
-import 'package:$projectName/features/notification/presentation/entities/notification_item_entity.dart';
-import 'package:$projectName/features/notification/presentation/entities/notification_type_entity.dart';
+import 'package:$projectName/features/notification/notification_index.dart';
 
 class NotificationTile extends StatelessWidget {
   const NotificationTile({
@@ -18,7 +17,7 @@ class NotificationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: Key(notification.id),
+      key: Key(notification.id ?? ''),
       direction: DismissDirection.endToStart,
       onDismissed: (_) => onDismissed?.call(),
       background: Container(
@@ -34,7 +33,7 @@ class NotificationTile extends StatelessWidget {
         title: Text(
           notification.title,
           style: TextStyle(
-            fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
+            fontWeight: notification.isRead == true ? FontWeight.normal : FontWeight.bold,
           ),
         ),
         subtitle: Text(
@@ -43,7 +42,7 @@ class NotificationTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         trailing: Text(
-          _timeAgo(notification.createdAt),
+          _timeAgo(notification.dateCreated ?? DateTime.now()),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         onTap: onTap,
@@ -52,12 +51,10 @@ class NotificationTile extends StatelessWidget {
   }
 
   IconData _iconForType(NotificationType type) => switch (type) {
-    NotificationType.announcement => Icons.campaign,
-    NotificationType.assignment => Icons.assignment,
-    NotificationType.quiz => Icons.quiz,
-    NotificationType.message => Icons.message,
-    NotificationType.system => Icons.settings,
-    NotificationType.general => Icons.notifications,
+    NotificationType.journal => Icons.book,
+    NotificationType.friendRequest => Icons.person_add,
+    NotificationType.friends => Icons.people,
+    NotificationType.chat => Icons.chat,
   };
 
   String _timeAgo(DateTime date) {

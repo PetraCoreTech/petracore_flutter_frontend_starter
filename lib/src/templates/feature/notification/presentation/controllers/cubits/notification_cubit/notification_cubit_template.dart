@@ -1,6 +1,6 @@
 String notificationCubitTemplate(String projectName) => '''
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:$projectName/features/notification/presentation/entities/notification_item_entity.dart';
+import 'package:$projectName/features/notification/notification_index.dart';
 
 class NotificationState {
   const NotificationState({
