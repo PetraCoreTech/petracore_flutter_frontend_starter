@@ -157,6 +157,23 @@ export 'media/presentation/screens/media_setup_guide_template.dart';
 export 'media/presentation/widgets/selected_media_item_template.dart';
 export 'media/presentation/widgets/video_player_template.dart';
 
+// Chatbot templates
+export 'feature/chatbot/chatbot_index_template.dart';
+export 'feature/chatbot/presentation/controllers/cubits/chatbot_cubit_template.dart';
+export 'feature/chatbot/presentation/controllers/chatbot_bloc_provider_template.dart';
+export 'feature/chatbot/presentation/controllers/chatbot_controller_index_template.dart';
+export 'feature/chatbot/presentation/entities/chat_message_entity_template.dart';
+export 'feature/chatbot/presentation/entities/chat_conversation_entity_template.dart';
+export 'feature/chatbot/presentation/widgets/message_bubble_template.dart';
+export 'feature/chatbot/presentation/widgets/chat_input_field_template.dart';
+export 'feature/chatbot/presentation/widgets/typing_indicator_template.dart';
+export 'feature/chatbot/presentation/widgets/conversation_list_template.dart';
+export 'feature/chatbot/presentation/screens/chatbot_screen_template.dart';
+export 'feature/chatbot/data/models/chat_message_model_template.dart';
+export 'feature/chatbot/data/remote/chatbot_service_template.dart';
+export 'feature/chatbot/data/remote/chatbot_repository_template.dart';
+export 'feature/chatbot/data/domain/chatbot_use_cases_template.dart';
+
 // Map templates
 export 'map/data/enums/business_status_template.dart';
 export 'map/data/helpers/location_helper_template.dart';

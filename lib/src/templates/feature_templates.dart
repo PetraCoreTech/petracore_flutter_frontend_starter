@@ -66,6 +66,23 @@ class FeatureTemplates {
   String get notificationList => notificationListTemplate(projectConfig.projectName);
   String get notificationTile => notificationTileTemplate(projectConfig.projectName);
 
+  /// Chatbot Feature
+  String get chatbotIndex => chatbotIndexTemplate(projectConfig.projectName);
+  String get chatMessageEntity => chatMessageEntityTemplate(projectConfig.projectName);
+  String get chatConversationEntity => chatConversationEntityTemplate(projectConfig.projectName);
+  String get chatbotCubit => chatbotCubitTemplate(projectConfig.projectName);
+  String get chatbotBlocProvider => chatbotBlocProviderTemplate(projectConfig.projectName);
+  String get chatbotControllerIndex => chatbotControllerIndexTemplate(projectConfig.projectName);
+  String get messageBubble => messageBubbleTemplate(projectConfig.projectName);
+  String get chatInputField => chatInputFieldTemplate(projectConfig.projectName);
+  String get typingIndicator => typingIndicatorTemplate(projectConfig.projectName);
+  String get conversationList => conversationListTemplate(projectConfig.projectName);
+  String get chatbotScreen => chatbotScreenTemplate(projectConfig.projectName);
+  String get chatMessageModel => chatMessageModelTemplate(projectConfig.projectName);
+  String get chatbotService => chatbotServiceTemplate(projectConfig.projectName);
+  String get chatbotRepository => chatbotRepositoryTemplate(projectConfig.projectName);
+  String get chatbotUseCases => chatbotUseCasesTemplate(projectConfig.projectName);
+
   /// Survey Feature
   String get surveyIndex => surveyIndexTemplate(projectConfig.projectName);
   String get surveyModeCubit => surveyModeCubitTemplate(projectConfig.projectName);

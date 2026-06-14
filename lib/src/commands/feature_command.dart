@@ -11,6 +11,7 @@ import '../generators/map_flow_generator.dart';
 import '../generators/media_flow_generator.dart';
 import '../generators/notification_generator.dart';
 import '../generators/survey_generator.dart';
+import '../generators/chatbot_flow_generator.dart';
 import '../templates/guides/guide_templates.dart';
 import '../templates/feature/pagination/pagination_index_template.dart';
 import '../templates/feature/pagination/presentation/controllers/pagination_bloc/pagination_event_template.dart';
@@ -343,6 +344,12 @@ class FeatureCommand extends BaseCommand {
     // 📋 SURVEY KEYWORD ANALYSIS
     if (featureName.toLowerCase() == 'survey') {
       await _handleSurveyKeyword();
+      return;
+    }
+
+    // 🤖 CHATBOT KEYWORD ANALYSIS
+    if (featureName.toLowerCase() == 'chatbot') {
+      await _handleChatbotKeyword();
       return;
     }
 
@@ -990,6 +997,87 @@ class FeatureCommand extends BaseCommand {
       }
     }
 
+    /// Handle the 'chatbot' keyword specially - offer full chatbot feature
+    Future<void> _handleChatbotKeyword() async {
+      Logger.header('Chatbot Feature Detected!');
+
+      Logger.info('I detected you want to generate a "chatbot" feature.');
+      Logger.info('Would you like to:');
+      Logger.spacer();
+
+      Logger.item(
+          '1. Generate a basic chatbot feature (standard feature structure)');
+      Logger.item('2. Bootstrap complete chatbot feature (recommended)');
+      Logger.item('   • Message & conversation models', indent: 6);
+      Logger.item('   • Chatbot service & repository (Dio + Either)', indent: 6);
+      Logger.item('   • Chatbot Cubit (conversation state management)', indent: 6);
+      Logger.item('   • Chatbot screen with app_ui_kit theming', indent: 6);
+      Logger.item('   • Message bubble, input field, typing indicator widgets', indent: 6);
+      Logger.spacer();
+
+      stdout.write('Choose option (1 or 2, default: 2): ');
+      final input = stdin.readLineSync()?.trim() ?? '';
+
+      if (input == '1') {
+        Logger.info('\nGenerating basic chatbot feature...');
+        await _generateBasicFeature('chatbot');
+      } else {
+        Logger.info('\nGreat choice! Let\'s set up a complete chatbot feature.');
+        Logger.info('');
+
+        if (!File('pubspec.yaml').existsSync()) {
+          Logger.error('Not in a Flutter project directory');
+          Logger.info('Run this command from the root of your Flutter project');
+          exit(1);
+        }
+
+        final currentDir = path.normalize(path.absolute(Directory.current.path));
+        final projectConfig = await ProjectConfigReader.readOrDefault(projectPath: currentDir);
+
+        final config = FeatureConfig(
+          featureName: 'chatbot',
+          projectRoot: currentDir,
+          featureRoot: path.join(currentDir, 'lib/features/chatbot'),
+          projectConfig: projectConfig,
+        );
+
+        Logger.header('Generating Chatbot Feature');
+        final generator = ChatbotFlowGenerator(config);
+
+        try {
+          await generator.generate();
+          Logger.success('Chatbot feature created successfully!');
+          Logger.section('Generated files');
+          Logger.item('lib/features/chatbot/');
+          Logger.item('  ├── chatbot_index.dart');
+          Logger.item('  ├── data/');
+          Logger.item('  │   ├── models/');
+          Logger.item('  │   ├── remote/');
+          Logger.item('  │   └── domain/');
+          Logger.item('  └── presentation/');
+          Logger.item('      ├── controllers/cubits/');
+          Logger.item('      ├── entities/');
+          Logger.item('      ├── widgets/');
+          Logger.item('      └── screens/');
+          await runPostGenerationSteps(
+            const PostGenerationOptions(runDartFix: true),
+          );
+
+          await InstructionGuideGenerator(
+            projectPath: currentDir,
+            fileName: 'CHATBOT_GUIDE.md',
+            content: chatbotGuideTemplate(),
+          ).generate();
+
+          Logger.section('Next steps');
+          Logger.item('See CHATBOT_GUIDE.md for detailed setup instructions');
+        } catch (e) {
+          Logger.error('Failed to generate chatbot feature: $e');
+          exit(1);
+        }
+      }
+    }
+
     /// Generate a basic feature for a given feature name
     Future<void> _generateBasicFeature(String featureName) async {
     if (!File('pubspec.yaml').existsSync()) {
@@ -1157,8 +1245,9 @@ Examples:
   petracore feature blog --no-interactive      # Uses "blog" for everything
 
 Special Keywords:
-  auth    - Offers to generate complete authentication flow
-  map     - Offers to generate complete map feature with Google Maps
+  auth     - Offers to generate complete authentication flow
+  map      - Offers to generate complete map feature with Google Maps
+  chatbot  - Offers to generate chatbot feature guide with AI conversation API
 ''');
   }
 }

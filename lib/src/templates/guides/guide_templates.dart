@@ -301,6 +301,33 @@ PaginationBloc<T>()
 \`\`\`
 ''';
 
+String chatbotGuideTemplate() => '''# Chatbot Feature Setup Guide
+
+## 1. Register Bloc Provider
+
+In \`lib/features/shared/presentation/controllers/bloc_provider.dart\`:
+
+\`\`\`dart
+import 'package:YOUR_PACKAGE_NAME/features/chatbot/presentation/controllers/chatbot_bloc_provider.dart';
+\`\`\`
+
+Add \`...chatbotBlocProvider,\` inside the providers list.
+
+## 2. Add Route
+
+In \`lib/navigation/routes.dart\`:
+
+\`\`\`dart
+static const chatbot = AppRoute(path: '/chatbot', name: 'chatbot');
+\`\`\`
+
+## 3. Run Build Runner
+
+\`\`\`bash
+dart run build_runner build
+\`\`\`
+''';
+
 String basicFeatureGuideTemplate(String featureName) => '''# $featureName Feature Setup Guide
 
 ## 1. Register Bloc Provider
