@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 
 import '../generators/auth_flow_generator.dart';
+import '../generators/instruction_guide_generator.dart';
+import '../templates/guides/guide_templates.dart';
 import '../utils/auth_validation.dart';
 import '../utils/logger.dart';
 
@@ -130,6 +132,14 @@ class AuthGenerationRunner {
     try {
       await generator.generate();
       Logger.success('Authentication flow created successfully!');
+
+      final packageName = config.projectName.toLowerCase().replaceAll('-', '_');
+      await InstructionGuideGenerator(
+        projectPath: outputDir,
+        fileName: 'AUTH_SETUP_GUIDE.md',
+        content: authGuideTemplate(packageName),
+      ).generate();
+
       _printPostGenerationInstructions(config);
     } catch (e) {
       Logger.error('Failed to generate auth flow: $e');
@@ -183,27 +193,7 @@ class AuthGenerationRunner {
     Logger.info('      ├── screens/         (Login/Signup screens)');
     Logger.info('      └── helpers/         (Controllers)');
     Logger.info('');
-
-    Logger.info('Next steps:');
-    Logger.info('  1. Add required dependencies to pubspec.yaml:');
-    Logger.info('     - flutter_bloc');
-    Logger.info('     - dartz');
-    Logger.info('     - dio');
-    Logger.info('     - flutter_secure_storage');
-    Logger.info('     - json_annotation');
-    Logger.info('');
-    Logger.info('  2. Add dev_dependencies:');
-    Logger.info('     - build_runner');
-    Logger.info('     - json_serializable');
-    Logger.info('');
-    Logger.info('  3. Run code generation:');
-    Logger.info('     dart run build_runner build');
-    Logger.info('');
-    Logger.info('  4. Update your main BlocProvider to include AuthBloc');
-    Logger.info('  5. Add auth routes to your navigation system');
-    Logger.info('  6. Configure your API base URL in environment variables');
-    Logger.info('');
-    Logger.info('Pro tip: Check the generated files for TODO comments');
-    Logger.info('   that need your attention for full integration.');
+    Logger.section('Next steps');
+    Logger.item('See AUTH_SETUP_GUIDE.md for detailed setup instructions');
   }
 }

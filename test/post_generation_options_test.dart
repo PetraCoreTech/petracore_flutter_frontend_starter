@@ -7,6 +7,7 @@ void main() {
       expect(PostGenerationOptions.none.runPubGet, isFalse);
       expect(PostGenerationOptions.none.runBuildRunner, isFalse);
       expect(PostGenerationOptions.none.runDartFix, isFalse);
+      expect(PostGenerationOptions.none.dryRun, isFalse);
     });
 
     test('pubGetOnly has only pubGet true', () {
@@ -15,10 +16,23 @@ void main() {
       expect(PostGenerationOptions.pubGetOnly.runDartFix, isFalse);
     });
 
+    test('dartFixOnly has only dartFix true', () {
+      expect(PostGenerationOptions.dartFixOnly.runPubGet, isFalse);
+      expect(PostGenerationOptions.dartFixOnly.runBuildRunner, isFalse);
+      expect(PostGenerationOptions.dartFixOnly.runDartFix, isTrue);
+    });
+
+    test('pubGetAndDartFix has pubGet and dartFix true', () {
+      expect(PostGenerationOptions.pubGetAndDartFix.runPubGet, isTrue);
+      expect(PostGenerationOptions.pubGetAndDartFix.runBuildRunner, isFalse);
+      expect(PostGenerationOptions.pubGetAndDartFix.runDartFix, isTrue);
+    });
+
     test('all has all flags true', () {
       expect(PostGenerationOptions.all.runPubGet, isTrue);
       expect(PostGenerationOptions.all.runBuildRunner, isTrue);
       expect(PostGenerationOptions.all.runDartFix, isTrue);
+      expect(PostGenerationOptions.all.dryRun, isFalse);
     });
 
     test('custom options work correctly', () {
@@ -26,10 +40,12 @@ void main() {
         runPubGet: true,
         runBuildRunner: false,
         runDartFix: true,
+        dryRun: true,
       );
       expect(opts.runPubGet, isTrue);
       expect(opts.runBuildRunner, isFalse);
       expect(opts.runDartFix, isTrue);
+      expect(opts.dryRun, isTrue);
     });
   });
 }

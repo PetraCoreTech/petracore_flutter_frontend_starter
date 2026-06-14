@@ -40,6 +40,7 @@ export 'auth/presentation/screens/reset_password_screen_template.dart';
 export 'auth/presentation/screens/signup_screen_template.dart';
 export 'auth/presentation/screens/splash_screen_template.dart';
 export 'auth/presentation/screens/verify_otp_screen_template.dart';
+export 'auth/presentation/screens/auth_setup_guide_template.dart';
 export 'auth/presentation/screens/welcome_screen_template.dart';
 export 'auth/presentation/widgets/animated_splash_logo_template.dart';
 export 'auth/presentation/widgets/material_resend_code_display_template.dart';
@@ -152,8 +153,38 @@ export 'media/presentation/helpers/media_helper_template.dart';
 export 'media/presentation/widgets/media_display_template.dart';
 export 'media/presentation/widgets/media_picker_field_template.dart';
 export 'media/presentation/widgets/photo_display_template.dart';
+export 'media/presentation/screens/media_setup_guide_template.dart';
 export 'media/presentation/widgets/selected_media_item_template.dart';
 export 'media/presentation/widgets/video_player_template.dart';
+
+// Map templates
+export 'map/data/enums/business_status_template.dart';
+export 'map/data/helpers/location_helper_template.dart';
+export 'map/data/models/nearby_place_model_template.dart';
+export 'map/data/models/user_location_model_template.dart';
+export 'map/data/parsers/business_status_parser_template.dart';
+export 'map/data/parsers/location_parser_template.dart';
+export 'map/data/remote/dtos/place_params_template.dart';
+export 'map/data/remote/location_repository_template.dart';
+export 'map/data/remote/location_service_template.dart';
+export 'map/data/use_cases/map_use_cases_template.dart';
+export 'map/map_index_template.dart';
+export 'map/map_templates.dart';
+export 'map/presentation/controllers/bloc_listeners/location_bloc_listener_template.dart';
+export 'map/presentation/controllers/blocs/location_bloc/location_bloc_template.dart';
+export 'map/presentation/controllers/blocs/location_bloc/location_event_template.dart';
+export 'map/presentation/controllers/blocs/location_bloc/location_state_template.dart';
+export 'map/presentation/controllers/blocs/nearby_places_bloc/nearby_places_bloc_template.dart';
+export 'map/presentation/controllers/blocs/nearby_places_bloc/nearby_places_event_template.dart';
+export 'map/presentation/controllers/blocs/nearby_places_bloc/nearby_places_state_template.dart';
+export 'map/presentation/controllers/cubits/location_cubit/location_cubit_template.dart';
+export 'map/presentation/controllers/cubits/nearby_places_cubit/nearby_places_cubit_template.dart';
+export 'map/presentation/controllers/map_bloc_provider_template.dart';
+export 'map/presentation/controllers/map_controllers_index_template.dart';
+export 'map/presentation/screens/map_screen_template.dart';
+export 'map/presentation/screens/map_screens_index_template.dart';
+export 'map/presentation/screens/map_setup_guide_template.dart';
+
 export 'project/analysis_options_template.dart';
 
 /// App
@@ -213,3 +244,4 @@ export 'project/utils/validation/input_field_validator_template.dart';
 export 'project/utils/validation/validation_index_template.dart';
 export 'project/vscode_launch_template.dart';
 export 'project/vscode_settings_template.dart';
+export 'guides/guide_templates.dart';

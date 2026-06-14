@@ -64,6 +64,26 @@ class CommandUtils {
     }
   }
 
+  /// Runs `dart` with the given [arguments]. Delegates to [runCommand].
+  ///
+  /// [workingDirectory]: optional working directory for the process.
+  /// [showOutput]: when `true`, stdout is printed to the console.
+  /// [throwOnError]: when `true`, throws [ProcessException] on non-zero exit.
+  static Future<ProcessResult> runDartCommand(
+    List<String> arguments, {
+    String? workingDirectory,
+    bool showOutput = false,
+    bool throwOnError = true,
+  }) async {
+    return runCommand(
+      'dart',
+      arguments,
+      workingDirectory: workingDirectory,
+      showOutput: showOutput,
+      throwOnError: throwOnError,
+    );
+  }
+
   /// Runs `flutter` with the given [arguments]. Delegates to [runCommand].
   ///
   /// [workingDirectory]: optional working directory for the process.
