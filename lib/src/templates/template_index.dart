@@ -157,6 +157,38 @@ export 'media/presentation/screens/media_setup_guide_template.dart';
 export 'media/presentation/widgets/selected_media_item_template.dart';
 export 'media/presentation/widgets/video_player_template.dart';
 
+// Chat templates
+export 'feature/chat/chat_index_template.dart';
+export 'feature/chat/data/models/chat_model_template.dart';
+export 'feature/chat/data/models/message_model_template.dart';
+export 'feature/chat/data/remote/dtos/chat_dto_template.dart';
+export 'feature/chat/data/remote/dtos/mark_chat_read_dto_template.dart';
+export 'feature/chat/data/remote/dtos/message_dto_template.dart';
+export 'feature/chat/data/remote/dtos/send_message_dto_template.dart';
+export 'feature/chat/data/remote/fire_store_chat_service_template.dart';
+export 'feature/chat/data/use_cases/chat_use_cases_template.dart';
+export 'feature/chat/presentation/controllers/blocs/chat_action_bloc/chat_action_bloc_template.dart';
+export 'feature/chat/presentation/controllers/blocs/chat_action_bloc/chat_action_event_template.dart';
+export 'feature/chat/presentation/controllers/blocs/chat_action_bloc/chat_action_state_template.dart';
+export 'feature/chat/presentation/controllers/cubits/chat_cubit/chat_cubit_template.dart';
+export 'feature/chat/presentation/controllers/cubits/chat_user_cubit/chat_user_cubit_template.dart';
+export 'feature/chat/presentation/controllers/cubits/saved_chat_cubit/saved_chat_cubit_template.dart';
+export 'feature/chat/presentation/controllers/chat_bloc_provider_template.dart';
+export 'feature/chat/presentation/controllers/chat_controller_index_template.dart';
+export 'feature/chat/presentation/entities/chat_entity_template.dart';
+export 'feature/chat/presentation/entities/saved_chat_template.dart';
+export 'feature/chat/presentation/helpers/chat_helper_template.dart';
+export 'feature/chat/presentation/screens/chat_screen_template.dart';
+export 'feature/chat/presentation/screens/chats_screen_template.dart';
+export 'feature/chat/presentation/screens/chat_screen_index_template.dart';
+export 'feature/chat/presentation/widgets/chat_bubble_template.dart';
+export 'feature/chat/presentation/widgets/chat_builder_template.dart';
+export 'feature/chat/presentation/widgets/chat_search_user_builder_template.dart';
+export 'feature/chat/presentation/widgets/chat_tile_template.dart';
+export 'feature/chat/presentation/widgets/compose_message_template.dart';
+export 'feature/chat/presentation/widgets/message_builder_template.dart';
+export 'feature/chat/presentation/widgets/search_user_display_template.dart';
+
 // Chatbot templates
 export 'feature/chatbot/chatbot_index_template.dart';
 export 'feature/chatbot/presentation/controllers/cubits/chatbot_cubit_template.dart';

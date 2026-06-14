@@ -11,6 +11,7 @@ import '../generators/map_flow_generator.dart';
 import '../generators/media_flow_generator.dart';
 import '../generators/notification_generator.dart';
 import '../generators/survey_generator.dart';
+import '../generators/chat_flow_generator.dart';
 import '../generators/chatbot_flow_generator.dart';
 import '../templates/guides/guide_templates.dart';
 import '../templates/feature/pagination/pagination_index_template.dart';
@@ -344,6 +345,12 @@ class FeatureCommand extends BaseCommand {
     // 📋 SURVEY KEYWORD ANALYSIS
     if (featureName.toLowerCase() == 'survey') {
       await _handleSurveyKeyword();
+      return;
+    }
+
+    // 💬 CHAT KEYWORD ANALYSIS
+    if (featureName.toLowerCase() == 'chat') {
+      await _handleChatKeyword();
       return;
     }
 
@@ -997,6 +1004,91 @@ class FeatureCommand extends BaseCommand {
       }
     }
 
+    /// Handle the 'chat' keyword - offer full chat feature
+    Future<void> _handleChatKeyword() async {
+      Logger.header('Chat Feature Detected!');
+
+      Logger.info('I detected you want to generate a "chat" feature.');
+      Logger.info('Would you like to:');
+      Logger.spacer();
+
+      Logger.item(
+          '1. Generate a basic chat feature (standard feature structure)');
+      Logger.item('2. Bootstrap complete chat feature (recommended)');
+      Logger.item('   • Chat & message models', indent: 6);
+      Logger.item('   • Firestore chat service with real-time streams', indent: 6);
+      Logger.item('   • Chat BLoC & Cubits (action bloc + chat/user/saved cubits)', indent: 6);
+      Logger.item('   • Chat screens (list + detail) with app_ui_kit theming', indent: 6);
+      Logger.item('   • Message bubble, chat tile, compose widgets', indent: 6);
+      Logger.spacer();
+
+      stdout.write('Choose option (1 or 2, default: 2): ');
+      final input = stdin.readLineSync()?.trim() ?? '';
+
+      if (input == '1') {
+        Logger.info('\nGenerating basic chat feature...');
+        await _generateBasicFeature('chat');
+      } else {
+        Logger.info('\nGreat choice! Let\'s set up a complete chat feature.');
+        Logger.info('');
+
+        if (!File('pubspec.yaml').existsSync()) {
+          Logger.error('Not in a Flutter project directory');
+          Logger.info('Run this command from the root of your Flutter project');
+          exit(1);
+        }
+
+        final currentDir = path.normalize(path.absolute(Directory.current.path));
+        final projectConfig = await ProjectConfigReader.readOrDefault(projectPath: currentDir);
+
+        final config = FeatureConfig(
+          featureName: 'chat',
+          projectRoot: currentDir,
+          featureRoot: path.join(currentDir, 'lib/features/chat'),
+          projectConfig: projectConfig,
+        );
+
+        Logger.header('Generating Chat Feature');
+        final generator = ChatFlowGenerator(config);
+
+        try {
+          await generator.generate();
+          Logger.success('Chat feature created successfully!');
+          Logger.section('Generated files');
+          Logger.item('lib/features/chat/');
+          Logger.item('  ├── chat_index.dart');
+          Logger.item('  ├── data/');
+          Logger.item('  │   ├── models/');
+          Logger.item('  │   ├── remote/');
+          Logger.item('  │   └── use_cases/');
+          Logger.item('  └── presentation/');
+          Logger.item('      ├── controllers/blocs/');
+          Logger.item('      ├── controllers/cubits/');
+          Logger.item('      ├── entities/');
+          Logger.item('      ├── helpers/');
+          Logger.item('      ├── widgets/');
+          Logger.item('      └── screens/');
+          await runPostGenerationSteps(
+            const PostGenerationOptions(runDartFix: true),
+          );
+
+          await InstructionGuideGenerator(
+            projectPath: currentDir,
+            fileName: 'CHAT_GUIDE.md',
+            content: chatGuideTemplate(),
+          ).generate();
+
+          Logger.section('Next steps');
+          Logger.item('1. Add cloud_firestore dependency to your pubspec.yaml');
+          Logger.item('2. Register chat routes in your router');
+          Logger.item('3. See CHAT_GUIDE.md for detailed setup instructions');
+        } catch (e) {
+          Logger.error('Failed to generate chat feature: $e');
+          exit(1);
+        }
+      }
+    }
+
     /// Handle the 'chatbot' keyword specially - offer full chatbot feature
     Future<void> _handleChatbotKeyword() async {
       Logger.header('Chatbot Feature Detected!');
@@ -1247,6 +1339,7 @@ Examples:
 Special Keywords:
   auth     - Offers to generate complete authentication flow
   map      - Offers to generate complete map feature with Google Maps
+  chat     - Offers to generate complete chat feature with Firestore messaging
   chatbot  - Offers to generate chatbot feature guide with AI conversation API
 ''');
   }

@@ -362,3 +362,137 @@ dart run build_runner build
 - Test data flow from UI through BLoC to repository
 - Verify models serialize/deserialize correctly
 ''';
+
+String chatGuideTemplate() => '''# Chat Feature Setup Guide
+
+## 1. Add Dependencies
+
+Add these to your \`pubspec.yaml\`:
+
+\`\`\`yaml
+dependencies:
+  cloud_firestore: ^4.13.0
+  flutter_bloc: ^8.1.3
+  hydrated_bloc: ^1.0.0
+  json_annotation: ^4.8.1
+  image_picker: ^1.1.2
+
+dev_dependencies:
+  build_runner: ^2.4.6
+  json_serializable: ^6.7.1
+\`\`\`
+
+Then run:
+\`\`\`bash
+flutter pub get
+\`\`\`
+
+## 2. Register Bloc Provider
+
+In \`lib/features/shared/presentation/controllers/bloc_provider.dart\`:
+
+\`\`\`dart
+import 'package:YOUR_PACKAGE_NAME/features/chat/presentation/controllers/chat_bloc_provider.dart';
+\`\`\`
+
+Add \`...chatBlocProvider,\` inside the providers list.
+
+## 3. Add Routes
+
+In your router configuration, add the chat routes:
+
+\`\`\`dart
+import 'package:flutter/material.dart';
+import 'package:YOUR_PACKAGE_NAME/features/chat/chat_index.dart';
+
+final chatRoutes = [
+  GoRoute(
+    path: '/chats',
+    name: 'chats',
+    builder: (context, state) => const ChatsScreen(),
+    routes: [
+      GoRoute(
+        path: 'messages',
+        name: 'chat',
+        builder: (context, state) => const ChatScreen(),
+      ),
+    ],
+  ),
+];
+\`\`\`
+
+## 4. Firebase Setup
+
+1. Create a Firebase project
+2. Add Firebase to your Flutter app (Android + iOS)
+3. Enable Firestore database
+4. Create a \`chats\` collection and \`chat/{id}/messages\` subcollection
+5. Set up Firestore security rules for the chats collection
+
+## 5. Firestore Data Structure
+
+### Chats Collection
+\`\`\`
+chats/{chatId}:
+  users: [{id, firstName, lastName, image}]
+  unreadMessages: {userId: count}
+  lastMessage: {text, sender, dateCreated, hasMedia}
+  isGroup: bool
+  groupName: string? (only for group chats)
+  groupImage: string? (only for group chats)
+  adminUsers: [userId] (only for group chats)
+  dateCreated: Timestamp
+  lastUpdated: Timestamp
+\`\`\`
+
+### Messages Subcollection
+\`\`\`
+chats/{chatId}/messages/{messageId}:
+  sender: userId
+  text: string?
+  mediaUrl: string?
+  mediaType: "image" | "video" | "file" | "none"
+  read: {userId: bool}
+  dateCreated: Timestamp
+\`\`\`
+
+## 6. Features
+
+### Text Messaging
+- Send and receive text messages in real-time via Firestore streams
+- Message status indicators (Sent / Read with double-check marks)
+
+### Media & File Sharing
+- Attach images from gallery or camera via the attachment button
+- Send files and documents
+- Preview attached media before sending
+- Images render inline in the chat bubble
+
+### Group Chats
+- Create group conversations with multiple participants
+- Group name and image support
+- Admin user management (future: add/remove participants)
+- Group conversation list with participant count
+
+### Conversation Management
+- Search conversations by name
+- Unread message badge counts
+- Read receipts on sent messages
+- Swipe to delete conversations
+
+## 7. Run Build Runner
+
+\`\`\`bash
+dart run build_runner build
+\`\`\`
+
+## 8. Verify Integration
+
+- Navigate to the Chats screen
+- Start a new conversation from the FAB
+- Send a text message
+- Attach and send an image
+- Verify real-time updates work across devices
+- Test group chat creation (via Firestore console)
+- Verify read receipts update correctly
+''';

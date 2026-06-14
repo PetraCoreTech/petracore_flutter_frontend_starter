@@ -66,6 +66,38 @@ class FeatureTemplates {
   String get notificationList => notificationListTemplate(projectConfig.projectName);
   String get notificationTile => notificationTileTemplate(projectConfig.projectName);
 
+  /// Chat Feature
+  String get chatIndex => chatIndexTemplate(projectConfig.projectName);
+  String get chatModel => chatModelTemplate(projectConfig.projectName);
+  String get messageModel => messageModelTemplate(projectConfig.projectName);
+  String get chatDto => chatDtoTemplate(projectConfig.projectName);
+  String get markChatReadDto => markChatReadDtoTemplate(projectConfig.projectName);
+  String get messageDto => messageDtoTemplate(projectConfig.projectName);
+  String get sendMessageDto => sendMessageDtoTemplate(projectConfig.projectName);
+  String get fireStoreChatService => fireStoreChatServiceTemplate(projectConfig.projectName);
+  String get chatUseCases => chatUseCasesTemplate(projectConfig.projectName);
+  String get chatActionEvent => chatActionEventTemplate(projectConfig.projectName);
+  String get chatActionState => chatActionStateTemplate(projectConfig.projectName);
+  String get chatActionBloc => chatActionBlocTemplate(projectConfig.projectName);
+  String get chatCubit => chatCubitTemplate(projectConfig.projectName);
+  String get chatUserCubit => chatUserCubitTemplate(projectConfig.projectName);
+  String get savedChatCubit => savedChatCubitTemplate(projectConfig.projectName);
+  String get chatBlocProvider => chatBlocProviderTemplate(projectConfig.projectName);
+  String get chatControllerIndex => chatControllerIndexTemplate(projectConfig.projectName);
+  String get chatEntity => chatEntityTemplate(projectConfig.projectName);
+  String get savedChat => savedChatTemplate(projectConfig.projectName);
+  String get chatHelper => chatHelperTemplate(projectConfig.projectName);
+  String get chatScreen => chatScreenTemplate(projectConfig.projectName);
+  String get chatsScreen => chatsScreenTemplate(projectConfig.projectName);
+  String get chatScreenIndex => chatScreenIndexTemplate(projectConfig.projectName);
+  String get chatBubble => chatBubbleTemplate(projectConfig.projectName);
+  String get chatBuilder => chatBuilderTemplate(projectConfig.projectName);
+  String get chatSearchUserBuilder => chatSearchUserBuilderTemplate(projectConfig.projectName);
+  String get chatTile => chatTileTemplate(projectConfig.projectName);
+  String get composeMessage => composeMessageTemplate(projectConfig.projectName);
+  String get messageBuilder => messageBuilderTemplate(projectConfig.projectName);
+  String get searchUserDisplay => searchUserDisplayTemplate(projectConfig.projectName);
+
   /// Chatbot Feature
   String get chatbotIndex => chatbotIndexTemplate(projectConfig.projectName);
   String get chatMessageEntity => chatMessageEntityTemplate(projectConfig.projectName);
