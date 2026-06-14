@@ -1,5 +1,5 @@
 String notificationUseCasesTemplate(String projectName) => '''
-import 'package:fpdart/fpdart.dart';
+import 'package:dartz/dartz.dart';
 import 'package:$projectName/core/core.dart';
 import 'package:$projectName/features/notification/notification_index.dart';
 

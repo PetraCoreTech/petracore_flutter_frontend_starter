@@ -1,7 +1,7 @@
 String notificationRepositoryTemplate(String projectName) => '''
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:$projectName/core/core.dart';
 import 'package:$projectName/features/notification/notification_index.dart';
 

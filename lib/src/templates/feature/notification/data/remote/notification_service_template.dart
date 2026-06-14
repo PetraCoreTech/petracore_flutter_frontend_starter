@@ -6,8 +6,11 @@ import 'package:$projectName/features/notification/notification_index.dart';
 final notificationService = NotificationService();
 
 abstract class NotificationServiceInterface {
-  Future<Response<dynamic>> getNotification({bool isSingle, String? id, Json? queryParams});
-  Future<Response<dynamic>> deleteNotification(String id);
+  Future<Response<dynamic>> getNotification({
+    bool isSingle,
+    String? id,
+    Json? queryParams,
+  });  Future<Response<dynamic>> deleteNotification(String id);
   Future<Response<dynamic>> markNotificationAsRead(String id);
   Future<void> notifyUsers(NotifyDto data);
 }
@@ -20,8 +23,8 @@ class NotificationService implements NotificationServiceInterface {
     Json? queryParams,
   }) async {
     final pathParam = isSingle ? '/\$id' : '';
-    final response = await networkService.makeRequest(
-      '\${ServiceUtils.v1}/notifications\$pathParam',
+    final response = await apiClient.makeRequest(
+      '/notifications\$pathParam',
       RequestMethod.get,
       reqToken: true,
       queryParams: queryParams,
@@ -31,8 +34,8 @@ class NotificationService implements NotificationServiceInterface {
 
   @override
   Future<Response> markNotificationAsRead(String id) async {
-    final response = await networkService.makeRequest(
-      '\${ServiceUtils.v1}/notifications/\$id/mark_as_read',
+    final response = await apiClient.makeRequest(
+      '/notifications/\$id/mark_as_read',
       RequestMethod.post,
       reqToken: true,
     );
@@ -41,8 +44,8 @@ class NotificationService implements NotificationServiceInterface {
 
   @override
   Future<void> notifyUsers(NotifyDto data) async {
-    await networkService.makeRequest(
-      '\${ServiceUtils.v1}/notifications/send_push_notification',
+    await apiClient.makeRequest(
+      '/notifications/send_push_notification',
       RequestMethod.post,
       data: data.toJson(),
       reqToken: true,
@@ -51,8 +54,8 @@ class NotificationService implements NotificationServiceInterface {
 
   @override
   Future<Response> deleteNotification(String id) async {
-    final response = await networkService.makeRequest(
-      '\${ServiceUtils.v1}/notifications/\$id',
+    final response = await apiClient.makeRequest(
+      '/notifications/\$id',
       RequestMethod.delete,
       reqToken: true,
     );

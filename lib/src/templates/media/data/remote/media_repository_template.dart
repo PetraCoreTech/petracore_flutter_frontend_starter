@@ -1,12 +1,10 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String mediaRepositoryTemplate(ProjectConfig config) => '''
-import 'package:${config.packageName}/core/core.dart';
-import 'package:${config.packageName}/features/media/data/enums/media_type.dart';
-import 'package:${config.packageName}/features/media/data/extensions/media_type_extension.dart';
-import 'package:${config.packageName}/features/media/data/models/attached_media_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:${config.packageName}/core/core.dart';
+import 'package:${config.packageName}/features/media/media_index.dart';
 
 final mediaRepository = MediaRepository._();
 

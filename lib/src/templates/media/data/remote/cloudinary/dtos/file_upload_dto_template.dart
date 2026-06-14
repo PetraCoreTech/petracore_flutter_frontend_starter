@@ -18,4 +18,5 @@ class FileUploadDto {
   final String name;
   final double size;
   final MediaType fileType;
+  }
 ''';

@@ -1,9 +1,8 @@
 import 'package:petracore_flutter_frontend_starter/src/generators/project_generator.dart';
 
 String xfileExtensionTemplate(ProjectConfig config) => '''
-import 'package:${config.packageName}/features/media/data/enums/media_type.dart';
-import 'package:${config.packageName}/features/media/data/extensions/media_type_extension.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:${config.packageName}/features/media/media_index.dart';
 
 class MediaSize {
   MediaSize({

@@ -2,9 +2,7 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 
 String cloudinaryServiceTemplate(ProjectConfig config) => '''
 import 'package:cloudinary_sdk/cloudinary_sdk.dart';
-import 'package:${config.packageName}/core/core.dart';
 import 'package:${config.packageName}/features/media/data/remote/cloudinary/dtos/file_upload_dto.dart';
-import 'package:${config.packageName}/features/media/data/remote/cloudinary/dtos/delete_upload_dto.dart';
 
 final cloudinaryService = CloudinaryService._();
 

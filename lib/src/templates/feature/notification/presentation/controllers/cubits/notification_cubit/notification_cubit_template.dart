@@ -28,7 +28,7 @@ class NotificationCubit extends Cubit<NotificationState> {
   final List<NotificationItem> _allNotifications = [];
 
   List<NotificationItem> get notifications => _allNotifications;
-  int get unreadCount => _allNotifications.where((n) => !n.isRead).length;
+  int get unreadCount => _allNotifications.where((n) => !(n.isRead ?? false)).length;
 
   void addNotification(NotificationItem notification) {
     _allNotifications.insert(0, notification);

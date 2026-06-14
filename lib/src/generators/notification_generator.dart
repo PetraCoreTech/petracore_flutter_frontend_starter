@@ -18,6 +18,9 @@ class NotificationGenerator {
 
     Logger.step('Updating bloc providers...');
     await _updateSharedBlocProvider();
+
+    Logger.step('Adding notification dependencies...');
+    await _updatePubspec();
   }
 
   Future<void> _createDirectories() async {
@@ -92,5 +95,51 @@ class NotificationGenerator {
       );
     }
     await FileUtils.writeFile(sharedPath, content);
+  }
+
+  Future<void> _updatePubspec() async {
+    final pubspecPath = path.join(
+      config.projectConfig.projectPath,
+      'pubspec.yaml',
+    );
+    final file = File(pubspecPath);
+    if (!await file.exists()) return;
+
+    var content = await file.readAsString();
+
+    final deps = [
+      '  dio: ^5.3.0',
+      '  fpdart: ^1.0.0',
+      '  json_annotation: ^4.8.1',
+      '  firebase_messaging: ^14.7.0',
+      '  flutter_local_notifications: ^16.0.0',
+      '  flutter_dotenv: ^5.1.0',
+      '  cloud_firestore: ^4.13.0',
+    ];
+
+    for (final dep in deps) {
+      final depName = dep.split(':').first.trim();
+      if (content.contains(depName)) continue;
+      content = content.replaceFirst(
+        'dependencies:',
+        'dependencies:\n$dep',
+      );
+    }
+
+    final devDeps = [
+      '  build_runner: ^2.4.6',
+      '  json_serializable: ^6.7.1',
+    ];
+
+    for (final dep in devDeps) {
+      final depName = dep.split(':').first.trim();
+      if (content.contains(depName)) continue;
+      content = content.replaceFirst(
+        'dev_dependencies:',
+        'dev_dependencies:\n$dep',
+      );
+    }
+
+    await FileUtils.writeFile(pubspecPath, content);
   }
 }

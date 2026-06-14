@@ -7,7 +7,7 @@ part 'notification_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class NotificationItem {
-  const NotificationItem({
+  NotificationItem({
     required this.title,
     required this.body,
     required this.type,
