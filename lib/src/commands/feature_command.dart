@@ -1069,7 +1069,10 @@ class FeatureCommand extends BaseCommand {
           Logger.item('      ├── widgets/');
           Logger.item('      └── screens/');
           await runPostGenerationSteps(
-            const PostGenerationOptions(runDartFix: true),
+            const PostGenerationOptions(
+              runPubGet: true,
+              runDartFix: true,
+            ),
           );
 
           await InstructionGuideGenerator(

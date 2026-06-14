@@ -1,6 +1,8 @@
 String chatBubbleTemplate(String projectName) => '''
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:$projectName/core/core.dart';
 import 'package:$projectName/features/chat/data/models/message_model.dart';
 
 class ChatBubble extends StatelessWidget {
@@ -54,36 +56,88 @@ class ChatBubble extends StatelessWidget {
       );
     }
 
-    // File or other media type
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 200),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.insert_drive_file, size: 24),
-          const SizedBox(width: 8),
-          Flexible(
-            child: Text(
-              message.mediaUrl!.split('/').last,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.labelSmall,
-            ),
+    if (message.isFile) {
+      return InkWell(
+        onTap: () => OpenFilex.open(message.mediaUrl!),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 220),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(8),
           ),
-        ],
-      ),
-    );
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                _fileIcon(message.mediaUrl!),
+                size: 28,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      message.mediaUrl!.split('/').last,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      'Tap to open',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 4),
+              Icon(
+                Icons.open_in_new,
+                size: 16,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  IconData _fileIcon(String url) {
+    final ext = url.split('.').last.toLowerCase();
+    switch (ext) {
+      case 'pdf':
+        return Icons.picture_as_pdf;
+      case 'doc':
+      case 'docx':
+        return Icons.description;
+      case 'xls':
+      case 'xlsx':
+        return Icons.table_chart;
+      case 'zip':
+      case 'rar':
+        return Icons.folder_zip;
+      case 'mp3':
+      case 'wav':
+      case 'aac':
+        return Icons.audiotrack;
+      default:
+        return Icons.insert_drive_file;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         horizontal: 14,
         vertical: 4,
       ),
@@ -92,7 +146,7 @@ class ChatBubble extends StatelessWidget {
         children: [
           if (message.hasMedia)
             Padding(
-              padding: EdgeInsets.only(bottom: message.text != null ? 4 : 0),
+              padding: const EdgeInsets.only(bottom: 4),
               child: _buildMediaContent(context),
             ),
           if (message.text != null && message.text!.isNotEmpty)

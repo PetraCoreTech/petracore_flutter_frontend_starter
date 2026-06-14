@@ -97,6 +97,17 @@ class FeatureTemplates {
   String get composeMessage => composeMessageTemplate(projectConfig.projectName);
   String get messageBuilder => messageBuilderTemplate(projectConfig.projectName);
   String get searchUserDisplay => searchUserDisplayTemplate(projectConfig.projectName);
+  String get callActionButton => callActionButtonTemplate(projectConfig.projectName);
+  String get callingModeToggle => callingModeToggleTemplate(projectConfig.projectName);
+  String get callParticipantCard => callParticipantCardTemplate(projectConfig.projectName);
+  String get callLogEntry => callLogEntryTemplate(projectConfig.projectName);
+  String get attachmentSheet => attachmentSheetTemplate(projectConfig.projectName);
+  String get groupMemberTile => groupMemberTileTemplate(projectConfig.projectName);
+  String get voiceCallScreen => voiceCallScreenTemplate(projectConfig.projectName);
+  String get videoCallScreen => videoCallScreenTemplate(projectConfig.projectName);
+  String get callLogScreen => callLogScreenTemplate(projectConfig.projectName);
+  String get createGroupScreen => createGroupScreenTemplate(projectConfig.projectName);
+  String get groupInfoScreen => groupInfoScreenTemplate(projectConfig.projectName);
 
   /// Chatbot Feature
   String get chatbotIndex => chatbotIndexTemplate(projectConfig.projectName);

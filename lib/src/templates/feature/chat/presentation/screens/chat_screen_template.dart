@@ -2,7 +2,7 @@ String chatScreenTemplate(String projectName) => '''
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:$projectName/core/core.dart';
 import 'package:$projectName/features/chat/chat_index.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -39,7 +39,9 @@ class _ChatScreenState extends State<ChatScreen> {
             child: chat.displayImage.isEmpty
                 ? Text(
                     chat.displayName.isNotEmpty ? chat.displayName[0] : '?',
-                    style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
+                    style: TextStyle(
+                      color: theme.colorScheme.onPrimaryContainer,
+                    ),
                   )
                 : null,
           ),
@@ -47,10 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                chat.displayName,
-                style: theme.textTheme.titleSmall,
-              ),
+              Text(chat.displayName, style: theme.textTheme.titleSmall),
               if (chat.isGroup)
                 Text(
                   '\${chat.users.length} participants',
@@ -66,30 +65,64 @@ class _ChatScreenState extends State<ChatScreen> {
         if (chat.isGroup)
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: () {}, // Group info
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => GroupInfoScreen(chat: chat),
+                ),
+              );
+            },
           ),
         IconButton(
+          icon: const Icon(Icons.phone),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => VoiceCallScreen(
+                  calleeName: chat.displayName,
+                  calleeAvatar: chat.displayImage.isNotEmpty
+                      ? chat.displayImage
+                      : null,
+                ),
+              ),
+            );
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.videocam),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => VideoCallScreen(
+                  calleeName: chat.displayName,
+                  calleeAvatar: chat.displayImage.isNotEmpty
+                      ? chat.displayImage
+                      : null,
+                ),
+              ),
+            );
+          },
+        ),
+        IconButton(
           icon: const Icon(Icons.more_vert),
-          onPressed: () {}, // More options
+          onPressed: () {},
         ),
       ],
     );
   }
 
-  void _onSend({String? text, XFile? media}) {
-    // Sends message using the available chat context
+  void _onSend({String? text, XFile? file}) {
     final chat = context.read<ChatCubit>().state;
     if (chat == null) return;
-    if (text != null) {
-      final messageDto = CreateMessageDto(sender: 'currentUser', text: text);
-      fireStoreChatService.createMessage(chat.id, messageDto);
-    }
-    if (media != null) {
-      // Upload media, then create message with mediaUrl
+    if (text != null || file != null) {
       final messageDto = CreateMessageDto(
         sender: 'currentUser',
         text: text,
-        media: media.path,
+        mediaUrl: file?.path,
+        mediaType: file != null ? MediaType.file : MediaType.none,
       );
       fireStoreChatService.createMessage(chat.id, messageDto);
     }
@@ -100,7 +133,9 @@ class _ChatScreenState extends State<ChatScreen> {
     return BlocBuilder<ChatCubit, Chat?>(
       builder: (context, chat) {
         return Scaffold(
-          appBar: chat != null ? _buildAppBar(context, chat) : AppBar(title: const Text('Chat')),
+          appBar: chat != null
+              ? _buildAppBar(context, chat)
+              : AppBar(title: const Text('Chat')),
           body: Column(
             children: [
               Expanded(

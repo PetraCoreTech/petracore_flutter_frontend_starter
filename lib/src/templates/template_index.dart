@@ -188,6 +188,17 @@ export 'feature/chat/presentation/widgets/chat_tile_template.dart';
 export 'feature/chat/presentation/widgets/compose_message_template.dart';
 export 'feature/chat/presentation/widgets/message_builder_template.dart';
 export 'feature/chat/presentation/widgets/search_user_display_template.dart';
+export 'feature/chat/presentation/widgets/attachment_sheet_template.dart';
+export 'feature/chat/presentation/widgets/call_action_button_template.dart';
+export 'feature/chat/presentation/widgets/calling_mode_toggle_template.dart';
+export 'feature/chat/presentation/widgets/call_participant_card_template.dart';
+export 'feature/chat/presentation/widgets/call_log_entry_template.dart';
+export 'feature/chat/presentation/widgets/group_member_tile_template.dart';
+export 'feature/chat/presentation/screens/voice_call_screen_template.dart';
+export 'feature/chat/presentation/screens/video_call_screen_template.dart';
+export 'feature/chat/presentation/screens/call_log_screen_template.dart';
+export 'feature/chat/presentation/screens/create_group_screen_template.dart';
+export 'feature/chat/presentation/screens/group_info_screen_template.dart';
 
 // Chatbot templates
 export 'feature/chatbot/chatbot_index_template.dart';

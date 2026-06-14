@@ -1,5 +1,7 @@
 String chatsScreenTemplate(String projectName) => '''
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:$projectName/core/core.dart';
 import 'package:$projectName/features/chat/chat_index.dart';
 
 class ChatsScreen extends StatefulWidget {
@@ -31,9 +33,22 @@ class _ChatsScreenState extends State<ChatsScreen> {
     );
   }
 
+  void _openCreateGroup() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CreateGroupScreen()),
+    );
+  }
+
+  void _openCallLog() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CallLogScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: _isSearching
@@ -68,9 +83,27 @@ class _ChatsScreenState extends State<ChatsScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showNewChatDialog,
-        child: const Icon(Icons.edit),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton.small(
+            heroTag: 'call_log',
+            onPressed: _openCallLog,
+            child: const Icon(Icons.history),
+          ),
+          const SizedBox(height: 8),
+          FloatingActionButton.small(
+            heroTag: 'new_group',
+            onPressed: _openCreateGroup,
+            child: const Icon(Icons.group_add),
+          ),
+          const SizedBox(height: 8),
+          FloatingActionButton(
+            heroTag: 'new_chat',
+            onPressed: _showNewChatDialog,
+            child: const Icon(Icons.edit),
+          ),
+        ],
       ),
     );
   }

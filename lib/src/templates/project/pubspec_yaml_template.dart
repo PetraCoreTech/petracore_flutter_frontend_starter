@@ -54,6 +54,15 @@ dependencies:
 
   # UI Components
   cupertino_icons: ^1.0.6
+  flutter_slidable: ^3.1.0
+
+  # Media & File Handling
+  image_picker: ^1.1.2
+  file_picker: ^8.0.0
+  open_filex: ^4.3.0
+
+  # Firebase
+  cloud_firestore: ^5.0.0
 
   # App UI Kit
   app_ui_kit: ^0.0.1+4

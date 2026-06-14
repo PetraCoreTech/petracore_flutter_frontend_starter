@@ -18,6 +18,9 @@ class ChatFlowGenerator {
 
     Logger.step('Updating bloc providers...');
     await _updateSharedBlocProvider();
+
+    Logger.step('Updating pubspec dependencies...');
+    await _updatePubspec();
   }
 
   Future<void> _createDirectories() async {
@@ -64,6 +67,11 @@ class ChatFlowGenerator {
       'presentation/screens/chat_screen.dart': templates.chatScreen,
       'presentation/screens/chats_screen.dart': templates.chatsScreen,
       'presentation/screens/chat_screen_index.dart': templates.chatScreenIndex,
+      'presentation/screens/voice_call_screen.dart': templates.voiceCallScreen,
+      'presentation/screens/video_call_screen.dart': templates.videoCallScreen,
+      'presentation/screens/call_log_screen.dart': templates.callLogScreen,
+      'presentation/screens/create_group_screen.dart': templates.createGroupScreen,
+      'presentation/screens/group_info_screen.dart': templates.groupInfoScreen,
       'presentation/widgets/chat_bubble.dart': templates.chatBubble,
       'presentation/widgets/chat_builder.dart': templates.chatBuilder,
       'presentation/widgets/chat_search_user_builder.dart': templates.chatSearchUserBuilder,
@@ -71,6 +79,12 @@ class ChatFlowGenerator {
       'presentation/widgets/compose_message.dart': templates.composeMessage,
       'presentation/widgets/message_builder.dart': templates.messageBuilder,
       'presentation/widgets/search_user_display.dart': templates.searchUserDisplay,
+      'presentation/widgets/attachment_sheet.dart': templates.attachmentSheet,
+      'presentation/widgets/call_action_button.dart': templates.callActionButton,
+      'presentation/widgets/calling_mode_toggle.dart': templates.callingModeToggle,
+      'presentation/widgets/call_participant_card.dart': templates.callParticipantCard,
+      'presentation/widgets/call_log_entry.dart': templates.callLogEntry,
+      'presentation/widgets/group_member_tile.dart': templates.groupMemberTile,
     };
     for (final entry in files.entries) {
       final filePath = path.join(config.featureRoot, entry.key);
@@ -105,5 +119,36 @@ class ChatFlowGenerator {
       );
     }
     await FileUtils.writeFile(sharedPath, content);
+  }
+
+  Future<void> _updatePubspec() async {
+    final pubspecPath = path.join(
+      config.projectConfig.projectPath,
+      'pubspec.yaml',
+    );
+
+    final file = File(pubspecPath);
+    if (!await file.exists()) return;
+
+    var content = await file.readAsString();
+
+    final chatDeps = [
+      '  flutter_slidable: ^3.1.0',
+      '  image_picker: ^1.1.2',
+      '  file_picker: ^8.0.0',
+      '  open_filex: ^4.3.0',
+      '  cloud_firestore: ^5.0.0',
+    ];
+
+    for (final dep in chatDeps) {
+      final depName = dep.split(':').first.trim();
+      if (content.contains(depName)) continue;
+      content = content.replaceFirst(
+        'dependencies:',
+        'dependencies:\n$dep',
+      );
+    }
+
+    await FileUtils.writeFile(pubspecPath, content);
   }
 }

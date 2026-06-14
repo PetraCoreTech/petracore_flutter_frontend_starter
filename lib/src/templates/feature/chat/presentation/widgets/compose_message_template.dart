@@ -1,6 +1,7 @@
 String composeMessageTemplate(String projectName) => '''
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:$projectName/core/core.dart';
 import 'package:$projectName/features/chat/chat_index.dart';
 
 class ComposeMessage extends StatefulWidget {
@@ -10,73 +11,29 @@ class ComposeMessage extends StatefulWidget {
     super.key,
   });
   final TextEditingController controller;
-  final void Function({String? text, XFile? media}) onSend;
+  final void Function({String? text, XFile? file}) onSend;
 
   @override
   State<ComposeMessage> createState() => _ComposeMessageState();
 }
 
 class _ComposeMessageState extends State<ComposeMessage> {
-  XFile? _pendingMedia;
-  final _picker = ImagePicker();
+  XFile? _pendingFile;
 
-  void _pickImage(ImageSource source) async {
-    final file = await _picker.pickImage(source: source, imageQuality: 80);
-    if (file != null) {
-      setState(() => _pendingMedia = file);
-    }
-  }
-
-  void _pickFile() async {
-    final file = await _picker.pickMedia();
-    if (file != null) {
-      setState(() => _pendingMedia = file);
-    }
-  }
-
-  void _showAttachmentOptions() {
-    showModalBottomSheet(
-      context: context,
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('Gallery'),
-              onTap: () {
-                Navigator.pop(ctx);
-                _pickImage(ImageSource.gallery);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('Camera'),
-              onTap: () {
-                Navigator.pop(ctx);
-                _pickImage(ImageSource.camera);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.insert_drive_file),
-              title: const Text('File'),
-              onTap: () {
-                Navigator.pop(ctx);
-                _pickFile();
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+  void _handleFilePicked(XFile file, AttachmentType type) {
+    Navigator.pop(context);
+    setState(() => _pendingFile = file);
   }
 
   void _send() {
     final text = widget.controller.text.trim();
-    if (text.isEmpty && _pendingMedia == null) return;
-    widget.onSend(text: text.isNotEmpty ? text : null, media: _pendingMedia);
+    if (text.isEmpty && _pendingFile == null) return;
+    widget.onSend(
+      text: text.isNotEmpty ? text : null,
+      file: _pendingFile,
+    );
     widget.controller.clear();
-    setState(() => _pendingMedia = null);
+    setState(() => _pendingFile = null);
   }
 
   @override
@@ -94,7 +51,7 @@ class _ComposeMessageState extends State<ComposeMessage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (_pendingMedia != null)
+            if (_pendingFile != null)
               Container(
                 height: 60,
                 margin: const EdgeInsets.only(bottom: 8),
@@ -104,27 +61,46 @@ class _ComposeMessageState extends State<ComposeMessage> {
                 ),
                 child: Row(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: Image.file(
-                        File(_pendingMedia!.path),
+                    if (_pendingFile!.mimeType != null &&
+                        ['jpg', 'jpeg', 'png', 'gif', 'webp']
+                            .contains(_pendingFile!.mimeType!.toLowerCase()))
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: Image.file(
+                          File(_pendingFile!.path),
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => const Icon(
+                            Icons.insert_drive_file,
+                            size: 24,
+                          ),
+                        ),
+                      )
+                    else
+                      Container(
                         width: 48,
                         height: 48,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Icon(Icons.insert_drive_file, size: 24),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Icon(
+                          Icons.insert_drive_file,
+                          color: theme.colorScheme.onPrimaryContainer,
+                        ),
                       ),
-                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        _pendingMedia!.name,
+                        _pendingFile!.name,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodySmall,
                       ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close, size: 18),
-                      onPressed: () => setState(() => _pendingMedia = null),
+                      onPressed: () => setState(() => _pendingFile = null),
                     ),
                   ],
                 ),
@@ -133,7 +109,10 @@ class _ComposeMessageState extends State<ComposeMessage> {
               children: [
                 IconButton(
                   icon: Icon(Icons.attach_file, color: theme.colorScheme.primary),
-                  onPressed: _showAttachmentOptions,
+                  onPressed: () => AttachmentSheet.show(
+                    context,
+                    onFilePicked: _handleFilePicked,
+                  ),
                 ),
                 Expanded(
                   child: TextField(
@@ -141,7 +120,10 @@ class _ComposeMessageState extends State<ComposeMessage> {
                     decoration: const InputDecoration(
                       hintText: 'Type a message...',
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                       isDense: true,
                     ),
                     maxLines: 4,

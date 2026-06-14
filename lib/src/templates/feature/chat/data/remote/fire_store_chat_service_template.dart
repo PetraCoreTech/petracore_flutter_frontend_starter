@@ -10,7 +10,7 @@ class FireStoreChatService {
   final _fireStore = FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _chats =>
-      _firestore.collection('chats');
+      _fireStore.collection('chats');
 
   DocumentReference<Map<String, dynamic>> _chat(String id) =>
       _chats.doc(id);

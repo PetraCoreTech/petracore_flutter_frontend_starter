@@ -1,5 +1,7 @@
 String chatTileTemplate(String projectName) => '''
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:$projectName/core/core.dart';
 import 'package:$projectName/features/chat/chat_index.dart';
 
 class ChatTile extends StatelessWidget {
@@ -22,7 +24,14 @@ class ChatTile extends StatelessWidget {
         backgroundColor: theme.colorScheme.secondaryContainer,
         child: chat.groupImage != null
             ? ClipOval(
-                child: Image.network(chat.groupImage!, fit: BoxFit.cover, errorBuilder: (_, __, ___) => Icon(Icons.group, color: theme.colorScheme.onSecondaryContainer)),
+                child: Image.network(
+                  chat.groupImage!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Icon(
+                    Icons.group,
+                    color: theme.colorScheme.onSecondaryContainer,
+                  ),
+                ),
               )
             : Icon(Icons.group, color: theme.colorScheme.onSecondaryContainer),
       );
@@ -45,7 +54,7 @@ class ChatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final unread = chat.unreadMessages.values.fold(0, (a, b) => a + b);
-    return ListTile(
+    final tile = ListTile(
       leading: _buildLeading(context),
       title: Text(
         chat.displayName,
@@ -61,8 +70,16 @@ class ChatTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (chat.lastMessage != null && chat.lastMessage!.hasMedia)
-            Icon(Icons.image, size: 14, color: theme.colorScheme.onSurfaceVariant),
-          if (chat.lastMessage != null && chat.lastMessage!.hasMedia && unread > 0)
+            Icon(
+              chat.lastMessage!.isFile
+                  ? Icons.insert_drive_file
+                  : Icons.image,
+              size: 14,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          if (chat.lastMessage != null &&
+              chat.lastMessage!.hasMedia &&
+              unread > 0)
             const SizedBox(width: 4),
           if (unread > 0)
             Container(
@@ -82,6 +99,22 @@ class ChatTile extends StatelessWidget {
             ),
         ],
       ),
+    );
+
+    return Slidable(
+      endActionPane: ActionPane(
+        motion: const BehindMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (_) => ChatHelper.deleteChat(chat.id),
+            backgroundColor: theme.colorScheme.error,
+            foregroundColor: theme.colorScheme.onError,
+            icon: Icons.delete,
+            label: 'Delete',
+          ),
+        ],
+      ),
+      child: tile,
     );
   }
 }
