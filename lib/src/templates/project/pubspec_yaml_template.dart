@@ -10,7 +10,7 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: "^3.8.0"
 
 dependencies:
   flutter:
@@ -47,7 +47,7 @@ dependencies:
   path_provider: ^2.1.4
 
   # Code Generation
-  json_annotation: ^4.8.0
+  json_annotation: ^4.12.0
 
   # Functional Programming
   dartz: ^0.10.1
