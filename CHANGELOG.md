@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-06-15
+
+### Added
+- 💬 **Complete Chat Feature**: `petracore feature chat` generates full chat with real-time Firestore messaging, Cloudinary CDN upload for file sharing, call screens (voice/video), group chat, and `AttachmentSheet` (gallery, camera, video, document, audio)
+- 📁 **`flutter_slidable` Integration**: Chat tiles now support swipe-to-delete via `Slidable`
+- 📂 **`file_picker` + `open_filex`**: File picking with `AttachmentSheet` and tap-to-open file preview in chat bubbles
+- ☁️ **Cloudinary Upload in ComposeMessage**: Picked files are uploaded to Cloudinary before sending; upload progress indicator shown
+- 📞 **Call Screens**: Voice and video call screens with calling mode toggle, participant cards, and call log
+- 👥 **Group Chat**: Create group screen, group info screen, and group member tile
+- 🔧 **`_updatePubspec()` in ChatFlowGenerator**: New dependencies (`flutter_slidable`, `file_picker`, `open_filex`, `image_picker`, `cloud_firestore`) are automatically injected into the generated project's `pubspec.yaml`
+- ⚡ **`runPubGet` After Chat Generation**: `flutter pub get` now runs automatically after chat feature generation (was missing, broke generated projects)
+
+### Changed
+- 🗑️ **`MediaType` Enum Removed**: Replaced with `String? mimeType` across chat (`Message`, `CreateMessageDto`) and media (`FileUploadDto`, `AttachedMedia`, `Attachment`) features — eliminates type conflicts and aligns with standard MIME type conventions
+- ♻️ **`FileUploadDto.fileType` → `mimeType`**: Media feature's Cloudinary DTO now uses `String? mimeType` instead of `MediaType` enum
+- ♻️ **`media_type_extension_template.dart` Rewritten**: Now provides `FileExtensionToMime` (file ext → MIME string) and `MimeTypeChecks` (`.isVideo`, `.isImage`, `.isAudio`) extensions instead of `MediaType`-based extensions
+- ♻️ **`media_type_parser_template.dart`**: Replaced `MediaTypeParser` with `MimeTypeConverter` (identity converter)
+- ♻️ **`upload_action_bloc_template.dart`**: Uses `mimeType` instead of `fileType`/`mediaType`
+- ♻️ **Media index exports cleaned**: Removed `media_type.dart` export (empty file no longer generated)
+
+### Fixed
+- 🐛 **`Set<dynamic>` Type Error**: Fixed in `create_group_screen_template.dart` — explicit `<String>` cast on `_selectedUsers.map`
+- 🐛 **Stray `'''` in `chat_flow_generator.dart`**: Removed dangling triple-quote that broke compilation
+- ✂️ **Missing `image_picker` Import**: Added `import 'package:image_picker/image_picker.dart'` to `compose_message_template.dart`
+- 📐 **`int` → `double` Cast**: `file.length()` returns `int` but `FileUploadDto.size` expects `double` — fixed with `.toDouble()`
+- 🔗 **`response.url` Null Safety**: `CloudinaryResponse.url` is nullable — added `?? throw Exception(...)` 
+- 🔄 **`runPubGet` Missing in Chat Handler**: `_handleChatKeyword` now passes `runPubGet: true` to `runPostGenerationSteps`, matching media/map/notification handlers
+
 ## [1.0.9+1] - 2026-06-13
 
 ### Changed

@@ -1,6 +1,6 @@
 # PetraCore Flutter Frontend Starter
 
-[![Pub Version](https://img.shields.io/badge/version-1.0.9-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
+[![Pub Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful CLI tool and package for generating Flutter projects with **clean architecture**, **Firebase integration**, and **industry best practices**. Based on proven patterns from production applications.
@@ -22,6 +22,19 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 
 ## 🆕 Recent Improvements (v1.1.0)
 
+- **💬 Complete Chat Feature**: `petracore feature chat` now generates a full chat feature with:
+  - Firestore-backed real-time messaging with chat & message models
+  - Chat list screen with `flutter_slidable` swipe-to-delete
+  - Chat detail screen with message bubbles, file sharing, and media preview
+  - Cloudinary CDN upload integration — files picked via `file_picker` are uploaded to Cloudinary before sending
+  - Voice/video call screens with call log, calling mode toggle, participant cards
+  - Group chat support — create group, group info screen, member management
+  - `AttachmentSheet` with gallery, camera, video, document, and audio options
+  - `open_filex` tap-to-open for file-type messages
+  - All dependencies (`flutter_slidable`, `file_picker`, `open_filex`, `image_picker`, `cloud_firestore`) auto-injected into `pubspec.yaml`
+  - `flutter pub get` runs automatically after generation
+- **🗑️ MediaType Enum Removed**: Replaced the custom `MediaType` enum with `String? mimeType` across both chat and media features — eliminates type conflicts and aligns with standard MIME type conventions. All `isImage`/`isVideo`/`isFile` checks now use `mimeType?.startsWith(...)` patterns
+- **📁 `FileUploadDto` Simplified**: `fileType: MediaType` → `mimeType: String?` in the media feature's Cloudinary DTO
 - **♻️ Design Preset Simplification**: Removed the entire local `DesignPresetId`/`DesignPreset` class hierarchy. Preset names are now plain strings — no local color/typography/radius definitions. All visual tokens come from `app_ui_kit` via `AppUiKitPreset` in generated `bootstrap.dart`
 - **`--design-preset` Values**: The `design-preset` CLI option accepts the same 12 preset names: `default`, `vercel`, `airbnb`, `apple`, `spotify`, `vibrant`, `highContrast`, `starbucks`, `linear`, `notion`, `mongodb`, `raycast`
 - **`--include-auth` Flag**: Generate auth alongside the project in one step — `petracore init my_app --include-auth`
@@ -153,6 +166,21 @@ petracore feature media
 
 # Full media feature with Cloudinary, image picker, BLoCs, and widgets
 # Auto-detected "media" keyword prompts for complete setup
+```
+
+### Generate Complete Chat Feature
+
+```bash
+# Interactive mode - choose full chat or basic feature
+petracore feature chat
+
+# Full chat feature with:
+# - Firestore real-time messaging
+# - Cloudinary file upload integration
+# - Voice/video call screens
+# - Group chat support
+# - File sharing with AttachmentSheet
+# Auto-detected "chat" keyword prompts for complete setup
 ```
 
 ### Available Options
@@ -387,7 +415,7 @@ flutter pub get
 # Generate core features
 petracore feature user_profile  
 petracore feature feed
-petracore feature chat
+petracore feature chat    # Full chat with calls, groups, file sharing
 
 # Generate code and run
 flutter packages pub run build_runner build
