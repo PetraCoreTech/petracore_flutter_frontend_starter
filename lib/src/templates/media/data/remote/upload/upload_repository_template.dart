@@ -30,7 +30,7 @@ class UploadRepository {
         url: response.url,
         publicId: response.publicId,
         size: params.uploadDto.size,
-        mediaType: params.uploadDto.fileType,
+        mimeType: params.uploadDto.mimeType,
       );
       return Left(attached);
     } catch (e) {
@@ -53,7 +53,7 @@ class UploadRepository {
           url: responses[i].url,
           publicId: responses[i].publicId,
           size: params.files[i].size,
-          mediaType: params.files[i].fileType,
+          mimeType: params.files[i].mimeType,
         ));
       }
       return Left(attachedList);

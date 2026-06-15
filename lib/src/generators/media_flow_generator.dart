@@ -121,17 +121,13 @@ class MediaFlowGenerator {
   }
 
   Future<void> _generateEnums() async {
-    final files = {
-      'lib/features/media/data/enums/media_type.dart': templates.mediaType,
-      'lib/features/media/data/enums/media_actions.dart': templates.mediaActions,
-    };
-
     final progress = Logger.fileProgress('Media enums');
-    progress.start(files.length);
-    for (final entry in files.entries) {
-      await FileUtils.writeFile(entry.key, entry.value);
-      progress.tick();
-    }
+    progress.start(1);
+    await FileUtils.writeFile(
+      'lib/features/media/data/enums/media_actions.dart',
+      templates.mediaActions,
+    );
+    progress.tick();
     progress.done();
   }
 

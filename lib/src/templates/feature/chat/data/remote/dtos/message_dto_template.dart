@@ -1,26 +1,25 @@
 String messageDtoTemplate(String projectName) => '''
 import 'package:$projectName/core/core.dart';
-import 'package:$projectName/features/chat/data/models/message_model.dart';
 
 class CreateMessageDto {
   CreateMessageDto({
     required this.sender,
     this.text,
     this.mediaUrl,
-    this.mediaType = MediaType.none,
+    this.mimeType,
     this.read,
   });
   final String sender;
   final String? text;
   final String? mediaUrl;
-  final MediaType mediaType;
+  final String? mimeType;
   final Map<String, bool>? read;
 
   Json toJson() => {
     'sender': sender,
     if (text != null) 'text': text,
     if (mediaUrl != null) 'mediaUrl': mediaUrl,
-    'mediaType': mediaType.name,
+    if (mimeType != null) 'mimeType': mimeType,
     if (read != null) 'read': read,
   };
 }

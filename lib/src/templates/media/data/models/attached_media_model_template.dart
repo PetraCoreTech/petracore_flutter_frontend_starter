@@ -4,7 +4,6 @@ String attachedMediaModelTemplate(ProjectConfig config) => '''
 import 'dart:typed_data';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:${config.packageName}/features/media/data/enums/media_type.dart';
 import 'package:${config.packageName}/features/media/data/extensions/media_type_extension.dart';
 import 'package:${config.packageName}/features/media/data/models/uint8_list_converter.dart';
 
@@ -25,7 +24,7 @@ class AttachedMedia {
     this.url,
     this.publicId,
     this.fileBytes,
-    this.mediaType = MediaType.text,
+    this.mimeType,
   });
 
   factory AttachedMedia.fromFilePicker(Json map) {
@@ -38,7 +37,7 @@ class AttachedMedia {
       path: filePath,
       url: map['url'] as String?,
       publicId: map['publicId'] as String?,
-      mediaType: filePath.mediaType,
+      mimeType: filePath.mimeType,
     );
   }
 
@@ -54,7 +53,7 @@ class AttachedMedia {
   final String? url;
   final String? publicId;
   final Uint8List? fileBytes;
-  final MediaType mediaType;
+  final String? mimeType;
 
   Json toJson() => _\$AttachedMediaToJson(this);
 }

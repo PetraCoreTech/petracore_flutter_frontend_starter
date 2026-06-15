@@ -9,7 +9,6 @@ class MediaTemplates {
   String get mediaIndex => mediaIndexTemplate(config);
 
   /// Data/Enums
-  String get mediaType => mediaTypeTemplate();
   String get mediaActions => mediaActionsTemplate();
 
   /// Data/Extensions

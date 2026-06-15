@@ -1,9 +1,11 @@
 String chatScreenTemplate(String projectName) => '''
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:$projectName/core/core.dart';
 import 'package:$projectName/features/chat/chat_index.dart';
+import 'package:$projectName/features/media/data/remote/cloudinary/cloudinary_service.dart';
+import 'package:$projectName/features/media/data/remote/cloudinary/dtos/file_upload_dto.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -19,6 +21,18 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<String> _uploadFile(XFile file) async {
+    final mime = file.mimeType ?? 'application/octet-stream';
+    final dto = FileUploadDto(
+      path: file.path,
+      name: file.name,
+      size: (await file.length()).toDouble(),
+      mimeType: mime,
+    );
+    final response = await cloudinaryService.uploadResource(dto: dto);
+    return response.url ?? (throw Exception('Upload returned no URL'));
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context, Chat chat) {
@@ -114,15 +128,15 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void _onSend({String? text, XFile? file}) {
+  void _onSend({String? text, String? fileUrl}) {
     final chat = context.read<ChatCubit>().state;
     if (chat == null) return;
-    if (text != null || file != null) {
+    if (text != null || fileUrl != null) {
       final messageDto = CreateMessageDto(
         sender: 'currentUser',
         text: text,
-        mediaUrl: file?.path,
-        mediaType: file != null ? MediaType.file : MediaType.none,
+        mediaUrl: fileUrl,
+        mimeType: fileUrl != null ? 'application/octet-stream' : null,
       );
       fireStoreChatService.createMessage(chat.id, messageDto);
     }
@@ -146,6 +160,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ComposeMessage(
                 controller: _controller,
                 onSend: _onSend,
+                onUploadFile: _uploadFile,
               ),
             ],
           ),

@@ -4,7 +4,6 @@ String mediaIndexTemplate(ProjectConfig config) => '''
 export 'data/domain/download_use_cases.dart';
 export 'data/domain/upload_use_cases.dart';
 export 'data/enums/media_actions.dart';
-export 'data/enums/media_type.dart';
 export 'data/extensions/media_bytes_extension.dart';
 export 'data/extensions/media_list_extension.dart';
 export 'data/extensions/media_size_extension.dart';

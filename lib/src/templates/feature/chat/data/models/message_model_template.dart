@@ -4,8 +4,6 @@ import 'package:$projectName/core/core.dart';
 
 part 'message_model.g.dart';
 
-enum MediaType { image, video, file, audio, none }
-
 @JsonSerializable()
 class Message extends BaseModel {
   Message({
@@ -15,7 +13,7 @@ class Message extends BaseModel {
     super.lastUpdated,
     this.text,
     this.mediaUrl,
-    this.mediaType = MediaType.none,
+    this.mimeType,
     this.read,
   });
 
@@ -25,13 +23,13 @@ class Message extends BaseModel {
   final String sender;
   final String? text;
   final String? mediaUrl;
-  final MediaType mediaType;
+  final String? mimeType;
   final Map<String, bool>? read;
 
-  bool get hasMedia => mediaUrl != null && mediaType != MediaType.none;
-  bool get isImage => mediaType == MediaType.image;
-  bool get isVideo => mediaType == MediaType.video;
-  bool get isFile => mediaType == MediaType.file;
+  bool get hasMedia => mediaUrl != null && mimeType != null;
+  bool get isImage => mimeType?.startsWith('image/') == true;
+  bool get isVideo => mimeType?.startsWith('video/') == true;
+  bool get isFile => mimeType != null && !mimeType!.startsWith('image/') && !mimeType!.startsWith('video/');
 
   Map<String, dynamic> toJson() => _\$MessageToJson(this);
 }

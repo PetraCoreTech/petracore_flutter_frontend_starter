@@ -120,7 +120,6 @@ export 'main_app/presentation/screens/material_dashboard_screen_template.dart';
 export 'media/data/domain/download_use_cases_template.dart';
 export 'media/data/domain/upload_use_cases_template.dart';
 export 'media/data/enums/media_actions_template.dart';
-export 'media/data/enums/media_type_template.dart';
 export 'media/data/extensions/media_bytes_extension_template.dart';
 export 'media/data/extensions/media_list_extension_template.dart';
 export 'media/data/extensions/media_size_extension_template.dart';

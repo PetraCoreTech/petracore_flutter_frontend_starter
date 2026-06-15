@@ -3,8 +3,6 @@ import 'package:petracore_flutter_frontend_starter/src/generators/project_genera
 String attachmentModelTemplate(ProjectConfig config) => '''
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:${config.packageName}/features/media/data/enums/media_type.dart';
-import 'package:${config.packageName}/features/media/data/parsers/media_type_parser.dart';
 
 part 'attachment_model.g.dart';
 
@@ -15,7 +13,7 @@ class Attachment extends Equatable {
     this.publicId,
     this.size,
     this.url,
-    this.mediaType,
+    this.mimeType,
     this.date,
   });
 
@@ -26,16 +24,12 @@ class Attachment extends Equatable {
   final String? publicId;
   final double? size;
   final String? url;
-  @JsonKey(
-    fromJson: MediaTypeParser.typeFromJson,
-    readValue: MediaTypeParser.readStatus,
-  )
-  final MediaType? mediaType;
+  final String? mimeType;
   final DateTime? date;
 
   Map<String, dynamic> toJson() => _\$AttachmentToJson(this);
 
   @override
-  List<Object?> get props => [name, publicId, size, url, mediaType, date];
+  List<Object?> get props => [name, publicId, size, url, mimeType, date];
 }
 ''';

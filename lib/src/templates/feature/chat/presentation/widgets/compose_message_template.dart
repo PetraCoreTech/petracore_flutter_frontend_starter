@@ -1,6 +1,7 @@
 String composeMessageTemplate(String projectName) => '''
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:$projectName/core/core.dart';
 import 'package:$projectName/features/chat/chat_index.dart';
 
@@ -8,10 +9,12 @@ class ComposeMessage extends StatefulWidget {
   const ComposeMessage({
     required this.controller,
     required this.onSend,
+    this.onUploadFile,
     super.key,
   });
   final TextEditingController controller;
-  final void Function({String? text, XFile? file}) onSend;
+  final void Function({String? text, String? fileUrl}) onSend;
+  final Future<String> Function(XFile file)? onUploadFile;
 
   @override
   State<ComposeMessage> createState() => _ComposeMessageState();
@@ -19,18 +22,35 @@ class ComposeMessage extends StatefulWidget {
 
 class _ComposeMessageState extends State<ComposeMessage> {
   XFile? _pendingFile;
+  bool _isUploading = false;
 
   void _handleFilePicked(XFile file, AttachmentType type) {
     Navigator.pop(context);
     setState(() => _pendingFile = file);
   }
 
-  void _send() {
+  Future<void> _send() async {
     final text = widget.controller.text.trim();
     if (text.isEmpty && _pendingFile == null) return;
+
+    String? fileUrl;
+    if (_pendingFile != null && widget.onUploadFile != null) {
+      setState(() => _isUploading = true);
+      try {
+        fileUrl = await widget.onUploadFile!(_pendingFile!);
+      } catch (_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to upload file')),
+          );
+        }
+      }
+      setState(() => _isUploading = false);
+    }
+
     widget.onSend(
       text: text.isNotEmpty ? text : null,
-      file: _pendingFile,
+      fileUrl: fileUrl,
     );
     widget.controller.clear();
     setState(() => _pendingFile = null);
@@ -51,7 +71,12 @@ class _ComposeMessageState extends State<ComposeMessage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (_pendingFile != null)
+            if (_isUploading)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: LinearProgressIndicator(),
+              ),
+            if (_pendingFile != null && !_isUploading)
               Container(
                 height: 60,
                 margin: const EdgeInsets.only(bottom: 8),
@@ -109,10 +134,12 @@ class _ComposeMessageState extends State<ComposeMessage> {
               children: [
                 IconButton(
                   icon: Icon(Icons.attach_file, color: theme.colorScheme.primary),
-                  onPressed: () => AttachmentSheet.show(
-                    context,
-                    onFilePicked: _handleFilePicked,
-                  ),
+                  onPressed: _isUploading
+                      ? null
+                      : () => AttachmentSheet.show(
+                            context,
+                            onFilePicked: _handleFilePicked,
+                          ),
                 ),
                 Expanded(
                   child: TextField(
@@ -133,9 +160,19 @@ class _ComposeMessageState extends State<ComposeMessage> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                IconButton(
-                  icon: Icon(Icons.send, color: theme.colorScheme.primary),
-                  onPressed: _send,
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: _isUploading
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : IconButton(
+                          key: const ValueKey('send'),
+                          icon: Icon(Icons.send, color: theme.colorScheme.primary),
+                          onPressed: _send,
+                        ),
                 ),
               ],
             ),

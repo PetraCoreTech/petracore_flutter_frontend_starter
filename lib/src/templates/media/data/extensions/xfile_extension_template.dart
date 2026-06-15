@@ -8,23 +8,22 @@ class MediaSize {
   MediaSize({
     required this.name,
     required this.size,
-    required this.type,
     required this.path,
+    this.mimeType,
   });
   final String name;
   final double size;
-  final MediaType type;
+  final String? mimeType;
   final String path;
 }
 
 extension XFileExtension on Iterable<XFile> {
   List<MediaSize> fileSizeList() {
     return map((file) {
-      final fileType = file.name.mediaType;
       return MediaSize(
         name: file.name,
         size: 0,
-        type: fileType,
+        mimeType: file.mimeType,
         path: file.path,
       );
     }).toList();

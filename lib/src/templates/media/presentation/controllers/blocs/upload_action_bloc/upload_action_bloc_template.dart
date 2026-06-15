@@ -28,7 +28,7 @@ class UploadActionBloc extends Bloc<UploadActionEvent, UploadActionState> {
       path: event.file.path,
       name: event.file.name,
       size: event.file.size,
-      fileType: event.file.mediaType,
+      mimeType: event.file.mimeType,
     );
     final params = UploadParams(uploadDto: dto);
     final result = await singleUploadUseCase(params);
@@ -48,7 +48,7 @@ class UploadActionBloc extends Bloc<UploadActionEvent, UploadActionState> {
               path: f.path,
               name: f.name,
               size: f.size,
-              fileType: f.mediaType,
+              mimeType: f.mimeType,
             ))
         .toList();
     final params = MultipleUploadParams(files: dtos);

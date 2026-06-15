@@ -103,7 +103,7 @@ class SelectedMediaItem extends StatelessWidget {
 
   bool _isVideo() {
     final name = url ?? path ?? '';
-    return name.mediaType.isVideo;
+    return name.mimeType?.isVideo == true;
   }
 }
 ''';

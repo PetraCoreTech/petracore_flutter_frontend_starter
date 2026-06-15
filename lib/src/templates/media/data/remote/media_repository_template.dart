@@ -27,7 +27,7 @@ class MediaRepository {
           path: file.path,
           author: author,
           size: 0,
-          mediaType: file.name.split('.').last.mediaType,
+          mimeType: file.mimeType ?? 'image/jpeg',
         );
       }).toList();
       return Left(mediaList);
@@ -50,7 +50,7 @@ class MediaRepository {
         path: file.path,
         author: author,
         size: 0,
-        mediaType: file.name.split('.').last.mediaType,
+        mimeType: file.mimeType ?? 'image/jpeg',
       );
       return Left(media);
     } catch (e) {

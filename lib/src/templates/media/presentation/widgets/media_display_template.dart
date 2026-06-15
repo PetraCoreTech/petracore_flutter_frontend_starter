@@ -49,7 +49,7 @@ class _MediaDisplayState extends State<MediaDisplay> {
         itemCount: items.length,
         itemBuilder: (context, index) {
           final item = items[index];
-          if (item.mediaType.isVideo) {
+          if (item.mimeType?.startsWith('video/') == true) {
             return VideoPlayer(url: item.url ?? '');
           }
           return InteractiveViewer(
