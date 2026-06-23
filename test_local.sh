@@ -433,6 +433,104 @@ test_auth_no_welcome() {
     fi
 }
 
+# Function to test service bootstrapping within an existing feature
+test_service_command() {
+    echo -e "${GREEN}🧪 Testing Service Bootstrap Command${NC}"
+    echo -e "${GREEN}=====================================${NC}"
+    
+    # First ensure a feature exists to bootstrap into
+    if [ ! -d "lib/features/blog" ]; then
+        run_cli --verbose feature blog --no-interactive
+        if [ ! -d "lib/features/blog" ]; then
+            echo -e "${RED}❌ Failed to create base feature for service test${NC}"
+            exit 1
+        fi
+    fi
+    
+    # Test service bootstrapping inside the blog feature
+    # Piped inputs: feature_name, model(y/N), repo(Y/n), repo_name, usecases(Y/n), uc_name, blocs(Y/n), blocs_prefix
+    printf "blog\nn\n\n\n\n\n\n" | run_cli --verbose service payment
+    
+    # Verify service file was created
+    if [ -f "lib/features/blog/data/remote/payment_service.dart" ]; then
+        echo -e "${GREEN}✅ Service file generated${NC}"
+    else
+        echo -e "${RED}❌ Service file missing${NC}"
+        exit 1
+    fi
+    
+    # Verify repository file was created (default: yes)
+    if [ -f "lib/features/blog/data/remote/payment_repository.dart" ]; then
+        echo -e "${GREEN}✅ Repository file generated${NC}"
+    else
+        echo -e "${RED}❌ Repository file missing${NC}"
+        exit 1
+    fi
+    
+    # Verify use cases file was created (default: yes)
+    if [ -f "lib/features/blog/data/domain/payment_use_cases.dart" ]; then
+        echo -e "${GREEN}✅ Use cases file generated${NC}"
+    else
+        echo -e "${RED}❌ Use cases file missing${NC}"
+        exit 1
+    fi
+    
+    # Verify bloc files were created (default: yes)
+    if [ -f "lib/features/blog/presentation/controllers/cubits/payment_cubit.dart" ] && \
+       [ -f "lib/features/blog/presentation/controllers/blocs/payment_action_bloc/payment_action_bloc.dart" ] && \
+       [ -f "lib/features/blog/presentation/controllers/blocs/multiple_payment_bloc/multiple_payment_bloc.dart" ] && \
+       [ -f "lib/features/blog/presentation/controllers/payment_bloc_provider.dart" ] && \
+       [ -f "lib/features/blog/presentation/controllers/payment_controller_index.dart" ]; then
+        echo -e "${GREEN}✅ BLoC/Cubit files generated${NC}"
+    else
+        echo -e "${RED}❌ BLoC/Cubit files missing${NC}"
+        ls -R lib/features/blog/presentation/controllers/ 2>/dev/null || true
+        exit 1
+    fi
+    
+    # Verify feature index was updated with new exports
+    if grep -q "export 'data/remote/payment_service.dart';" lib/features/blog/blog_index.dart && \
+       grep -q "export 'data/remote/payment_repository.dart';" lib/features/blog/blog_index.dart && \
+       grep -q "export 'data/domain/payment_use_cases.dart';" lib/features/blog/blog_index.dart; then
+        echo -e "${GREEN}✅ Feature index updated with service exports${NC}"
+    else
+        echo -e "${RED}❌ Feature index missing service exports${NC}"
+        exit 1
+    fi
+    
+    # Verify presentation barrel was updated
+    if grep -q "export 'controllers/payment_controller_index.dart';" lib/features/blog/presentation/presentation.dart; then
+        echo -e "${GREEN}✅ Presentation barrel updated${NC}"
+    else
+        echo -e "${RED}❌ Presentation barrel not updated${NC}"
+        exit 1
+    fi
+    
+    # Clean up service files
+    rm -f lib/features/blog/data/remote/payment_service.dart
+    rm -f lib/features/blog/data/remote/payment_repository.dart
+    rm -f lib/features/blog/data/domain/payment_use_cases.dart
+    rm -f lib/features/blog/data/remote/dto/create_payment_dto.dart 2>/dev/null || true
+    rm -f lib/features/blog/data/remote/dto/update_payment_dto.dart 2>/dev/null || true
+    rm -f lib/features/blog/data/remote/dto/payment_params.dart 2>/dev/null || true
+    rm -rf lib/features/blog/presentation/controllers/cubits/payment_cubit.dart
+    rm -rf lib/features/blog/presentation/controllers/blocs/payment_action_bloc/
+    rm -rf lib/features/blog/presentation/controllers/blocs/multiple_payment_bloc/
+    rm -f lib/features/blog/presentation/controllers/payment_bloc_provider.dart
+    rm -f lib/features/blog/presentation/controllers/payment_controller_index.dart
+    # Remove the added exports from blog_index.dart
+    sed -i '' "/export 'data\/remote\/payment_service.dart';/d" lib/features/blog/blog_index.dart 2>/dev/null || true
+    sed -i '' "/export 'data\/remote\/payment_repository.dart';/d" lib/features/blog/blog_index.dart 2>/dev/null || true
+    sed -i '' "/export 'data\/domain\/payment_use_cases.dart';/d" lib/features/blog/blog_index.dart 2>/dev/null || true
+    # Remove payment bloc provider from shared bloc_provider.dart
+    sed -i '' "/import.*payment_bloc_provider.dart/d" lib/features/shared/presentation/controllers/bloc_provider.dart 2>/dev/null || true
+    sed -i '' "/\.\.\.paymentBlocProvider,/d" lib/features/shared/presentation/controllers/bloc_provider.dart 2>/dev/null || true
+    # Remove from presentation barrel
+    sed -i '' "/export 'controllers\/payment_controller_index.dart';/d" lib/features/blog/presentation/presentation.dart 2>/dev/null || true
+    
+    echo -e "${GREEN}✅ Service test files cleaned up${NC}"
+}
+
 # Function to test Flutter commands in generated project
 test_flutter_commands() {
     echo -e "${GREEN}🧪 Testing Flutter Commands in Generated Project${NC}"
@@ -468,6 +566,7 @@ run_tests() {
     test_feature_media
     test_feature_output
     test_auth_flow_output
+    test_service_command
     test_flutter_commands
     test_unit
     
@@ -492,11 +591,12 @@ interactive_mode() {
     echo "9.  Test complete auth flow (requires existing project)"
     echo "10. Test auth flow without welcome screen (requires existing project)"
     echo "11. Test basic auth feature (requires existing project)"
-    echo "12. Test unit tests only"
-    echo "13. Custom CLI command"
-    echo "14. Exit"
+    echo "12. Test service bootstrap command (requires existing project)"
+    echo "13. Test unit tests only"
+    echo "14. Custom CLI command"
+    echo "15. Exit"
     echo ""
-    read -p "Enter your choice (1-14): " choice
+    read -p "Enter your choice (1-15): " choice
     
     case $choice in
         1)
@@ -571,9 +671,16 @@ interactive_mode() {
             test_auth_basic
             ;;
         12)
-            test_unit
+            cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+                echo -e "${RED}❌ No existing project found. Run option 1 or 2 first.${NC}"
+                exit 1
+            }
+            test_service_command
             ;;
         13)
+            test_unit
+            ;;
+        14)
             cd "$HOME/StudioProjects/petracore_local_test" 2>/dev/null || {
                 echo -e "${YELLOW}⚠️  Test directory not found. Commands will run from current directory.${NC}"
             }
@@ -585,7 +692,7 @@ interactive_mode() {
             read -p "> " custom_command
             run_cli $custom_command
             ;;
-        14)
+        15)
             echo -e "${BLUE}👋 Goodbye!${NC}"
             exit 0
             ;;
@@ -615,6 +722,7 @@ show_help() {
     echo "  -t, --test         Run full test suite"
     echo "  -c, --clean        Clean up test directory"
     echo "  -u, --unit         Run package unit tests"
+    echo "  -s, --service      Test service bootstrap command"
     echo ""
     echo "If no options are provided, interactive mode will be launched."
     echo ""
@@ -627,6 +735,7 @@ show_help() {
     echo "  $0 --notification-init # Test notification auto-generated during init"
     echo "  $0 --survey-keyword   # Test survey keyword feature"
     echo "  $0 --auth-no-welcome  # Test auth without welcome screen"
+    echo "  $0 --service          # Test service bootstrap command"
     echo "  $0 --clean            # Clean up test directory"
 }
 
@@ -713,6 +822,13 @@ case "$1" in
         ;;
     -u|--unit)
         test_unit
+        ;;
+    -s|--service)
+        cd "$HOME/StudioProjects/petracore_local_test/test_app" 2>/dev/null || {
+            echo -e "${RED}❌ No existing project found. Run with --init first.${NC}"
+            exit 1
+        }
+        test_service_command
         ;;
     "")
         interactive_mode

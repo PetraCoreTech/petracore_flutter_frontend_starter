@@ -1,6 +1,6 @@
 # PetraCore Flutter Frontend Starter
 
-[![Pub Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
+[![Pub Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://pub.dev/packages/petracore_flutter_frontend_starter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful CLI tool and package for generating Flutter projects with **clean architecture**, **Firebase integration**, and **industry best practices**. Based on proven patterns from production applications.
@@ -19,9 +19,11 @@ A powerful CLI tool and package for generating Flutter projects with **clean arc
 - 🎯 **Best Practices**: Linting rules, code generation, and project structure
 - 📦 **Rich Packages**: Carefully selected and battle-tested dependencies
 - ✨ **Enhanced CLI**: Beautiful, professional logging with levels (debug, info, warning, error, success) and colored output for improved user experience
+- 🧩 **Service Bootstrap**: Add services, repositories, use cases, and BLoCs to existing features with `petracore service`
 
 ## 🆕 Recent Improvements (v1.1.0)
 
+- **🧩 Service Bootstrap Command**: `petracore service <service_name>` interactively bootstraps a new service inside an existing feature with optional model, repository, use cases, and BLoC/Cubit — all wired into the feature's barrel files and shared BlocProvider automatically
 - **💬 Complete Chat Feature**: `petracore feature chat` now generates a full chat feature with:
   - Firestore-backed real-time messaging with chat & message models
   - Chat list screen with `flutter_slidable` swipe-to-delete
@@ -183,6 +185,43 @@ petracore feature chat
 # Auto-detected "chat" keyword prompts for complete setup
 ```
 
+### Bootstrap a Service Into an Existing Feature
+
+```bash
+# Interactive prompt walks you through the setup
+petracore service payment
+
+# The command asks:
+# 1. Which existing feature to add the service to
+# 2. Whether to create a model (with DTOs and Params)
+# 3. Whether to create a repository (name defaults to <service>_repository)
+# 4. Whether to create use cases (name defaults to <service>_use_cases)
+# 5. Whether to create BLoC/Cubit (prefix defaults to the entity name)
+#
+# All generated files are automatically exported in the feature's barrel
+# index and the shared BlocProvider is updated if BLoCs are added.
+```
+
+The service command is ideal for adding new API integrations to an existing feature. For example, if you have a `shop` feature and want to add a `payment` service:
+
+```bash
+petracore service payment
+# Feature name: shop
+# Create a model? (y/N): y
+# Model name: transaction
+# Create a repository? (Y/n): (enter)
+# Create use cases? (Y/n): (enter)
+# Create BLoC/Cubit? (Y/n): (enter)
+```
+
+This generates:
+- `data/remote/payment_service.dart` — Dio-based API service
+- `data/remote/payment_repository.dart` — Repository with Either pattern
+- `data/models/transaction_model.dart` — Model + DTOs + Params
+- `data/domain/payment_use_cases.dart` — Create/Delete/Get/Update use cases
+- `presentation/controllers/` — Cubit, Action BLoC, Data BLoC, BlocProvider
+- Updates `shop_index.dart`, `presentation.dart`, and shared `BlocProvider`
+
 ### Available Options
 
 #### Init Command Options
@@ -339,6 +378,17 @@ firebase_messaging: ^15.2.4    # Cloud Messaging
 
 4. **Navigation routes are auto-registered**: Both auth and feature generators automatically register routes in `lib/navigation/routes.dart` (using the `Route` data class), create a per-feature route list in `lib/navigation/routes/<feature>_routes.dart`, and update `router.dart` — no manual editing needed.
 
+### Adding Services to Existing Features
+
+1. **Bootstrap the service**:
+   ```bash
+   petracore service payment
+   ```
+
+2. **Follow the prompts** to optionally create a model, repository, use cases, and BLoC/Cubit.
+
+3. **All wiring is automatic**: The feature's barrel index is updated with new exports, the presentation barrel registers new controllers, and the shared `BlocProvider` is updated if BLoCs are generated — no manual editing needed.
+
 ## 🎨 Design Presets & Theming
 
 PetraCore uses the `app_ui_kit` package for all theming and UI components — no theme files are generated locally.
@@ -456,6 +506,9 @@ petracore feature payment \
   --repository \
   --use-cases \
   --models
+
+# Bootstrap a service into an existing feature
+petracore service payment
 ```
 
 ## 🔍 Advanced Usage

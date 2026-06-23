@@ -25,6 +25,7 @@ void main(List<String> arguments) async {
   parser.addCommand('generate', generateCommandParser());
   parser.addCommand('feature', featureCommandParser());
   parser.addCommand('auth', authCommandParser());
+  parser.addCommand('service', serviceCommandParser());
 
   try {
     final results = parser.parse(arguments);
@@ -51,6 +52,9 @@ void main(List<String> arguments) async {
       case 'auth':
         await AuthCommand().run(results.command!);
         break;
+      case 'service':
+        await ServiceCommand().run(results.command!);
+        break;
       default:
         Logger.error('Unknown command: ${results.command!.name}');
         _printHelp(parser);
@@ -76,6 +80,7 @@ Available commands:
   generate   Generate various components (alias: feature)
   feature    Generate a new feature module
   auth       Generate complete authentication flow with login, signup, and more
+  service    Bootstrap a new service within an existing feature
 
 Global options:
 ${parser.usage}
@@ -86,6 +91,7 @@ Examples:
   petracore feature auth                   # Detects auth keyword, offers full flow
   petracore auth                           # Generate complete auth flow
   petracore generate feature profile       # Generate profile feature
+  petracore service payment                # Bootstrap a payment service in a feature
 
 For more help on a specific command:
   petracore <command> --help

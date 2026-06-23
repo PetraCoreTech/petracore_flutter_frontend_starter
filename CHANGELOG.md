@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 2026-06-15
+## [1.1.1] - 2026-06-23
+
+### Added
+- 🧩 **Service Bootstrap Command (`petracore service`)**: Interactively bootstraps a new service within an existing feature — `petracore service <service_name>` prompts for the target feature and optionally generates model + DTOs, repository, use cases, and BLoC/Cubit. All files use the same templates as `petracore feature`, are exported in the feature's barrel index, and the shared BlocProvider is updated automatically
+- 🧪 **Test Infrastructure for Service Command**: New `test_service_command` function in `test_local.sh` with interactive option 12 and `--service` CLI flag for CI
+
+## [1.1.0] - 2026-06-23
 
 ### Added
 - 💬 **Complete Chat Feature**: `petracore feature chat` generates full chat with real-time Firestore messaging, Cloudinary CDN upload for file sharing, call screens (voice/video), group chat, and `AttachmentSheet` (gallery, camera, video, document, audio)
@@ -24,6 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ♻️ **`media_type_parser_template.dart`**: Replaced `MediaTypeParser` with `MimeTypeConverter` (identity converter)
 - ♻️ **`upload_action_bloc_template.dart`**: Uses `mimeType` instead of `fileType`/`mediaType`
 - ♻️ **Media index exports cleaned**: Removed `media_type.dart` export (empty file no longer generated)
+
+### Added
+- 🧪 **Service Command Tests**: `test_local.sh` updated with `test_service_command` function, interactive menu option 12, and `--service` CLI flag
 
 ### Fixed
 - 🐛 **`Set<dynamic>` Type Error**: Fixed in `create_group_screen_template.dart` — explicit `<String>` cast on `_selectedUsers.map`
